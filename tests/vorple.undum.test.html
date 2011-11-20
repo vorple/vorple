@@ -1,0 +1,169 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<script type="text/javascript" src="../lib/jquery-1.6.4.min.js"></script>
+	
+	<script type="text/javascript" src="../src/vorple.core.js"></script>
+	<script type="text/javascript" src="../src/vorple.undum.js"></script>
+	<script type="text/javascript" src="../lib/undum.js"></script>
+	<script type="text/javascript" src="lib/dummy-undum.js"></script>
+	
+	<script type="text/javascript" src="lib/qunit-git.js"></script>
+	
+	<link rel="stylesheet" href="lib/qunit-git.css" type="text/css" media="screen" />
+
+<script>
+$( document ).ready(function(){
+
+    vorple.core.init();
+
+    module( 'core' );
+
+    test( 'engine', function() {
+	   	equal(
+   	       	vorple.core.engine(),
+   	       	'undum',
+   	       	'Undum loaded'
+  	    );
+  	    
+       	equal(
+   	       	vorple.core.engine( 'undum' ),
+   	       	true,
+   	       	'testing for Undum after it is loaded'
+  	    );
+
+  	    equal(
+    	    vorple.core.engine( 'foobar' ),
+    	    false,
+    	    'testing for anything else after Undum has loaded'
+   	    );
+    });
+
+    module( 'undum' );
+
+    test( 'dispose', function() {
+		for( var i = 1; i <= 10; ++i ) {
+			var action = ( i % 2 ) ? './' : '';
+	        $( '#content' ).append( '<a href="'+action+'testlink'+i+'" id="disposeTest'+i+'">foo</a>' );
+		}
+
+        vorple.undum.dispose( 'testlink1' );
+        vorple.undum.dispose( 'testlink2' );
+        vorple.undum.dispose( './testlink3' );
+        vorple.undum.dispose( 'testlink4', 'testlink5' );
+        vorple.undum.dispose( [ 'testlink6', 'testlink7' ] );
+        vorple.undum.dispose( [ 'testlink8', 'testlink9' ], 'testlink10' );
+	
+		ok( 
+			$.inArray( 'testlink1', undum.game._disposedLinks ) > -1,
+			'disposed link in undum.game'
+		);
+	
+		equal(
+			$( '#disposeTest1' ).length,
+			0,
+			'link actually disposed'
+		);
+	
+		ok(
+	    	vorple.undum.isDisposed( 'testlink2' ),
+		    'action link disposed'
+		);
+	
+	  	ok(
+	  	    vorple.undum.isDisposed( 'testlink3' ),
+	  		'situation link disposed, given as action'
+	 	);
+	  		
+	   	ok(
+	       	vorple.undum.isDisposed( 'testlink4' ) && vorple.undum.isDisposed( 'testlink5' ),
+			'two links disposed'
+	   	);
+
+	   	ok(
+	       	vorple.undum.isDisposed( 'testlink6' ) && vorple.undum.isDisposed( 'testlink7' ),
+			'two links disposed as an array'
+	   	);
+
+	   	ok(
+	       	vorple.undum.isDisposed( 'testlink8' ) && vorple.undum.isDisposed( 'testlink9' ) && vorple.undum.isDisposed( 'testlink10' ),
+			'three links disposed as an array and a string'
+	   	);
+		   	
+    });
+
+    test( 'isDisposed', function() {
+		vorple.undum.dispose( 'isDisposed' );
+
+        ok( 
+            vorple.undum.isDisposed( 'isDisposed' ),
+            'link is disposed'
+        );
+
+        ok( 
+            !vorple.undum.isDisposed( 'isNotDisposed' ),
+            'link is not disposed'
+        );
+    });
+
+    test( 'reactivation', function() {
+        vorple.undum.dispose( 
+			'reactivate1', 
+			'reactivate2', 
+			'./reactivate3',
+			'reactivate4',
+			'reactivate5',
+			'reactivate6',
+			'reactivate7',
+			'reactivate8',
+			'reactivate9'
+		);
+
+        vorple.undum.reactivate( 'reactivate1' );
+        vorple.undum.reactivate( './reactivate2' );
+        vorple.undum.reactivate( 'reactivate3', 'reactivate4' );
+        vorple.undum.reactivate( [ 'reactivate5', 'reactivate6' ] );
+        vorple.undum.reactivate( [ 'reactivate7', 'reactivate8' ], 'reactivate9' );
+
+        ok(
+            !vorple.undum.isDisposed( 'reactivate' ),
+            'reactivation with one link'
+        );
+
+        ok(
+            !vorple.undum.isDisposed( 'reactivate2' ),
+            'reactivating an action as a situation'
+        );
+
+        ok(
+            !vorple.undum.isDisposed( 'reactivate3' ) && !vorple.undum.isDisposed( 'reactivate4' ),
+            'reactivation with two links'
+        );
+
+        ok(
+            !vorple.undum.isDisposed( 'reactivate5' ) && !vorple.undum.isDisposed( 'reactivate6' ),
+            'reactivation with two links as an array'
+        );
+
+        ok(
+            !vorple.undum.isDisposed( 'reactivate7' ) && !vorple.undum.isDisposed( 'reactivate8' )  && !vorple.undum.isDisposed( 'reactivate9' ),
+            'reactivation with two links as an array and one as a string'
+        );
+    });
+
+    // cleanup the test page
+    $( '#content' ).hide();
+});
+
+</script>
+  
+</head>
+<body>
+  <h1 id="qunit-header">Vorple Undum</h1>
+ <h2 id="qunit-banner"></h2>
+ <div id="qunit-testrunner-toolbar"></div>
+ <h2 id="qunit-userAgent"></h2>
+ <ol id="qunit-tests"></ol>
+ <div id="qunit-fixture">test markup, will be hidden</div>
+</body>
+</html>

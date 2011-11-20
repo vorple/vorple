@@ -1,0 +1,193 @@
+<!DOCTYPE HTML>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>One With Everything</title>
+    <link href='http://fonts.googleapis.com/css?family=Tangerine'
+          rel='stylesheet' type='text/css'>
+
+    <link media="screen"
+          rel="stylesheet" href="css/undum.css">
+
+    <meta name="viewport" content="user-scalable=no, width=device-width">
+    <link rel="apple-touch-icon" href="img/iphone/icon.png">
+    <link rel="apple-touch-startup-image" href="img/iphone/splash.png">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <!--[if !IE]>-->
+    <link media="only screen and (max-width: 640px)"
+          rel="stylesheet" type="text/css" href="css/undum-mobile.css">
+    <!--<![endif]-->
+
+    <script type="text/javascript" src="../../lib/jquery-1.6.4.min.js"></script>
+    <script type="text/javascript" src="../../lib/jquery.jplayer.min.js"></script>
+    <script type="text/javascript" src="../../lib/jquery.qtip.min.js"></script>
+    <script type="text/javascript" src="../../lib/undum.js"></script>
+    <script type="text/javascript" src="../../src/vorple.core.js"></script>
+    <script type="text/javascript" src="../../src/vorple.html.js"></script>
+    <script type="text/javascript" src="../../src/vorple.media.js"></script>
+    <script type="text/javascript" src="../../src/vorple.tooltip.js"></script>
+    <script type="text/javascript" src="../../src/vorple.button.js"></script>
+    <script type="text/javascript" src="../../src/vorple.cookie.js"></script>
+    <script type="text/javascript" src="../../src/vorple.undum.js"></script>
+    <link rel="stylesheet" href="../../lib/qtip/jquery.qtip.min.css">
+    
+
+    <script type="text/javascript"
+            src="everything.game.en.js"></script>
+
+	<style type="text/css">
+		/* style and add some space around the link buttons */
+		.linkButton {
+			margin: 1em;
+			padding:3px 5px;
+			border:1px solid gray;
+			background-color:#ccc;
+			opacity:0.8;
+		}
+		
+		#mutes {
+			font-size:smaller;
+			text-align:left;
+		}
+	</style>
+  </head>
+  <body>
+    <div id="toolbar">
+      <h1>One With Everything</h1>
+      <div class="nav">
+        <a href="#" class="button" id="menu-button">Menu</a>
+      </div>
+    </div>
+    <ul id="menu">
+      <li><a href="#title, #content_wrapper">Story</a></li>
+      <li><a href="#character_panel">Character</a></li>
+      <li><a href="#info_panel">Info</a></li>
+    </ul>
+
+    <div id="page">
+
+      <div id="tools_wrapper">
+        <div id="info_panel" class="tools left">
+
+          <h1>One With Everything</h1>
+          <p>
+          	An example story that includes every standard Vorple feature.
+          </p>
+
+          <div class='buttons'>
+            <button id="save">Save</button><button id="erase">Erase</button>
+          </div>
+          <div class="buttons" id="mutes">
+	          <div>
+	          	<input type="checkbox" id="muteSound" class="mute" value="sound" /> 
+	          	<label for="muteSound">Mute sound effects</label>
+	          </div>
+	          <div>
+	          	<input type="checkbox" id="muteMusic" class="mute" value="music" /> 
+	          	<label for="muteMusic">Mute music</label>
+	       	  </div>
+	       	  <div>
+	          	<input type="checkbox" id="muteAll" class="mute" value="all" /> 
+	          	<label for="muteAll">Mute all</label>
+	          </div>
+	          
+	          <!-- The following doesn't work automatically. We'll make a
+	          	custom handler for it in undum.game.init(). -->
+          	  <div>
+          	  	<button id="toggleAll">Toggle all</button>
+          	  </div>
+
+<!--	          
+				These are the opposite of mute buttons -- they are checked
+				when the sounds are enabled.
+				
+	          <div>
+	          	<input type="checkbox" id="unmuteMusic" class="unmute" value="music" checked="checked" /> 
+	          	<label for="unmuteMusic">Music</label>
+	       	  </div>
+	       	  <div>
+	          	<input type="checkbox" id="unmuteSound" class="unmute" value="sound" checked="checked" /> 
+	          	<label for="unmuteSound">Sound effects</label>
+	          </div>
+	       	  <div>
+	          	<input type="checkbox" id="unmuteAll" class="unmute" value="all" checked="checked" /> 
+	          	<label for="unmuteAll">Unmute all</label>
+	          </div>
+-->
+          </div>
+        </div>
+
+        <div id="character_panel" class="tools right">
+          <h1>Navigation</h1>
+          <div id="navButtons">
+          	<!-- this will be filled with the navigation button group -->
+          </div>
+        </div>
+      </div>
+
+      <div id="mid_panel">
+        <div id="title">
+          <div class="label">
+
+            <h1>One With Everything</h1>
+            <h2>Vorple feature showcase</h2>
+
+            <noscript><p class="noscript_message">This game requires 
+              Javascript.</p></noscript>
+            <p class="click_message">click to begin</p>
+          </div>
+        </div>
+
+        <div id="content_wrapper">
+          <div id="content">
+          </div>
+          <a name="end_of_content"></a>
+        </div>
+
+        <div id="legal">
+          <p>
+            Parts of the software and design &copy; 2010 IDM. Undum is
+            available
+            <a href="http://github.com/idmillington/undum">here</a>.
+          </p>
+          <p>
+          	<!-- the vorple-version class will be automatically
+          		filled with the version number of the Vorple library -->
+          	Powered by Vorple <span class="vorple-version"></span>.
+          </p>
+        </div>
+      </div>
+    </div> 
+
+    <div id="ui_library">
+      <div id="quality" class="quality">
+        <span class="name" data-attr="name"></span>
+        <span class="value" data-attr="value"></span>
+      </div>
+
+      <div id="quality_group" class="quality_group">
+        <h2 data-attr="title"></h2>
+        <div class="qualities_in_group">
+        </div>
+      </div>
+
+      <div id="progress_bar" class="progress_bar">
+        <span class="name" data-attr="name"></span>
+        <span class="value" data-attr="value"></span>
+        <div class="progress_bar_track">
+          <div class="progress_bar_color" data-attr="width">
+          </div>
+        </div>
+        <span class="left_label" data-attr="left_label"></span>
+        <span class="right_label" data-attr="right_label"></span>
+      </div>
+
+      <hr id="turn_separator">
+    </div>
+
+    <div id="content_library">
+    </div>
+
+  </body>
+</html>
