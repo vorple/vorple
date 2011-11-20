@@ -93,8 +93,9 @@ for themesource in themeroot:
         shutil.copy( themedir+"vorple.game.en.js", target )
         shutil.copytree( libdir, target+"/lib" )
         os.mkdir( target+"/media" )
-        os.mkdir( target+"/media/image" )
         os.mkdir( target+"/media/audio" )
+        os.mkdir( target+"/media/image" )
+        os.mkdir( target+"/media/music" )
         os.mkdir( target+"/media/video" )
         os.chdir( target )
         call([
