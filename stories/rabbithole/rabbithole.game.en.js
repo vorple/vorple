@@ -386,6 +386,16 @@ undum.game.init = function( character, system ) {
     );
     
     
+    // preload images
+    vorple.media.preloadImage([
+        'lamps.jpg',
+        'guitar.png',
+        'drum.png',
+        'glockenspiel.png',
+        'teaparty.jpg',
+        'rabbit.jpg'
+        ]);
+    
     vorple.core.init();
 };
 
