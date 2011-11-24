@@ -1,5 +1,33 @@
 /* vorple.core.js - Vorple core functions */
 
+/** Function inheritance, by Crockford */
+Function.prototype.inherits = function(Parent) {
+    var d = {}, p = (this.prototype = new Parent());
+    this.prototype.uber = function(name) {
+        if (!(name in d)) d[name] = 0;
+        var f, r, t = d[name], v = Parent.prototype;
+        if (t) {
+            while (t) {
+                v = v.constructor.prototype;
+                t -= 1;
+            }
+            f = v[name];
+        } else {
+            f = p[name];
+            if (f == this[name]) {
+                f = v[name];
+            }
+        }
+        d[name] += 1;
+        r = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
+        d[name] -= 1;
+        return r;
+    };
+    return this;
+};
+
+    
+/** Vorple main object */
 var vorple = {};
 
 ( function( $ ) {
