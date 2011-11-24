@@ -8,138 +8,202 @@
     /**
      * Button templates.
      */
-    vorple.button.template = {
-        /**
-         * A standard HTML button.
-         */
-        Basic: function( enabledOptions, disabledOptions ) {
-            this.opt = $.extend( {}, { text: null }, enabledOptions );
-            this.disabledOpt = $.extend( {}, enabledOptions, disabledOptions );
-            this.id = 'button_'+vorple.core.generateId();
-            
-            this.element = $( vorple.html.tag(
-                    'button',
-                    this.opt.text,   
-                    this.opt
-                ) ).addClass( this.id ).addClass( 'vorpleButton basicButton' );
-            
-            /**
-             * Disables the button.
-             */
-            this.disable = function() {
-                this.element.attr( 'disabled', 'disabled' );
-            };
-            
-            /**
-             * Enables the button.
-             */
-            this.enable = function() {
-                this.element.attr( 'disabled', '' );
-            };
-            
-            /**
-             * Checks whether the button is enabled or disabled.
-             * @return true on enabled, false on disabled
-             */
-            this.isEnabled = function() {
-                return this.element.attr( 'disabled' ) !== 'disabled';
-            };
-
-            /**
-             * Returns the HTML code for the button.
-             */
-            this.html = function() {
-                return vorple.html.$toHtml( this.element );
-            };
-        },
+    vorple.button.template = function( content, onclick, options ) {
+        this.defaults = { classes: '' };
         
-        Link: function( enabledOptions, disabledOptions ) {
-            this.opt = $.extend( {}, { text: '', endTag: 'always' }, enabledOptions );
-            this.disabledOpt = $.extend( {}, enabledOptions, disabledOptions );
-            this.id = 'button_'+vorple.core.generateId();
-            this.enabled = true;
-            var onclick;
+        this.init = function( content, onclick, options ) {
+            // check if options are given as the second or the third parameter
+            if( typeof options === 'object' ) {
+                this.opt = $.extend( {}, this.defaults, options );
+            }
+            else if( typeof onclick === 'object' ) {
+                this.opt = $.extend( {}, this.defaults, onclick );
+            }
+            else {
+                this.opt = $.extend( {}, this.defaults );
+            }
             
-            if( typeof this.opt.onclick !== 'undefined' ) {
-                onclick = this.opt.onclick;
-                delete this.opt.onclick;
+            if( typeof content !== 'undefined' ) {
+                this.content = content;
+            }
+            else {
+                this.content = '';
             }
 
-            this.element = $( vorple.html.tag( 
-                'span', 
-                vorple.html.tag(
-                    'a',
-                    this.opt.text,
-                    {
-                        href: vorple.html.url( this.opt.url ),
-                        onclick: onclick
-                    }
-                ),
-                this.opt 
-            ) ).addClass( this.id ).addClass( 'vorpleButton linkButton' );
-            
-            this.disable = function() {
-                this.element.html( this.element.children( 'a' ).html() )
-                    .addClass( 'ex_link' );
-                this.enabled = false;
-            };
-            
-            this.enable = function() {
-                this.element.html(
-                    '<a href="'+vorple.html.url( this.opt.url )+'">'+this.opt.text+'</a>'
-                ).removeClass( 'ex_link' );
-                this.enabled = true;
-            };
-            
-            this.isEnabled = function() {
-                return this.enabled;
-            };
-            
-            this.html = function() {
-                return vorple.html.$toHtml( this.element );
-            };
-        },
         
-        Image: function( enabledOptions, disabledOptions ) {
-            this.opt = $.extend( {}, { src: '', endTag: 'never' }, enabledOptions );
-            this.id = 'button_'+vorple.core.generateId();
-            this.disabledOpt = $.extend( {}, enabledOptions, { onclick: '' }, disabledOptions );
-            this.enabled = true;
+            this.idClass = 'button_'+vorple.core.generateId();
+            
+            // add classes to the button
+            this.opt.classes += ' vorpleButton basicButton ' + this.idClass;
 
-            this.disable = function() {
-                vorple.html.replaceAttributes( this.element, this.disabledOpt );
-                this.element.addClass( this.id );
-                
-                this.enabled = false;
-            };
+            this.options = options;
+
+            this.element = this.createElement( content, this.opt );
             
-            this.enable = function() {
-                this.element = $( vorple.html.tag(
-                        'img',
-                        null,
-                        this.opt
-                    ) ).addClass( this.id ).addClass( 'vorpleButton imageButton' );
-                
-                this.enabled = true;
-            };
             
-            this.isEnabled = function() {
-                return this.enabled;
-            };
-            
-            this.html = function() {
-                return vorple.html.$toHtml( this.element );
-            };
-            
-            this.click = $.noop();
-            
-            this.enable();
-        }
+            /**
+             * Attach a click event to the button
+             */
+            if( $.type( onclick ) === 'function' ) {
+                this.onclick = onclick;
+                this.createClickEvent( onclick );
+            }
+            else {
+                this.onclick = $.noop;
+            }
+        };
+        
+        this.createClickEvent = function( onclick ) {
+            var self = this;
+            $( document ).delegate( '.'+this.idClass, 'click', function( event ) {
+                if( self.isEnabled() ) {
+                    onclick( event );
+                }
+            });
+        };
+        
+        this.createElement = function( content, opt ) {
+            return content;
+        };
+        
+
+        /**
+         * Disables the button.
+         */
+        this.disable = $.noop;
+ 
+        
+        /**
+         * Enables the button.
+         */
+        this.enable = $.noop;
+        
+        
+        /**
+         * Checks whether the button is enabled or disabled.
+         * @return true on enabled, false on disabled
+         */
+        this.isEnabled = $.noop;
+           
+
+        /**
+         * Returns the HTML code for the button.
+         */
+        this.toString = function() {
+            return this.element;
+        };
+        
+        this.init( content, onclick, options );
     };
+    
+    
+    /**
+     * Standard HTML buttons.
+     * 
+     * @see vorple.button.template
+     */
+    vorple.button.Button = function( content, onclick, options ) {
+        this.createElement = function( content, options ) {
+            return vorple.html.tag(
+                'button',
+                content,
+                options
+            ); 
+        };
+
+        this.disable = function() {
+            $( '.'+this.idClass ).attr( 'disabled', 'disabled' );
+        };
+        
+        this.enable = function() {
+            $( '.'+this.idClass ).attr( 'disabled', '' );
+        };
+        
+        this.isEnabled = function() {
+            return $( '.'+this.idClass ).attr( 'disabled' ) !== 'disabled';
+        };
+        
+        this.init( content, onclick, options );
+    };
+    vorple.button.Button.inherits( vorple.button.template );
+    
+    
+    /**
+     * Link (&lt;a&gt; tag) buttons.
+     * 
+     * Note that disabled link buttons can't be enabled later on. 
+     * 
+     * @see vorple.button.template
+     */
+    vorple.button.Link = function( content, onclick, options ) {
+        this.defaults = {
+            classes: '',
+            href: '#'
+        };
+        
+        this.createElement = function( content, options ) {
+            return vorple.html.link(
+                options.href,
+                content,
+                options
+            );
+        };
+        
+        this.disable = function() {
+            $( '.'+this.idClass )
+                .replaceWith( '<span class="ex_link '
+                    +this.opt.classes+'">'+this.content+'</span>' );
+        };
+        
+        this.isEnabled = function() {
+            return !$( '.'+this.idClass ).hasClass( 'ex_link' );
+        };
+        
+        this.init( content, onclick, options );
+    };
+    vorple.button.Link.inherits( vorple.button.template );
 
     
     /**
-     * A button group class.
+     * Image buttons.
+     * 
+     * Give the image's URL as the content, as with 
+     * <code>vorple.media.image()</code>.
+     * 
+     * You can give an alternative image that is used when the button
+     * is disabled as the <code>disabledImage</code> option.
+     * 
+     * @see vorple.button.template
+     * @see vorple.media.image
+     */
+    vorple.button.Image = function( content, onclick, options ) {
+        this.createElement = function( content, options ) {
+            return vorple.media.image(
+                content,
+                options
+            );
+        };
+        
+        this.enabled = true;
+        
+        this.disable = function() {
+            this.enabled = false;
+            if( 'disabledImage' in this.opt ) {
+                $( '.'+this.idClass ).attr( 'src', this.opt.disabledImage );
+            }
+        };
+        
+        this.isEnabled = function() {
+            return this.enabled;
+        };
+        
+        this.init( content, onclick, options );
+   };
+    vorple.button.Image.inherits( vorple.button.template );
+
+    
+    /**
+     * Button groups.
      * 
      * @param {Button|jQuery|string|Array|null} [buttons] Initial content of the group. 
      * Either a single button object, the HTML code of a button, a jQuery element,

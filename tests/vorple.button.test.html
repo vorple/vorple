@@ -5,6 +5,8 @@
 	
 	<script src="../src/vorple.core.js"></script>
 	<script src="../src/vorple.html.js"></script>
+	<script src="../src/vorple.cookie.js"></script>
+	<script src="../src/vorple.media.js"></script>
 	<script src="../src/vorple.button.js"></script>
 	<script type="text/javascript" src="lib/qunit-git.js"></script>
 	
@@ -17,115 +19,164 @@ $(document).ready(function(){
     
     module( 'buttons' );
     
-    test( 'basic', function() {
-        var button = new vorple.button.template.Basic();
-        ok(
-            (function() { return vorple.html.$toHtml( button.element ).match(
-                    /\<button class\=\"button_[0-9a-zA-Z]*\"\>\<\/button\>/ 
-            ); } )(),
-            'empty button'
-        ); 
-
-        button = new vorple.button.template.Basic( { text: 'Test', class: 'foo' } );
-        ok(
-            (function() { 
-                return vorple.html.$toHtml( button.element )
-                    .match( /\<button class\=\"foo button_[0-9a-zA-Z]*\"\>Test\<\/button\>/ ); } 
-            )(),
-			'text and class'
-        );
-
-        ok( button.isEnabled(), 'Created as enabled' );
-        button.disable();
-        ok( !button.isEnabled(), 'isEnabled is false after disable' );
-
-        equal( 
-            button.element.attr( 'disabled' ),
-            'disabled',
-            'disabling'
-        );
-        
-    } );
-
-    test( 'link', function() {
-        var button = new vorple.button.template.Link();
-        
-        ok(
-            (function() { return vorple.html.$toHtml( button.element ).match(
-                    /\<span class\=\"button_[0-9a-zA-Z]*\"\>\<a href=\"#\"\>\<\/a\>\<\/span\>/ 
-            ); } )(),
-            'empty button'
-        ); 
-
-        button = new vorple.button.template.Link( { 
-            text: 'Test', 
-            class: 'foo', 
-            url: 'bar',
-            onclick: 'baz' 
-        } );
-
-        ok(
-            (function() { 
-                return vorple.html.$toHtml( button.element )
-                    .match( /\<span class\=\"foo button_[0-9a-zA-Z]*\"\>\<a href=\"bar\"\ onclick=\"baz\">Test\<\/a\>\<\/span\>/ ); } 
-            )(),
-			'text and class'
-        );
-
-        ok( button.isEnabled(), 'Created as enabled' );
-        button.disable();
-        ok( !button.isEnabled(), 'isEnabled is false after disable' );
+    test( 'basic button', function() {
+        var button = new vorple.button.Button();
+        var $element = $( button.toString() );
 
         equal(
-            button.element.html(),
+            $element.toString(),
+            '',
+            'empty button'
+        ); 
+
+        button = new vorple.button.Button( 'Test', { classes: 'foo' } );
+        var $element = $( button.toString() );
+
+        $element.appendTo( '#qunit-fixture' );
+
+        equal(
+            $element.toString(),
             'Test',
-            'disabled link content'
+            'text'
         );
 
-        ok(
-            button.element.hasClass( 'ex_link' ),
-            'disabled link has class ex_link'
-        );
-    } );
-
-    test( 'image', function() {
-        var button = new vorple.button.template.Image();
-        ok(
-            (function() { return vorple.html.$toHtml( button.element ).match(
-                    /\<img src=\"\" class\=\"button_[0-9a-zA-Z]*\"\>/ 
-            ); } )(),
-            'empty image'
-        ); 
-
-        button = new vorple.button.template.Image( { src: 'test.jpg', class: 'foo' } );
-        ok(
-            (function() { 
-                return vorple.html.$toHtml( button.element )
-                    .match( /\<img src=\"test\.jpg\" class\=\"foo button_[0-9a-zA-Z]*\"\>/ ); } 
-            )(),
-			'text and class'
-        );
+        ok( $element.hasClass( 'foo' ), 'classes' );    
 
         ok( button.isEnabled(), 'Created as enabled' );
         button.disable();
         ok( !button.isEnabled(), 'isEnabled is false after disable' );
 
-        button = new vorple.button.template.Image( { src: 'test.jpg' }, { src: 'disabled.png' } );
+        window.eventTest = false;
+        
+        button = new vorple.button.Button( 'Test', function() {
+            window.eventTest = true;
+        });
+
+        $element = $( button.toString() );
+        $element.appendTo( '#qunit-fixture' ).trigger( 'click' );
+
+        ok( window.eventTest, 'click event attached' );
+
+        window.eventTest = false;
         button.disable();
+        $element.trigger( 'click' );
+        
+        ok( !window.eventTest, 'no click event triggered when disabled' );
+    });
+
+    
+    test( 'link', function() {
+        var button = new vorple.button.Link();
+        var $element = $( button.toString() );
 
         equal(
-            button.element.attr( 'src' ),
-            'disabled.png',
-            'disabled image changed'
+            $element.toString(),
+            '',
+            'empty button'
+        ); 
+
+        equal(
+            $element.attr( 'href' ),
+            '#',
+            'default href'
         );
-    } );
+
+        button = new vorple.button.Link( 'Test', { classes: 'foo', href: 'bar' } );
+        $element = $( button.toString() );
+
+        $element.appendTo( '#qunit-fixture' );
+
+        equal(
+            $element.toString(),
+            'Test',
+            'text'
+        );
+
+        equal(
+            $element.attr( 'href' ),
+            'bar',
+            'href'
+        );
+
+        ok( $element.hasClass( 'foo' ), 'classes' );    
+
+        ok( button.isEnabled(), 'Created as enabled' );
+        button.disable();
+        ok( !button.isEnabled(), 'isEnabled is false after disable' );
+
+        window.eventTest = false;
+        
+        button = new vorple.button.Link( 'Test', function() {
+            window.eventTest = true;
+        });
+
+        $element = $( button.toString() );
+        $element.appendTo( 'body' ).trigger( 'click' );
+
+        ok( window.eventTest, 'click event attached' );
+
+        window.eventTest = false;
+        button.disable();
+        $element.trigger( 'click' );
+        
+        ok( !window.eventTest, 'no click event triggered when disabled' );
+    });
+
+    
+    test( 'image', function() {
+        var button = new vorple.button.Image( 'test.png' );
+        var $element = $( button.toString() );
+
+        equal(
+            $element.attr( 'src' ),
+            vorple.media.defaults.imagePath+'/test.png',
+            'src'
+        );
+
+        button = new vorple.button.Image( 
+            'test.png', 
+            { classes: 'foo', disabledImage: '/disabled.png' } 
+        );
+        $element = $( button.toString() );
+
+        $element.appendTo( '#qunit-fixture' );
+
+        ok( $element.hasClass( 'foo' ), 'classes' );    
+
+        ok( button.isEnabled(), 'Created as enabled' );
+        button.disable();
+        ok( !button.isEnabled(), 'isEnabled is false after disable' );
+
+		equal( 
+			$element.attr( 'src' ),
+			'/disabled.png',
+			'disabled image'
+		);
+		
+        window.eventTest = false;
+        
+        button = new vorple.button.Image( 'test.png', function() {
+            window.eventTest = true;
+        });
+
+        $element = $( button.toString() );
+        $element.appendTo( 'body' ).trigger( 'click' );
+
+        ok( window.eventTest, 'click event attached' );
+
+        window.eventTest = false;
+        button.disable();
+        $element.trigger( 'click' );
+        
+        ok( !window.eventTest, 'no click event triggered when disabled' );
+    });
 
 
     module( 'button groups' );
 
     test( 'create', function() {
         var g = new vorple.button.Group();
-        equal( g.html(), '<div></div>', 'group is empty' );
+        equal( g.toString(), '<div></div>', 'group is empty' );
         ok( g.element.jquery, 'element is a jQuery object' );
 
         g = new vorple.button.Group( null, { id:'foo', class:'bar' });
@@ -133,27 +184,27 @@ $(document).ready(function(){
         ok( g.element.hasClass( 'bar' ), 'object container class' );
 
         g = new vorple.button.Group( null, '<ul>' );
-        equal( g.html(), '<ul></ul>', 'container element specified as string' );
+        equal( g.toString(), '<ul></ul>', 'container element specified as string' );
 
         g = new vorple.button.Group( '', { tag:'ul' } );
-        equal( g.html(), '<ul></ul>', 'container element specified as tag' );  
+        equal( g.toString(), '<ul></ul>', 'container element specified as tag' );  
         
         g = new vorple.button.Group( null, $( '<ul>' ) );
-        equal( g.html(), '<ul></ul>', 'jquery object as container' );
+        equal( g.toString(), '<ul></ul>', 'jquery object as container' );
 
         g = new vorple.button.Group( '<span>bar</span>' );
-        equal( g.html(), '<div><span>bar</span></div>', 'string content' );
+        equal( g.toString(), '<div><span>bar</span></div>', 'string content' );
 
         g = new vorple.button.Group( [ '<span>bar</span>', '<span>baz</span>' ] );
-        equal( g.html(), '<div><span>bar</span><span>baz</span></div>', 'string array content' );
+        equal( g.toString(), '<div><span>bar</span><span>baz</span></div>', 'string array content' );
 
         var button = new vorple.button.template.Basic();
         
         g = new vorple.button.Group( button );
-        equal( g.html(), '<div>'+button.html()+'</div>', 'button content' );
+        equal( g.toString(), '<div>'+button.toString()+'</div>', 'button content' );
         
         g = new vorple.button.Group( [ button, '<span>baz</span>' ] );
-        equal( g.html(), '<div>'+button.html()+'<span>baz</span></div>', 'mixed array content' );
+        equal( g.toString(), '<div>'+button.toString()+'<span>baz</span></div>', 'mixed array content' );
 
     } );
 });
