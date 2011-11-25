@@ -1213,6 +1213,11 @@ has the image.
 
 <h4 id="media-sounds">Sound effects</h4>
 
+<div class="note floatbox">
+The sounds are played automatically with sound down if the reader has
+<a href="#mute-controls">muted sounds</a>. The same applies to music. 
+</div>
+
 <p>
 Audio and local video files are played using the
 <a href="http://jplayer.org/">jPlayer</a> library.
@@ -1252,9 +1257,13 @@ If you assign the return value to a variable, you can use any
 </p>
 
 <div class="note">
-The sounds are played automatically with sound down if the reader has
-<a href="#mute-controls">muted sounds</a>. The same applies to music. 
+iOS devices (iPhone, iPad, iPod) support only <em>one</em> sound playing
+simultaneously.
+If you specifically target these devices, it's best to use either background
+music or sound effects, but not both. Otherwise any sound effect will stop
+the background music. 
 </div>
+
 
 
 <h4>Music</h4>

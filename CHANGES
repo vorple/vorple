@@ -5,6 +5,7 @@ Documentation
 -------------
 
  - Fixed the documentation for preloading multiple images.
+ - Added a note about playing sounds in iOS devices.
  
 
 Examples
@@ -12,6 +13,13 @@ Examples
 
  - Down the Rabbit-Hole now preloads the images it uses.
 
+
+Modules
+-------
+
+ - Buttons: rewrote the button system.
+ - Core: added Crockford's inheritance method. 
+ 
  
 Releases
 --------
