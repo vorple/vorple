@@ -6,7 +6,14 @@
     vorple.button = {};
     
     /**
-     * Button templates.
+     * Default settings
+     */
+    vorple.button.defaults = {
+        groupContainer: '<div>'
+    };
+    
+    /**
+     * Button templates
      */
     vorple.button.template = function( content, onclick, options ) {
         this.defaults = { classes: '' };
@@ -89,7 +96,7 @@
         /**
          * Returns the HTML code for the button.
          */
-        this.toString = function() {
+        this.html = function() {
             return this.element;
         };
         
@@ -184,17 +191,17 @@
             );
         };
         
-        this.enabled = true;
+        var enabled = true;
         
         this.disable = function() {
-            this.enabled = false;
+            enabled = false;
             if( 'disabledImage' in this.opt ) {
                 $( '.'+this.idClass ).attr( 'src', this.opt.disabledImage );
             }
         };
         
         this.isEnabled = function() {
-            return this.enabled;
+            return enabled;
         };
         
         this.init( content, onclick, options );
@@ -215,24 +222,25 @@
      * If a string is given, an element is created with the string as its class.
      * If an object is given, an element is created using the attributes defined
      * in the object.
-     * The default is vorple.button.group.defaults.container (&lt;div&gt;).
+     * The default is <code>vorple.button.defaults.groupContainer</code> 
+     * (<code>&lt;div&gt;</code>).
      */
     vorple.button.Group = function( buttons, container ) {
-        var self = this;
-        this.content = [];
+        var $element;
+        var content = [];
         
-        if( $.type( container ) === 'object' || container == undefined || !container ) {
-            if( container != undefined && container.jquery != undefined ) {
-                this.element = container;
+        if( $.type( container ) === 'object' || typeof container === 'undefined' || !container ) {
+            if( typeof container === 'object' && typeof container.jquery !== 'undefined' ) {
+                $element = container;
             }
             else {  
                 if( $.type( container ) !== 'object' ) {
                     container = { tag: 'div' };
                 }
-                else if( container.tag == undefined ) {
+                else if( typeof container.tag === 'undefined' ) {
                     container.tag = 'div';
                 }
-                this.element = $( vorple.html.tag( 
+                $element = $( vorple.html.tag( 
                         container.tag, 
                         null, 
                         container, 
@@ -240,50 +248,107 @@
                     ) );
             }
         } else if( $.type( container ) === 'string' ) {
-            this.element = $( container );
+            $element = $( container );
         }
         else {
-            this.element = $( '<div>' );
+            $element = $( '<div>' );
         }
         
         if( $.type( buttons ) === 'array' ) {
-            this.content = buttons;
+            content = buttons;
         }
-        else if( buttons !== undefined && buttons ) {
-            this.content.push( buttons );
+        else if( typeof buttons !== 'undefined' && buttons ) {
+            content.push( buttons );
         }
         
-        $.each( this.content, function( index, button ) {
-            self.element.append( button.element );
+        function appendButton( button ) {
+            if( typeof button === 'string' 
+                || ( typeof button === 'object' && typeof button.jquery !== 'undefined' ) ) {
+                $element.append( button );
+            }
+            else if( button ) {
+                $element.append( button.html() );
+            }
+        }
+        
+        $.each( content, function( index, button ) {
+            appendButton( button );
         });
         
         this.html = function() {
-            var html = '';
-            for( var i = 0; i < this.content.length; ++i ) {
-                switch( $.type( this.content[ i ] ) ) {
-                    case 'object':
-                        if( this.content[ i ].jquery != undefined ) {
-                            html += vorple.html.$toHtml( i );
-                        }
-                        else if( this.content[ i ].html() != undefined ) {
-                            html += this.content[ i ].html();
-                        }
-                        else {
-                            html += this.content[ i ];  
-                        }
-                        break;
-                    case 'string': 
-                    default:
-                        html += this.content[ i ];
-                        break;
-                }
-            }
-            var fullElement = this.element;
-            fullElement.html( html );
-            return vorple.html.$toHtml( fullElement );
+            return vorple.html.$toHtml( $element )
         };
         
-        this.update = function() {
+        this.add = function( newButtons ) {
+            var buttons;
+            
+            if( typeof newButtons !== 'array' ) {
+                buttons = [ newButtons ];
+            }
+            else {
+                buttons = newButtons;
+            }
+            
+            $.each( buttons, function( index, button ) {
+                var exists = false;
+                if( typeof button === 'object' && 'idClass' in button ) {
+                    $.each( content, function( index, oldButton ) {
+                        if( typeof oldButton === 'object' && 'idClass' in oldButton && button.idClass == oldButton.idClass ) {
+                            exists = true;
+                        }
+                    });
+                }
+                
+                if( !exists ) {
+                    content.push( button );
+                    appendButton( button );
+                }
+            });
+        };
+        
+        this.update = function( newButtons, preserveOrder ) {
+            var buttons = [];
+            
+            if( preserveOrder ) {
+                $.each( content, function( index, button ) {
+                    if( typeof button === 'object' && 'idClass' in button ) {
+                        $.each( newButtons, function( index, newButton ) {
+                            if( typeof newButton === 'object' && 'idClass' in newButton && button.idClass == newButton.idClass ) {
+                                buttons.push( newButton );
+                            }
+                        });
+                    }
+                });
+            
+                $.each( newButtons, function( index, newButton ) {
+                    var buttonAdded = false;
+                    if( typeof newButton === 'object' && 'idClass' in newButton ) {
+                        $.each( buttons, function( index, button ) {
+                            if( typeof button === 'object' && 'idClass' in button && button.idClass == newButton.idClass ) {
+                                buttonAdded = true;
+                            }
+                        });
+                    }
+                    if( !buttonAdded ) {
+                        buttons.push( newButton );
+                    }
+                });
+            }
+            else {
+                buttons = newButtons;
+            }
+            
+            
+            if( $.type( newButtons ) !== 'array' ) {
+                buttons = [ newButtons ];
+            }
+
+            content = buttons;
+            $element.html( '' );
+            
+            $.each( buttons, function( index, button ) {
+                appendButton( button );
+            });            
         };
     };   
 })( jQuery );

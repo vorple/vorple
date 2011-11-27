@@ -21,21 +21,21 @@ $(document).ready(function(){
     
     test( 'basic button', function() {
         var button = new vorple.button.Button();
-        var $element = $( button.toString() );
+        var $element = $( button.html() );
 
         equal(
-            $element.toString(),
+            $element.html(),
             '',
             'empty button'
         ); 
 
         button = new vorple.button.Button( 'Test', { classes: 'foo' } );
-        var $element = $( button.toString() );
+        var $element = $( button.html() );
 
         $element.appendTo( '#qunit-fixture' );
 
         equal(
-            $element.toString(),
+            $element.html(),
             'Test',
             'text'
         );
@@ -52,7 +52,7 @@ $(document).ready(function(){
             window.eventTest = true;
         });
 
-        $element = $( button.toString() );
+        $element = $( button.html() );
         $element.appendTo( '#qunit-fixture' ).trigger( 'click' );
 
         ok( window.eventTest, 'click event attached' );
@@ -67,10 +67,10 @@ $(document).ready(function(){
     
     test( 'link', function() {
         var button = new vorple.button.Link();
-        var $element = $( button.toString() );
+        var $element = $( button.html() );
 
         equal(
-            $element.toString(),
+            $element.html(),
             '',
             'empty button'
         ); 
@@ -82,12 +82,12 @@ $(document).ready(function(){
         );
 
         button = new vorple.button.Link( 'Test', { classes: 'foo', href: 'bar' } );
-        $element = $( button.toString() );
+        $element = $( button.html() );
 
         $element.appendTo( '#qunit-fixture' );
 
         equal(
-            $element.toString(),
+            $element.html(),
             'Test',
             'text'
         );
@@ -110,7 +110,7 @@ $(document).ready(function(){
             window.eventTest = true;
         });
 
-        $element = $( button.toString() );
+        $element = $( button.html() );
         $element.appendTo( 'body' ).trigger( 'click' );
 
         ok( window.eventTest, 'click event attached' );
@@ -125,7 +125,7 @@ $(document).ready(function(){
     
     test( 'image', function() {
         var button = new vorple.button.Image( 'test.png' );
-        var $element = $( button.toString() );
+        var $element = $( button.html() );
 
         equal(
             $element.attr( 'src' ),
@@ -137,7 +137,7 @@ $(document).ready(function(){
             'test.png', 
             { classes: 'foo', disabledImage: '/disabled.png' } 
         );
-        $element = $( button.toString() );
+        $element = $( button.html() );
 
         $element.appendTo( '#qunit-fixture' );
 
@@ -159,7 +159,7 @@ $(document).ready(function(){
             window.eventTest = true;
         });
 
-        $element = $( button.toString() );
+        $element = $( button.html() );
         $element.appendTo( 'body' ).trigger( 'click' );
 
         ok( window.eventTest, 'click event attached' );
@@ -176,37 +176,82 @@ $(document).ready(function(){
 
     test( 'create', function() {
         var g = new vorple.button.Group();
-        equal( g.toString(), '<div></div>', 'group is empty' );
-        ok( g.element.jquery, 'element is a jQuery object' );
+        equal( g.html(), '<div></div>', 'group is empty' );
 
         g = new vorple.button.Group( null, { id:'foo', class:'bar' });
-        equal( g.element.attr( "id" ), 'foo', 'object container id' );
-        ok( g.element.hasClass( 'bar' ), 'object container class' );
+        var $g = $( g.html() ); 
+        equal( $g.attr( "id" ), 'foo', 'object container id' );
+        ok( $g.hasClass( 'bar' ), 'object container class' );
 
         g = new vorple.button.Group( null, '<ul>' );
-        equal( g.toString(), '<ul></ul>', 'container element specified as string' );
+        equal( g.html(), '<ul></ul>', 'container element specified as string' );
 
         g = new vorple.button.Group( '', { tag:'ul' } );
-        equal( g.toString(), '<ul></ul>', 'container element specified as tag' );  
+        equal( g.html(), '<ul></ul>', 'container element specified as tag' );  
         
         g = new vorple.button.Group( null, $( '<ul>' ) );
-        equal( g.toString(), '<ul></ul>', 'jquery object as container' );
+        equal( g.html(), '<ul></ul>', 'jquery object as container' );
 
         g = new vorple.button.Group( '<span>bar</span>' );
-        equal( g.toString(), '<div><span>bar</span></div>', 'string content' );
+        equal( g.html(), '<div><span>bar</span></div>', 'string content' );
 
         g = new vorple.button.Group( [ '<span>bar</span>', '<span>baz</span>' ] );
-        equal( g.toString(), '<div><span>bar</span><span>baz</span></div>', 'string array content' );
+        equal( g.html(), '<div><span>bar</span><span>baz</span></div>', 'string array content' );
 
-        var button = new vorple.button.template.Basic();
-        
+        var button = new vorple.button.Button();
         g = new vorple.button.Group( button );
-        equal( g.toString(), '<div>'+button.toString()+'</div>', 'button content' );
+        $g = $( g.html() );
+        equal( $g.find( 'button' ).length, 1, 'button content' );
         
         g = new vorple.button.Group( [ button, '<span>baz</span>' ] );
-        equal( g.toString(), '<div>'+button.toString()+'<span>baz</span></div>', 'mixed array content' );
+        $g = $( g.html() );
+        equal( $g.find( 'button' ).length, 1, 'button found' );
+        equal( $g.find( 'span' ).length, 1, 'span found' );
+    });
 
-    } );
+    test( 'add', function() {
+        var button1 = new vorple.button.Button();
+        var button2 = new vorple.button.Link();
+        var button3 = new vorple.button.Image( 'test.png' );
+        var g = new vorple.button.Group([ button1, button2, '<span>foo</span>' ]);
+
+        g.add( button3 );
+        var $g = $( g.html() );
+        equal( $g.find( 'img' ).length, 1, 'button added' );
+
+        g.add( button3 );
+        equal( $g.find( 'img' ).length, 1, 'button not added twice' );
+    });
+
+    test( 'update', function() {
+        var button1 = new vorple.button.Button();
+        var button2 = new vorple.button.Link();
+        var button3 = new vorple.button.Image( 'test.png' );
+        var g = new vorple.button.Group([ button1, button2, '<span>foo</span>' ]);
+
+        g.update([ button1, button3 ]);
+        var $g = $( g.html() );
+        equal( $g.find( 'button' ).length, 1, 'button not removed' );
+        equal( $g.find( 'a' ).length, 0, 'link removed' );
+        equal( $g.find( 'img' ).length, 1, 'image added' );
+
+        g.update([ button2, button3, button1 ], true );
+        $g = $( g.html() );
+        ok( 
+               $g.children().eq( 0 ).is( 'button' ) 
+            && $g.children().eq( 1 ).is( 'img' )
+            && $g.children().eq( 2 ).is( 'a' ),
+            'order preserved'
+        );
+
+        g.update();
+        $g = $( g.html() );
+        equal(
+            $g.html(),
+            '',
+            'empty group'
+        );
+    });
 });
 </script>
   
