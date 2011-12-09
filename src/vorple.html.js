@@ -68,6 +68,30 @@
     
     
     /**
+     * Creates a single &lt;a&gt; tag.
+     * 
+     * @param {object} linkObject The link's data as an object
+     * with the following keys: 
+     * content (the text inside the tag),
+     * url (the url where the link points at) and
+     * options (tag attributes).
+     * @return {string} The created link tag.
+     * @private
+     */
+    vorple.html._createLink = function( linkObject ) {
+        var self = this;
+        var opt = $.extend( {}, { endTag: 'always' }, linkObject.options );
+        opt.href = linkObject.url;
+
+        return self.tag( 
+            'a', 
+            linkObject.content,
+            opt
+        );
+    };
+    
+    
+    /**
      * The HTML source code of a jQuery element.
      * 
      * @param {jQuery} $element The target element. If multiple elements match,
@@ -154,26 +178,32 @@
     /**
      * Creates an &lt;a&gt; tag.
      * 
+     * The url where the link points to, the content of the link and
+     * the optional tag attributes can be given as separate parameters
+     * or as a single object { url: ..., content: ..., options: ... }.
+     * 
      * @example 
-     * vorple.html.link( 'foo', 'Bar', { class: 'baz' } )
+     * vorple.html.link( 'foo', 'Bar', { classes: 'baz' } )
      *     == &lt;a href="foo" class="baz"&gt;Bar&lt;/a&gt;
      *     
-     * @param {String} url The url of the link.
+     * vorple.html.link({ url: 'foo', content: 'Bar', options: { classes: 'baz' })
+     *     == &lt;a href="foo" class="baz"&gt;Bar&lt;/a&gt;
+     *     
+     * @param {String|Object} url The url of the link, 
+     * or an object containing the required data,
+     * or an array of links.
      * @param {String} content The content text of the link. 
      * @param {Object} [options] Additional attributes added to the tag.
      * 
      * @return {String} The HTML code for the link tag.
      */
     vorple.html.link = function( url, content, options ) {
-        var self = this;
-        var opt = $.extend( {}, { endTag: 'always' }, options );
-        opt.href = url;
-
-        return self.tag( 
-            'a', 
-            content,
-            opt
-        );
+        if( typeof url === 'object' ) {
+            return this._createLink( url );
+        }
+        else {
+            return this._createLink({ url: url, content: content, options: options });
+        }
     };
     
     
@@ -354,3 +384,4 @@
     };
     
 } )( jQuery );
+

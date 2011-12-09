@@ -81,7 +81,8 @@ $(document).ready(function(){
     test( 'link', function() {
         equal(
             vorple.html.link( 'foo', 'bar' ),
-            '<a href="foo">bar</a>'
+            '<a href="foo">bar</a>',
+            'link'
         )
 
         var $link = $( vorple.html.link( 'foo', 'bar', { classes: 'baz', id: 'buzz' } ) );
@@ -90,6 +91,20 @@ $(document).ready(function(){
             $link.hasClass( 'baz' ) && $link.attr( 'id' ) == 'buzz',
             'link options'
         );
+
+	equal(
+            vorple.html.link({ url: 'foo', content: 'bar' }),
+            '<a href="foo">bar</a>',
+            'link object'	
+        )
+
+        var $link = $( vorple.html.link({ url: 'foo', content: 'bar', options: { classes: 'baz', id: 'buzz' } }) );
+
+        ok(
+            $link.hasClass( 'baz' ) && $link.attr( 'id' ) == 'buzz',
+            'link object options'
+        );
+
     });
 
     test( 'quotes', function() {

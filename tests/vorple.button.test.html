@@ -203,10 +203,14 @@ $(document).ready(function(){
         $g = $( g.html() );
         equal( $g.find( 'button' ).length, 1, 'button content' );
         
-        g = new vorple.button.Group( [ button, '<span>baz</span>' ] );
+        g = new vorple.button.Group([ button, '<span>baz</span>' ]);
         $g = $( g.html() );
         equal( $g.find( 'button' ).length, 1, 'button found' );
         equal( $g.find( 'span' ).length, 1, 'span found' );
+
+        $( '#qunit-fixture' ).html( '' );
+        g = new vorple.button.Group( button, $( '#qunit-fixture' ) );
+        ok( $( '#qunit-fixture' ).find( 'button' ).length > 0, 'inserted into container' ); 
     });
 
     test( 'add', function() {

@@ -9,7 +9,7 @@
      * Default settings
      */
     vorple.button.defaults = {
-        groupContainer: '<div>'
+        groupParent: '<div>'
     };
     
     /**
@@ -216,42 +216,42 @@
      * Either a single button object, the HTML code of a button, a jQuery element,
      * or an array of buttons. Passing null or leaving the parameter out will
      * create the group as initially empty. 
-     * @param {Object} [container] The container for the button
-     * group. 
+     * @param {Object} [parent] The main container for the button group
+     * (the parent of all buttons). 
      * If a jQuery object is given, it will be used as is. 
      * If a string is given, an element is created with the string as its class.
      * If an object is given, an element is created using the attributes defined
      * in the object.
-     * The default is <code>vorple.button.defaults.groupContainer</code> 
+     * The default is <code>vorple.button.defaults.groupParent</code> 
      * (<code>&lt;div&gt;</code>).
      */
-    vorple.button.Group = function( buttons, container ) {
+    vorple.button.Group = function( buttons, parent ) {
         var $element;
         var content = [];
         
-        if( $.type( container ) === 'object' || typeof container === 'undefined' || !container ) {
-            if( typeof container === 'object' && typeof container.jquery !== 'undefined' ) {
-                $element = container;
+        if( $.type( parent ) === 'object' || typeof parent === 'undefined' || !parent ) {
+            if( $.type( parent ) === 'object' && typeof parent.jquery !== 'undefined' ) {
+                $element = parent;
             }
             else {  
-                if( $.type( container ) !== 'object' ) {
-                    container = { tag: 'div' };
+                if( $.type( parent ) !== 'object' ) {
+                    parent = { tag: 'div' };
                 }
-                else if( typeof container.tag === 'undefined' ) {
-                    container.tag = 'div';
+                else if( typeof parent.tag === 'undefined' ) {
+                    parent.tag = 'div';
                 }
                 $element = $( vorple.html.tag( 
-                        container.tag, 
+                        parent.tag, 
                         null, 
-                        container, 
+                        parent, 
                         { endTag: 'never' }  
                     ) );
             }
-        } else if( $.type( container ) === 'string' ) {
-            $element = $( container );
+        } else if( $.type( parent ) === 'string' ) {
+            $element = $( parent );
         }
         else {
-            $element = $( '<div>' );
+            $element = $( vorple.button.defaults.groupParent );
         }
         
         if( $.type( buttons ) === 'array' ) {
@@ -261,6 +261,11 @@
             content.push( buttons );
         }
         
+        $.each( content, function( index, button ) {
+            appendButton( button );
+        });
+
+
         function appendButton( button ) {
             if( typeof button === 'string' 
                 || ( typeof button === 'object' && typeof button.jquery !== 'undefined' ) ) {
@@ -271,14 +276,7 @@
             }
         }
         
-        $.each( content, function( index, button ) {
-            appendButton( button );
-        });
-        
-        this.html = function() {
-            return vorple.html.$toHtml( $element )
-        };
-        
+
         this.add = function( newButtons ) {
             var buttons;
             
@@ -304,6 +302,10 @@
                     appendButton( button );
                 }
             });
+        };
+        
+        this.html = function() {
+            return vorple.html.$toHtml( $element )
         };
         
         this.update = function( newButtons, preserveOrder ) {

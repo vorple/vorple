@@ -1025,17 +1025,31 @@ vorple.html.p( "Hello World!", { classes: "transient" } );
 <p>
 Links can be added with 
 <code>vorple.html.link()</code><a href="../API/symbols/vorple.html.html#.link" class="api">API</a>.
-The first parameter is the link target and the second parameter the contents.
+The first parameter is the link target, the second parameter the contents,
+and the third the <code>&lt;a&gt;</code> tag options.
+
 </p>
 
 <pre class="brush: js;">
-vorple.html.link( "./book", "Open the book" );
-// &rarr; &lt;a href="./book"&gt;Open the book&lt;/a&gt;
+vorple.html.link( "./book", "Open the book", { classes: 'unique' } );
+// &rarr; &lt;a href="./book" class="unique"&gt;Open the book&lt;/a&gt;
+</pre>
+
+<p>
+The parameters can be given as a single object that has keys for at least 
+the url and the contents:
+</p>
+
+<pre class="brush: js;">
+vorple.html.link({ 
+    url: "./book", 
+    content: "Open the book", 
+    options: { classes: 'unique' } 
+});
 </pre>
 
 
 <h4 id="html-quotes">Quotes</h4>
-
 <p>
 <code>vorple.html.quote()</code><a href="../API/symbols/vorple.html.html#.quote" class="api">API</a>
 can be used to wrap contents inside quotes.
