@@ -14,11 +14,18 @@ Examples
  - Down the Rabbit-Hole now preloads the images it uses.
 
 
+Libraries
+---------
+
+ - Updated jQuery to 1.7.1
+ 
+
 Modules
 -------
 
  - Buttons: rewrote the button system.
  - Core: added Crockford's inheritance method. 
+ - HTML: link() accepts the link building parameters as a single object.
  
  
 Releases
