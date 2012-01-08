@@ -80,7 +80,7 @@
 
         return $( document ).delegate( element, opt.show.event, function( e ) {
             self._create( this, opt );
-        }, event );
+        });
     };
     
     

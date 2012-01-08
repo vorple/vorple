@@ -29,6 +29,8 @@ Modules
  - HTML: url() now recognizes that filenames starting with ./ or ../ should
    not have the default directory prepended to them. 
  - Media: added isMuted().
+ - Tooltip: removed a stray uninitialized variable that caused problems 
+   in some browsers.
  
  
 Releases
