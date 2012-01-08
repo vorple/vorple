@@ -266,6 +266,42 @@
     
     
     /**
+     * Check whether a media type is muted and return the current status.
+     * 
+     * @param {string|string[]} types The audio type (music, sound, or all)
+     * as a single string or an array.
+     * 
+     * @return {boolean|boolean[]} true if media type is muted, false otherwise.
+     * An array of truth values is returned if the parameter was given 
+     * as an array. 
+     */
+    vorple.media.isMuted = function( types ) {
+        var self = this;
+        var input = types;
+        var result = [];
+        
+        if( typeof types == 'string' ) {
+            input = [ types ];
+        }
+        
+        var toggle = {};
+        $.each( input, function( key, type ) {
+        	if( type === 'all' ) {
+        		result.push( self._muted.sound && self._muted.music );
+        	}
+        	else {
+            	result.push( self._muted[ type ] );
+        	}
+        });
+
+        if( typeof types == 'string' ) {
+            return result[ 0 ];
+        }
+        
+        return result;     	
+    };
+    
+    /**
      * Play an audio file.
      * 
      * @see vorple.media.playAudio

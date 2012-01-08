@@ -26,6 +26,9 @@ Modules
  - Buttons: rewrote the button system.
  - Core: added Crockford's inheritance method. 
  - HTML: link() accepts the link building parameters as a single object.
+ - HTML: url() now recognizes that filenames starting with ./ or ../ should
+   not have the default directory prepended to them. 
+ - Media: added isMuted().
  
  
 Releases
