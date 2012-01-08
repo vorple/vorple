@@ -453,7 +453,8 @@
         if( typeof path == 'undefined'
                 || !path
                 || filename.match( /^[a-zA-Z]*:\/\// ) 
-                || filename.indexOf( "/" ) === 0 ) {
+                || filename.indexOf( "/" ) === 0  
+        		|| filename.indexOf( "." ) === 0 ) {
             return filename;
         }
         else {

@@ -267,6 +267,16 @@ $(document).ready(function(){
 			'/path/filename + path'
    		);
         equal(
+        	vorple.html.url( './test.html', 'foo' ),
+        	'./test.html',
+        	'force local file'
+        );
+        equal(
+            vorple.html.url( '../test.html', 'foo' ),
+            '../test.html',
+            'relative path'
+        );
+        equal(
    			vorple.html.url( 'http://example.com/test.html', 'foo' ),
    			'http://example.com/test.html',
    			'url + path'
