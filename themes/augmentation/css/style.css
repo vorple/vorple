@@ -93,3 +93,5 @@ a:active, a:hover{color:#d1d1d1;}
 .buttons button, .buttons button:hover{background:#000 url(images/button-bg.jpg);height:30px;width:60px;margin:0 15px;color:#cacdca;font-size:15px;border:1px solid #343;-moz-box-shadow: 0 0 16px rgba(0,0,0,0.75);-webkit-box-shadow: 0 0 16px rgba(0,0,0,0.75);box-shadow: 0 0 16px rgba(0,0,0,0.75);cursor:pointer;}
 .buttons button[disabled], .buttons button[disabled]:hover{color:#999;cursor:default;opacity:0.8;}
 #sound-controls{position:fixed;bottom:10px;margin-left:15px;text-align:left;}
+#ui_library{ display:none; }
+#content hr { height:1px; margin:0 20px 20px 20px; opacity:0.5; }
