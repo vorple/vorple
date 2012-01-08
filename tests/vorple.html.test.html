@@ -78,25 +78,39 @@ $(document).ready(function(){
         );
     });
 
+    
     test( 'link', function() {
-        equal(
-            vorple.html.link( 'foo', 'bar' ),
-            '<a href="foo">bar</a>',
-            'link'
-        )
+        var $link = $( vorple.html.link( 'foo', 'bar' ) );
 
-        var $link = $( vorple.html.link( 'foo', 'bar', { classes: 'baz', id: 'buzz' } ) );
+		ok(
+			$link.is( 'a' ),
+			'link created'
+		);
+        
+        equal(
+            $link.html(),
+            'bar',
+            'content ok'
+        );
+
+        equal(
+			$link.attr( 'href' ),
+			'foo',
+			'href ok'
+        );
+
+        $link = $( vorple.html.link( 'foo', 'bar', { classes: 'baz', id: 'buzz' } ) );
 
         ok(
             $link.hasClass( 'baz' ) && $link.attr( 'id' ) == 'buzz',
             'link options'
         );
 
-	equal(
+		equal(
             vorple.html.link({ url: 'foo', content: 'bar' }),
             '<a href="foo">bar</a>',
             'link object'	
-        )
+        );
 
         var $link = $( vorple.html.link({ url: 'foo', content: 'bar', options: { classes: 'baz', id: 'buzz' } }) );
 
@@ -105,6 +119,36 @@ $(document).ready(function(){
             'link object options'
         );
 
+        
+        // link popups
+        
+        $( vorple.html.link([
+            { url: 'link1', content: 'content1' },
+            { url: 'link2', content: 'content2' },
+            { url: 'link3', content: 'content3' }
+        ], 'test', { id: 'multipleLinkTest' }) ).appendTo( '#qunit-fixture' );
+
+        console.log( vorple.html.$toHtml( $( '#multipleLinkTest' ) ) );
+        equal( 
+            $( '#multipleLinkTest' ).length,
+            1,
+            'popup link created'
+        );
+
+        $( '#multipleLinkTest' ).click();
+        $popup = $( '.linkPopup' );
+        
+        equal(
+			$popup.length,
+			1,
+			'link popup created'
+        );
+
+        equal(
+            $popup.find( 'a' ).length,
+            3,
+            'contains all the links'
+        );
     });
 
     test( 'quotes', function() {

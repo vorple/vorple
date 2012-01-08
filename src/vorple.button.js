@@ -62,7 +62,7 @@
         
         this.createClickEvent = function( onclick ) {
             var self = this;
-            $( document ).delegate( '.'+this.idClass, 'click', function( event ) {
+            $( document ).on( 'click', '.'+this.idClass, function( event ) {
                 if( self.isEnabled() ) {
                     onclick( event );
                 }

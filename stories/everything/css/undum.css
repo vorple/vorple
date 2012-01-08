@@ -362,3 +362,11 @@ img.float_left {
 #menu {
     display: none;
 }
+
+/* Vorple-specific */
+
+ul.linkPopup {
+	margin:0;
+	background-color:#e6e6c6;
+}
+

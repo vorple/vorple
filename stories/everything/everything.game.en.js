@@ -149,7 +149,20 @@ undum.game.situations.html = new undum.Situation({
                     // added to all links with titles 
                     // in undum.game.init().
                 )
-                + "."
+                + ". A link with "
+                + vorple.html.link([
+                        {
+                            content: 'First option',
+                            url: './first'
+                        },
+                        {
+                            content: 'Second option',
+                            url: './second'
+                        }
+                    ],
+                    'multiple options'
+                )
+                + '.'
             )
         );
 
@@ -212,8 +225,13 @@ undum.game.situations.html = new undum.Situation({
                     )
                 );
                 break;
+            case 'first':
+                system.write( vorple.html.p( 'You clicked the first option.' ) );
+                break;
+            case 'second':
+                system.write( vorple.html.p( 'You clicked the second option.' ) );
+                break;
         }
-
     }
 });
 
@@ -557,34 +575,24 @@ undum.game.situations.undum = new undum.Situation({
 
 
 /**
- * BUTTONS
- */
-var navButtonGroup = new vorple.button.Group([
-    new vorple.button.template.Basic({ text: 'Cookie', value: 'cookie' }),
-    new vorple.button.template.Basic({ text: 'Core', value: 'core' }),
-    new vorple.button.template.Basic({ text: 'HTML', value: 'html' }),
-    new vorple.button.template.Basic({ text: 'Media', value: 'media' }),
-    new vorple.button.template.Basic({ text: 'Tooltip', value: 'tooltip' }),
-    new vorple.button.template.Basic({ text: 'Undum', value: 'undum' })
- ] );
-
-
-/**
  * Enable tooltips in all links
  */
 vorple.tooltip.enable( 'a' );
 
 
 undum.game.init = function( character, system ) {
-    // add the buttons to the layout
-    $( '#navButtons' ).append( navButtonGroup.element );
+    /**
+     * BUTTONS
+     */
+    var navButtonGroup = new vorple.button.Group([
+        new vorple.button.Button( 'Cookie', function() { system.doClick( 'cookie' ); } ),
+        new vorple.button.Button( 'Core', function() { system.doClick( 'core' ); } ),
+        new vorple.button.Button( 'HTML', function() { system.doClick( 'html' ); } ),
+        new vorple.button.Button( 'Media', function() { system.doClick( 'media' ); } ),
+        new vorple.button.Button( 'Tooltip', function() { system.doClick( 'tooltip' ); } ),
+        new vorple.button.Button( 'Undum', function() { system.doClick( 'undum' ); } )
+     ], '#navButtons' );
 
-
-    // have the navigation buttons work as links
-    $( '#navButtons .vorpleButton' ).click( function() {
-        system.doClick( $( this ).attr( 'value' ) );
-    });
-    
     // Handler for the "toggle all" button
     $( '#toggleAll' ).click( function() {
         vorple.media.toggleMute( [ 'music', 'sound' ] );
@@ -597,5 +605,5 @@ undum.game.init = function( character, system ) {
  
     
     /** Initialize and start Vorple. This line is mandatory. */
-    vorple.core.init();
+    vorple.core.init( system );
 };

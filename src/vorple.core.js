@@ -44,7 +44,11 @@ var vorple = {};
         /** Major version number
          * @const
          */
-        version: 1
+        version: 1,
+        
+        /** The interpreter engine
+         */
+        system: null
     };
     
     
@@ -52,7 +56,9 @@ var vorple = {};
      * Default core options
      * @const
      */
-    vorple.core.defaults = {};
+    vorple.core.defaults = {
+        target: '_blank'
+    };
 
     
     /**
@@ -83,7 +89,10 @@ var vorple = {};
      * Initialization functions.
      * @private
      */
-    vorple.core._init = function() {
+    vorple.core._init = function( system ) {
+        // save the engine
+        this.system = system;
+        
         // insert the version number to the layout
         $( '.vorple-version' ).html( this.version+'.'+this.release );
         
@@ -196,9 +205,26 @@ var vorple = {};
      *     alert( 'Hello!' );
      * });</code> 
      */
-    vorple.core.init = function() {
-        this._init();
+    vorple.core.init = function( system ) {
+        this._init( system );
         $( document ).trigger( 'vorpleInit' );
+    };
+    
+    
+    /**
+     * Process a click of a link
+     */
+    vorple.core.doLink = function( url, options ) {
+        var self = this;
+        var opt = $.extend( {}, self.defaults, options );
+
+        // with Undum execute system.doClick()
+        if( self.engine( 'undum' ) ) {
+            self.system.doClick( url );
+        }
+        else {
+            window.location = url;
+        }
     };
     
     

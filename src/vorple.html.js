@@ -198,11 +198,90 @@
      * @return {String} The HTML code for the link tag.
      */
     vorple.html.link = function( url, content, options ) {
-        if( typeof url === 'object' ) {
-            return this._createLink( url );
+        var self = this;
+        var opt = $.extend( 
+                {},
+                { classes: '' },
+                self.defaults, 
+                options 
+            );
+        
+        if( $.isArray( url ) ) {
+            // create a popup link
+
+            // rename the variable to fit its meaning in this case
+            var links = url;
+            
+            var linkId = vorple.core.generateId();
+            
+            var $popup = $( vorple.html.tag( 
+                    'ul',
+                    null,
+                    {
+                        endTag: 'always',
+                        classes: 'options linkPopup popup_'+linkId,
+                        style: 'display:none; position:absolute;'
+                    }
+                ) 
+            );
+        
+            $.each( links, function( index, link ) {
+                $( '<li>' )
+                    .append( $( self.link( link ) ) )
+                    .appendTo( $popup );
+            });
+        
+            // rig the link to show the popup on click
+            $( 'body' ).on( 
+                'click', 
+                '.popuplink_'+linkId, 
+                function( e ) {
+                    e.preventDefault();
+
+                    // hide existing popups
+                    $( '.linkPopup' ).hide();
+                    
+                    // show the popup and position it correctly
+                    $popup
+                        .appendTo( 'body' )
+                        .show() // must be shown before setting the coordinates,
+                                // otherwise .offset() doesn't work correctly
+                        .offset({ 'left': e.pageX, 'top': e.pageY });
+                    
+                    // have any click event hide the popup
+                    $( document ).one(
+                        'click',
+                        function() {
+                            $( '.linkPopup' ).hide();
+                            console.log( 'click' );
+                        }
+                    );                    
+                }
+            );
+            
+            // have the links in the popup execute the clicks
+            $( 'body' ).on(
+                'click',
+                '.popup_'+linkId+' a', 
+                function( e ) {
+                    e.preventDefault();
+
+                    // execute the command
+                    vorple.core.doLink( $( this ).attr( 'href' ) );
+                    
+                    return false;
+                }
+            );
+           
+            opt.classes += 'popupLink popuplink_'+linkId;
+            
+            return vorple.html.link( '#', content, opt ); // + vorple.html.$toHtml( $popup ), opt );
+        }
+        else if( typeof url === 'object' ) {
+            return self._createLink( url );
         }
         else {
-            return this._createLink({ url: url, content: content, options: options });
+            return self._createLink({ url: url, content: content, options: opt });
         }
     };
     
@@ -251,7 +330,6 @@
         return startQuote+content+endQuote;
     };
     
-
     
     /**
      * Replaces a jQuery element's attributes with the given new set.
