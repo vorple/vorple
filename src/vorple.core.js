@@ -39,7 +39,7 @@ var vorple = {};
         /** Release number
          * @const
          */
-        release: 1,
+        release: 2,
         
         /** Major version number
          * @const
@@ -178,7 +178,7 @@ var vorple = {};
                 var rnd = Math.floor( Math.random() * 62 );
             }
             
-            // algorithm by kennebec ()
+            // algorithm by kennebec (http://stackoverflow.com/questions/1349404/generate-a-string-of-5-random-characters-in-javascript/1350278#1350278)
             if( rnd < 10 ) {
                 id += ''+rnd;
             }
@@ -214,7 +214,7 @@ var vorple = {};
     /**
      * Process a click of a link
      */
-    vorple.core.doLink = function( url, options ) {
+    vorple.core.clickLink = function( url, options ) {
         var self = this;
         var opt = $.extend( {}, self.defaults, options );
 
