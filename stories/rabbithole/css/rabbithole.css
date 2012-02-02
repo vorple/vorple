@@ -425,7 +425,7 @@ img.float_left {
 	margin:0 auto;
 }
 
-.mainbuttons span {
+.mainbuttons a, .mainbuttons span {
 	display:inline-block;
 	margin:0.5em 1em;
 	background:#000 url(image/old_paper.jpg) repeat top left;
@@ -434,11 +434,8 @@ img.float_left {
     -moz-box-shadow: 1px 1px 5px rgba(100,100,100,1);
     -webkit-box-shadow: 1px 1px 5px rgba(100,100,100,1);
 	border:1px solid gray;
-}
-
-.mainbuttons span a {
-	color:white;
-	padding:5px 15px;
+    color:white;
+    padding:5px 15px;
 }
 
 #sound_controls {

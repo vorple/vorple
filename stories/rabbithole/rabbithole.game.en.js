@@ -348,10 +348,10 @@ undum.game.init = function( character, system ) {
     
     // Main room buttons
     var buttons = [
-           new vorple.button.template.Link({ url: 'theater', text: 'Theater' }),
-           new vorple.button.template.Link({ url: 'museum', text: 'Museum' }),
-           new vorple.button.template.Link({ url: 'music', text: 'Music room' }),
-           new vorple.button.template.Link({ url: 'garden', text: 'Garden' })
+           new vorple.button.Link( 'Theater', 'theater' ),
+           new vorple.button.Link( 'Museum', 'museum' ),
+           new vorple.button.Link( 'Music room', 'music' ),
+           new vorple.button.Link( 'Garden', 'garden' )
        ];
     
     undum.game.mainButtons = new vorple.button.Group( buttons, { classes: 'transient mainbuttons' } );
@@ -360,7 +360,7 @@ undum.game.init = function( character, system ) {
     $( '#reset-button' ).click( function( e ) {
         if( !character.sandbox.atStart ) {
             character.sandbox.atStart = true;
-            system.doClick( 'start' );
+            vorple.core.clickLink( 'start' );
             e.preventDefault();
         }
         else {
@@ -396,7 +396,7 @@ undum.game.init = function( character, system ) {
         'rabbit.jpg'
         ]);
     
-    vorple.core.init();
+    vorple.core.init( system );
 };
 
 
