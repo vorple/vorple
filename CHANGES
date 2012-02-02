@@ -24,8 +24,11 @@ Modules
 -------
 
  - Buttons: rewrote the button system.
- - Core: added Crockford's inheritance method. 
+ - Core: added Crockford's inheritance method.
+ - Core: passing the Undum engine to the initializer is now mandatory. 
+ - Core: added a function for "clicking" links.
  - HTML: link() accepts the link building parameters as a single object.
+ - HTML: link() can create multiple choice popups.
  - HTML: url() now recognizes that filenames starting with ./ or ../ should
    not have the default directory prepended to them. 
  - Media: added isMuted().
