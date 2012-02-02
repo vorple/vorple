@@ -507,7 +507,7 @@ changes to the story file:
 
 <ul>
 <li>Add 
-<a href="#initializing"><code>vorple.core.init();</code></a>
+<a href="#initializing"><code>vorple.core.init( system );</code></a>
 to the <code>undum.game.init()</code> function.</li>
 <li>If you're using <code>undum.game.afterEnter()</code> or
 <code>undum.game.afterAction()</code> global event hooks, you have to make
@@ -538,7 +538,9 @@ work incorrectly if the library isn't initialized.
 <p>
 Some of Vorple's features are initialized by calling 
 <code>vorple.core.init()</code><a href="../API/symbols/vorple.core.html#.init" class="api">API</a>.
-<code>undum.game.init()</code> is a good place to do so.
+<code>undum.game.init()</code> is a good place to do so. The Undum engine
+must be given as the first parameter to the initialization function. The engine
+is the <code>undum.game.init()</code>'s second parameter, <code>system</code>.
 </p>
 
 <pre class="brush: js;">
@@ -546,7 +548,7 @@ undum.game.init = function( character, system ) {
     // other Undum initialization
     // ...
     
-    vorple.core.init();
+    vorple.core.init( system );
 };
 </pre>
 
