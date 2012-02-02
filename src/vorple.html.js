@@ -237,6 +237,10 @@
                 '.popuplink_'+linkId, 
                 function( e ) {
                     e.preventDefault();
+                    
+                    // prevent the generic popup window hider event from
+                    // hiding the popup we're just creating
+                    e.stopPropagation();	 
 
                     // hide existing popups
                     $( '.linkPopup' ).hide();
@@ -247,15 +251,6 @@
                         .show() // must be shown before setting the coordinates,
                                 // otherwise .offset() doesn't work correctly
                         .offset({ 'left': e.pageX, 'top': e.pageY });
-                    
-                    // have any click event hide the popup
-                    $( document ).one(
-                        'click',
-                        function() {
-                            $( '.linkPopup' ).hide();
-                            console.log( 'click' );
-                        }
-                    );                    
                 }
             );
             
@@ -267,8 +262,11 @@
                     e.preventDefault();
 
                     // execute the command
-                    vorple.core.doLink( $( this ).attr( 'href' ) );
-                    
+                    vorple.core.clickLink( $( this ).attr( 'href' ) );
+
+                    // hide the popup
+                    $( '.linkPopup' ).hide();
+
                     return false;
                 }
             );
@@ -284,6 +282,16 @@
             return self._createLink({ url: url, content: content, options: opt });
         }
     };
+    
+    // have any click event hide the popup
+    $( document ).bind( 'vorpleInit', function() {
+	    $( document ).on(
+	        'click',
+	        function() {
+	            $( '.linkPopup' ).hide();
+	        }
+	    );
+    });
     
     
     /**
@@ -444,8 +452,10 @@
      */
     vorple.html.url = function( filename, path ) {
         // if both filename and path are empty, return '#'
-        if( ( typeof filename == 'undefined' || !filename ) 
-                && ( typeof path == 'undefined' || !path ) ) {
+        if( ( typeof filename == 'undefined' || !filename ) ) {
+        	if( typeof path == 'undefined' || !path ) {
+        		return path;
+        	}
             return '#';
         }
         
