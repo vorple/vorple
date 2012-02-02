@@ -17,90 +17,95 @@
      */
     vorple.button.template = function( content, onclick, options ) {
         this.defaults = { classes: '' };
+    };
         
-        this.init = function( content, onclick, options ) {
-            // check if options are given as the second or the third parameter
-            if( typeof options === 'object' ) {
-                this.opt = $.extend( {}, this.defaults, options );
-            }
-            else if( typeof onclick === 'object' ) {
-                this.opt = $.extend( {}, this.defaults, onclick );
-            }
-            else {
-                this.opt = $.extend( {}, this.defaults );
-            }
-            
-            if( typeof content !== 'undefined' ) {
-                this.content = content;
-            }
-            else {
-                this.content = '';
-            }
+    vorple.button.template.prototype.init = function( content, onclick, options ) {
+        // check if options are given as the second or the third parameter
+        if( typeof options === 'object' ) {
+            this.opt = $.extend( {}, this.defaults, options );
+        }
+        else if( typeof onclick === 'object' ) {
+            this.opt = $.extend( {}, this.defaults, onclick );
+        }
+        else {
+            this.opt = $.extend( {}, this.defaults );
+        }
+        
+        if( typeof content !== 'undefined' ) {
+            this.content = content;
+        }
+        else {
+            this.content = '';
+        }
 
+    
+        this.idClass = 'button_'+vorple.core.generateId();
         
-            this.idClass = 'button_'+vorple.core.generateId();
-            
-            // add classes to the button
-            this.opt.classes += ' vorpleButton basicButton ' + this.idClass;
+        // add classes to the button
+        this.opt.classes += ' vorpleButton basicButton ' + this.idClass;
 
-            this.options = options;
+        this.options = options;
 
-            this.element = this.createElement( content, this.opt );
-            
-            
-            /**
-             * Attach a click event to the button
-             */
-            if( $.type( onclick ) === 'function' ) {
-                this.onclick = onclick;
-                this.createClickEvent( onclick );
-            }
-            else {
-                this.onclick = $.noop;
-            }
-        };
+        this.element = this.createElement( content, this.opt );
         
-        this.createClickEvent = function( onclick ) {
-            var self = this;
-            $( document ).on( 'click', '.'+this.idClass, function( event ) {
-                if( self.isEnabled() ) {
-                    onclick( event );
-                }
-            });
-        };
         
-        this.createElement = function( content, opt ) {
-            return content;
-        };
-        
-
         /**
-         * Disables the button.
+         * Attach a click event to the button
          */
-        this.disable = $.noop;
+        if( $.type( onclick ) === 'function' ) {
+            this.onclick = onclick;
+        }
+        else if( $.type( onclick )  === 'string' ) {
+        	this.onclick = function( e ) {
+        		vorple.core.clickLink( onclick );
+        		e.preventDefault();
+        	};
+        }
+        else {
+            this.onclick = $.noop;
+        }
+        this.createClickEvent( this.onclick );
+    };
+
+    
+    vorple.button.template.prototype.createClickEvent = function( onclick ) {
+    	var self = this;
+        $( document ).on( 'click', '.'+this.idClass, function( event ) {
+            if( self.isEnabled() ) {
+                onclick( event );
+            }
+        });
+    };
+    
+    vorple.button.template.prototype.createElement = function( content, opt ) {
+        return content;
+    };
+    
+
+    /**
+     * Disables the button.
+     */
+    vorple.button.template.prototype.disable = $.noop;
  
         
-        /**
-         * Enables the button.
-         */
-        this.enable = $.noop;
-        
-        
-        /**
-         * Checks whether the button is enabled or disabled.
-         * @return true on enabled, false on disabled
-         */
-        this.isEnabled = $.noop;
-           
+    /**
+     * Enables the button.
+     */
+    vorple.button.template.prototype.enable = $.noop;
+    
+    
+    /**
+     * Checks whether the button is enabled or disabled.
+     * @return true on enabled, false on disabled
+     */
+    vorple.button.template.prototype.isEnabled = $.noop;
+       
 
-        /**
-         * Returns the HTML code for the button.
-         */
-        this.html = function() {
-            return this.element;
-        };
-        
-        this.init( content, onclick, options );
+    /**
+     * Returns the HTML code for the button.
+     */
+    vorple.button.template.prototype.html = function() {
+        return this.element;
     };
     
     
@@ -110,31 +115,31 @@
      * @see vorple.button.template
      */
     vorple.button.Button = function( content, onclick, options ) {
-        this.createElement = function( content, options ) {
-            return vorple.html.tag(
-                'button',
-                content,
-                options
-            ); 
-        };
-
-        this.disable = function() {
-            $( '.'+this.idClass ).attr( 'disabled', 'disabled' );
-        };
-        
-        this.enable = function() {
-            $( '.'+this.idClass ).attr( 'disabled', '' );
-        };
-        
-        this.isEnabled = function() {
-            return $( '.'+this.idClass ).attr( 'disabled' ) !== 'disabled';
-        };
-        
-        this.init( content, onclick, options );
+    	this.init( content, onclick, options );
     };
-    vorple.button.Button.inherits( vorple.button.template );
+    vorple.button.Button.inherits( vorple.button.template ); 
+
+    vorple.button.Button.prototype.createElement = function( content, options ) {
+        return vorple.html.tag(
+            'button',
+            content,
+            options
+        ); 
+    };
     
+    vorple.button.Button.prototype.disable = function() {
+        $( '.'+this.idClass ).prop( 'disabled', true );
+    };
+
+    vorple.button.Button.prototype.enable = function() {
+        $( '.'+this.idClass ).prop( 'disabled', false );
+    };
     
+    vorple.button.Button.prototype.isEnabled = function() {
+        return !$( '.'+this.idClass ).prop( 'disabled' );
+    };
+    
+
     /**
      * Link (&lt;a&gt; tag) buttons.
      * 
@@ -143,33 +148,40 @@
      * @see vorple.button.template
      */
     vorple.button.Link = function( content, onclick, options ) {
-        this.defaults = {
+    	this.defaults = {
             classes: '',
             href: '#'
         };
-        
-        this.createElement = function( content, options ) {
-            return vorple.html.link(
-                options.href,
-                content,
-                options
-            );
-        };
-        
-        this.disable = function() {
-            $( '.'+this.idClass )
-                .replaceWith( '<span class="ex_link '
-                    +this.opt.classes+'">'+this.content+'</span>' );
-        };
-        
-        this.isEnabled = function() {
-            return !$( '.'+this.idClass ).hasClass( 'ex_link' );
-        };
-        
-        this.init( content, onclick, options );
+    	
+    	this.init( content, onclick, options );
     };
     vorple.button.Link.inherits( vorple.button.template );
-
+       
+    vorple.button.Link.prototype.createElement = function( content, options ) {
+    	this.tag = vorple.html.link(
+            options.href,
+            content,
+            options
+        );
+    	
+    	return this.tag;
+    };
+    
+    vorple.button.Link.prototype.disable = function() {
+        $( '.'+this.idClass )
+            .replaceWith( '<span class="ex_link '
+                +this.opt.classes+'">'+this.content+'</span>' );
+    };
+    
+    vorple.button.Link.prototype.enable = function() {
+        $( '.'+this.idClass )
+            .replaceWith( this.tag );
+    };
+    
+    vorple.button.Link.prototype.isEnabled = function() {
+        return !$( '.'+this.idClass ).hasClass( 'ex_link' );
+    };
+    
     
     /**
      * Image buttons.
@@ -184,30 +196,39 @@
      * @see vorple.media.image
      */
     vorple.button.Image = function( content, onclick, options ) {
-        this.createElement = function( content, options ) {
-            return vorple.media.image(
-                content,
-                options
-            );
-        };
-        
-        var enabled = true;
-        
-        this.disable = function() {
-            enabled = false;
-            if( 'disabledImage' in this.opt ) {
-                $( '.'+this.idClass ).attr( 'src', this.opt.disabledImage );
-            }
-        };
-        
-        this.isEnabled = function() {
-            return enabled;
-        };
+        this.enabled = true;
         
         this.init( content, onclick, options );
-   };
+    };
     vorple.button.Image.inherits( vorple.button.template );
 
+    vorple.button.Image.prototype.createElement = function( content, options ) {
+        var tag = vorple.media.image(
+            content,
+            options
+        );
+        
+        this.url = $( tag ).attr( 'src' );
+        
+        return tag;
+    };
+    
+    vorple.button.Image.prototype.disable = function() {
+        this.enabled = false;
+        if( 'disabledImage' in this.opt ) {
+            $( '.'+this.idClass ).attr( 'src', this.opt.disabledImage );
+        }
+    };
+    
+    vorple.button.Image.prototype.enable = function() {
+    	this.enabled = true;
+    	$( '.'+this.idClass ).attr( 'src', this.url );
+    };
+    
+    vorple.button.Image.prototype.isEnabled = function() {
+        return this.enabled;
+    };
+    
     
     /**
      * Button groups.
@@ -303,9 +324,29 @@
                 }
             });
         };
+
+        this.contains = function( button ) {
+        	return $.inArray( button, content ) > -1;
+        };
+        
+       this.enable = function() {
+        	$.each( content, function( index, button ) {        		
+        		if( $.isFunction( button.enable ) ) {
+        			button.enable();
+        		}
+        	});
+        };
+
+        this.disable = function() {
+        	$.each( content, function( index, button ) {
+        		if( $.isFunction( button.disable ) ) {
+        			button.disable();
+        		}
+        	});
+        };
         
         this.html = function() {
-            return vorple.html.$toHtml( $element )
+            return vorple.html.$toHtml( $element );
         };
         
         this.update = function( newButtons, preserveOrder ) {
@@ -350,7 +391,7 @@
             
             $.each( buttons, function( index, button ) {
                 appendButton( button );
-            });            
+            });
         };
     };   
 })( jQuery );

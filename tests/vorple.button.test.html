@@ -62,6 +62,16 @@ $(document).ready(function(){
         $element.trigger( 'click' );
         
         ok( !window.eventTest, 'no click event triggered when disabled' );
+        
+        button2 = new vorple.button.Button( 'Test2', 'bar' );
+        $( button2.html() ).appendTo( '#qunit-fixture' );
+        button.enable();
+        ok( button.isEnabled(), 'button 1 re-enabled' );
+        
+        button2.disable();
+        ok( !button2.isEnabled(), 'button 2 disabled' );
+        ok( button.isEnabled(), 'button 1 still enabled' );
+        
     });
 
     
@@ -255,6 +265,18 @@ $(document).ready(function(){
             '',
             'empty group'
         );
+    });
+    
+    test( 'enable/disable', function() {
+        var button1 = new vorple.button.Button();
+        var button2 = new vorple.button.Link();
+        var g = new vorple.button.Group([ button1, button2, '<span>foo</span>' ], $( '#qunit-fixture' ) );
+
+        g.disable();
+    	ok( !button1.isEnabled() && !button2.isEnabled(), 'contents disabled' );
+
+    	g.enable();
+        ok( button1.isEnabled() && button2.isEnabled(), 'contents re-enabled' );
     });
 });
 </script>
