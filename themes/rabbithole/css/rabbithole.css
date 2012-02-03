@@ -414,3 +414,8 @@ img.float_left {
 	padding:1em 0 1em 2em;
     font-size: 0.9em;
 }
+
+ul.linkPopup {
+    margin:0;
+    background-color:#e6e6c6;
+}

@@ -95,3 +95,4 @@ a:active, a:hover{color:#d1d1d1;}
 #sound-controls{position:fixed;bottom:10px;margin-left:15px;text-align:left;}
 #ui_library{ display:none; }
 #content hr { height:1px; margin:0 20px 20px 20px; opacity:0.5; z-index:-1; }
+ul.linkPopup { margin:0; background-color:#e6e6c6; }
