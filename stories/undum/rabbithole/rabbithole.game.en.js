@@ -117,7 +117,7 @@ undum.game.situations.theater = new undum.Situation( {
         if( $screen.html() == '' ) {
             $screen.html(
                 vorple.media.youtube( 
-                    'bsGEWHNJ3s8',
+                    'eFQxRd0isAQ',
                     {
                         width: '500',
                         height: '281',
@@ -252,7 +252,7 @@ undum.game.situations.music = new undum.Situation({
         /*
          * Image credits:
          * guitar.png: Marfalogia CC-BY-SA-3.0 (http://commons.wikimedia.org/wiki/File:CrafterD-8TS.jpg)
-         * drum.png: GeheimnistrŠgerin CC-BY-SA-3.0 (http://commons.wikimedia.org/wiki/File:Trixon_Tom.jpg)
+         * drum.png: Geheimnistrï¿½gerin CC-BY-SA-3.0 (http://commons.wikimedia.org/wiki/File:Trixon_Tom.jpg)
          * glockenspiel.png: flamurai, public domain (http://commons.wikimedia.org/wiki/File:Glockenspiel-malletech.jpg)
          */
     },
