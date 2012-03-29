@@ -10,6 +10,17 @@ Documentation
  - Added a link to Starborn
  - Added links to example stories' source codes
  - Added a section about link popups to the documentation and the API
+ - Removed the vertical scroll bars from the code examples
+ 
+
+Examples
+--------
+
+ - New folder structure in preparation for Inform 7 examples
+ - Added the Inform 7 preview
+ - Fixed a bug where One With Everything would duplicate navigation buttons
+   when a save game was erased
+   
 
 
 Release 2 (2012-02-04)

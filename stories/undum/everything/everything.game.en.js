@@ -600,6 +600,12 @@ undum.game.init = function( character, system ) {
     /**
      * BUTTONS
      */
+    
+    // clear the navigation element so that buttons won't be duplicated
+    // when clearing the save game (which restarts the game and re-runs 
+    // undum.game.init()
+    $( '#navButtons' ).empty();
+    
     var navButtonGroup = new vorple.button.Group([
         new vorple.button.Button( 'Cookie', function() { system.doClick( 'cookie' ); } ),
         new vorple.button.Button( 'Core', function() { system.doClick( 'core' ); } ),
