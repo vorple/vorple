@@ -370,3 +370,16 @@ ul.linkPopup {
 	background-color:#e6e6c6;
 }
 
+.fixed {
+	position:fixed !important;
+}
+
+.notification {
+	margin:5px;
+    padding:5px;
+	background:black;
+	color:white;
+	position:fixed;
+	width:100%;
+	text-align:center;
+}

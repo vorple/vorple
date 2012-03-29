@@ -319,7 +319,7 @@ undum.game.situations.media = new undum.Situation({
                 system.write(
                     vorple.html.p(
                         vorple.media.youtube( 
-                            'bsGEWHNJ3s8',
+                            'eFQxRd0isAQ',
                             {
                                 width: '500',
                                 height: '280',
@@ -393,6 +393,22 @@ undum.game.situations.media = new undum.Situation({
     }
 });
 
+
+/**
+ * NOTIFY
+ */
+undum.game.situations.notify = new undum.Situation({
+    enter: function( character, system, from ) {
+        system.write(
+            vorple.html.p(
+                "Notification"
+            )
+        );
+        
+        vorple.notify.show( 'Hello world!' );
+
+    }
+});
 
 /**
  * TOOLTIPS
@@ -589,6 +605,7 @@ undum.game.init = function( character, system ) {
         new vorple.button.Button( 'Core', function() { system.doClick( 'core' ); } ),
         new vorple.button.Button( 'HTML', function() { system.doClick( 'html' ); } ),
         new vorple.button.Button( 'Media', function() { system.doClick( 'media' ); } ),
+        new vorple.button.Button( 'Notify', function() { system.doClick( 'notify' ); } ),
         new vorple.button.Button( 'Tooltip', function() { system.doClick( 'tooltip' ); } ),
         new vorple.button.Button( 'Undum', function() { system.doClick( 'undum' ); } )
      ], '#navButtons' );
