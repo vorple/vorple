@@ -1,3 +1,17 @@
+Release 3 (2012-??)
+===================
+
+Documentation
+-------------
+
+ - Added a fallback to local jQuery UI library if the CDN fails
+ - Added the undum namespace to examples where it was missing
+ - Removed the rather weak "resources" section from the Undum introduction
+ - Added a link to Starborn
+ - Added links to example stories' source codes
+ - Added a section about link popups
+
+
 Release 2 (2011-02-04)
 ======================
 

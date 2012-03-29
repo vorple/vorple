@@ -10,7 +10,12 @@
 	        document.write( unescape( "%3Cscript src='../../lib/jquery-1.7.1.min.js' type='text/javascript'%3E%3C/script%3E" ) );
 	    }
 	</script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+	<script type="text/javascript">
+        if( typeof jQuery === 'undefined' ) {
+            document.write( unescape( "%3Cscript src='../../lib/jquery-ui-1.8.18.custom.min.js' type='text/javascript'%3E%3C/script%3E" ) );
+        }
+    </script>
 	<script type="text/javascript" src="media/js/jquery.toc.js"></script>
 	<script type="text/javascript" src="media/js/highlighter/shCore.js"></script>
 	<script type="text/javascript" src="media/js/highlighter/shBrushJScript.js"></script>
@@ -134,10 +139,11 @@ are subject to slightly more restrictive licenses.)
 </p>
 
 
+
 <h3>Introduction to Undum</h3>
 
 <p>
-<strong>Undum</strong> is a JavaScript framework for creating works of hypertext 
+<strong><a href="http://undum.com">Undum</a></strong> is a JavaScript framework for creating works of hypertext 
 and CYOA games. It is completely browser-based and provides beautiful visual 
 design and smooth interaction out of the box. 
 Undum is created and maintained by I D Millington.
@@ -182,13 +188,16 @@ to add more features to the stories. The official Undum tutorial uses only the
 basic features, as do <em>Cavity of Time</em> and <em>The Play</em>.
 </p>
 
-<div class="resources">
-Resources
-</div>
+<p>
+As a contrast to "vanilla" Undum stories, <em>Starborn</em> is a story that
+uses Vorple to add multimedia features and e.g. an interactive map.
+</p>
 
 <ul>
-<li> <a href="http://undum.com">Undum home page</a></li>
-<li> <a href="">Undum API</a></li>
+<li>
+<a href="http://transcripts.game-testing.org/undum/starborn/">Starborn</a>
+by Juhana Leinonen
+</li>
 </ul>
 
 
@@ -259,9 +268,9 @@ The official tutorial builds the situations in a single block:
 
 <pre class="brush: js">
 undum.game.situations = { 
-    start: new SimpleSituation( "..." ), 
-    foo: new SimpleSituation( "..." ),
-    bar: new SimpleSituation( "..." )
+    start: new undum.SimpleSituation( "..." ), 
+    foo: new undum.SimpleSituation( "..." ),
+    bar: new undum.SimpleSituation( "..." )
 };
 </pre>
 
@@ -271,9 +280,9 @@ create one situation at a time independent of each other.
 </p>
 
 <pre class="brush: js">
-    undum.game.situations.start = new SimpleSituation( "..." );
-    undum.game.situations.foo = new SimpleSituation( "..." );
-    undum.game.situations.bar = new SimpleSituation( "..." );
+    undum.game.situations.start = new undum.SimpleSituation( "..." );
+    undum.game.situations.foo = new undum.SimpleSituation( "..." );
+    undum.game.situations.bar = new undum.SimpleSituation( "..." );
 </pre>
 
 <p>
@@ -284,7 +293,7 @@ it must be created using again a slightly different syntax:
 </p>
 
 <pre class="brush: js">
-    undum.game.situations[ "end-scene" ] = new SimpleSituation( "..." );
+    undum.game.situations[ "end-scene" ] = new undum.SimpleSituation( "..." );
 </pre>
 
 <p>
@@ -1051,6 +1060,33 @@ vorple.html.link({
 </pre>
 
 
+<img src="media/image/vorple/choicepopup.png" class="floatimg" />
+<p>
+If an array of multiple links is given as the first parameter,
+a choice popup is created. A choice popup is a list of choices that
+appears when the main link is clicked.
+</p>
+
+<p>
+The popup is hidden when any of the choices are selected or if the 
+reader clicks on outside the popup.
+</p>
+
+<pre class="brush: js;">
+vorple.html.link([
+    {
+        url: "http://vorple-if.com",
+        content: 'Vorple'
+    },
+    {
+        url: "http://undum.com",
+        content: 'Undum'
+    }],
+    'useful links'
+);
+</pre>
+
+
 <h4 id="html-quotes">Quotes</h4>
 <p>
 <code>vorple.html.quote()</code><a href="../API/symbols/vorple.html.html#.quote" class="api">API</a>
@@ -1806,7 +1842,8 @@ you can probably find it in the story's source code.
 </p>
 
 <ul>
-<li><em><a href="../../stories/everything/">One With Everything</a></em></li>
+<li><em><a href="../../stories/undum/everything/">One With Everything</a></em></li>
+<li><a href="../../stories/undum/everything/everything.game.en.js">Source code</a></li>
 </ul>
 
 
@@ -1819,9 +1856,26 @@ some more advanced techniques to e.g. show custom popup windows.
 </p>
 
 <ul>
-<li><em><a href="../../stories/rabbithole/">Down the Rabbit-Hole</a></em></li>
+<li><em><a href="../../stories/undum/rabbithole/">Down the Rabbit-Hole</a></em></li>
+<li><a href="../../stories/undum/rabbithole/rabbithole.game.en.js">Source code</a></li>
 </ul>
 
+
+<h3 id="starborn">Starborn</h3>
+
+<p>
+<em>Starborn</em> is an Undum/Vorple adaptation of an 
+<a href="http://inform7.com">Inform 7</a> keyword-based
+story. The adaptation adds background music, an interactive map, clickable
+buttons and other eye candy. Some of the features are straight-up Vorple,
+some are custom-made for the story. 
+</p>
+
+<ul>
+<li><em><a href="http://transcripts.game-testing.org/undum/starborn/">Starborn</a></em></li>
+<li><a href="http://transcripts.game-testing.org/undum/starborn/starborn.game.en.js">Source code</a></li>
+<li><a href="http://ifdb.tads.org/viewgame?id=xxzy1f49yw1n6ghj">The original Inform 7 version</a></li>
+</ul>
 
 
 <footer id="footer">
