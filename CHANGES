@@ -11,6 +11,7 @@ Documentation
  - Added links to example stories' source codes
  - Added a section about link popups to the documentation and the API
  - Removed the vertical scroll bars from the code examples
+ - Added a note about Mobile Safari audio limitations
  
 
 Examples
@@ -27,6 +28,7 @@ Libraries
 
  - Added the jQuery UI library
  - Added the noty library
+ - Updated to latest qTip2
  
 
 Modules
