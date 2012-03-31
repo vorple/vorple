@@ -395,6 +395,177 @@ undum.game.situations.media = new undum.Situation({
 
 
 /**
+ * NOTIFY
+ */
+undum.game.situations.notify = new undum.Situation({
+    enter: function( character, system, from ) {
+        vorple.notify.show( 'Welcome!', { layout: 'top' } );
+        
+        system.write(
+            vorple.html.p(
+                "Click to trigger notifications:"
+            )
+            + vorple.html.tag(
+                'ul',
+                vorple.html.tag(
+                    'li',
+                    vorple.html.link( 
+                        './top',
+                        'Top'
+                    )
+                    + ', '
+                    + vorple.html.link( 
+                        './bottom',
+                        'bottom'
+                    )
+                    + ', '
+                    + vorple.html.link( 
+                        './center',
+                        'center'
+                    )
+                    + ', '
+                    + vorple.html.link( 
+                        './topcenter',
+                        'top center'
+                    )
+                    + ' (notifications are put into a queue)'
+                )
+                + vorple.html.tag(
+                    'li',
+                    vorple.html.link( 
+                        './topleft',
+                        'Top left'
+                    )
+                    + ', '
+                    + vorple.html.link( 
+                        './topright',
+                        'top right'
+                    )
+                    + ', '
+                    + vorple.html.link( 
+                        './bottomleft',
+                        'bottom left'
+                    )
+                    + ', '
+                    + vorple.html.link( 
+                        './bottomright',
+                        'bottom right'
+                    )
+                )
+                + vorple.html.tag(
+                    'li',
+                    vorple.html.link( 
+                        './error',
+                        'Error message'
+                    )
+                    + ', '
+                    + vorple.html.link( 
+                        './success',
+                        'success notification'
+                    )
+                )
+                + vorple.html.tag(
+                    'li',
+                    vorple.html.link( 
+                        './question',
+                        'Modal closable dialog'
+                    )
+                )
+            )
+        );
+    },
+    act: function( character, system, action ) {
+        switch( action ) {
+            case 'top':
+                vorple.notify.show( 'Top notification', { layout: 'top' } );
+                break;                
+            case 'bottom':
+                vorple.notify.show( 'Bottom notification', { layout: 'bottom' } );
+                break;                
+            case 'topleft':
+                vorple.notify.show( 'Top left notification', { layout: 'topLeft' } );
+                break;                
+            case 'topcenter':
+                vorple.notify.show( 'Top center notification', { layout: 'topCenter' } );
+                break;                
+            case 'topright':
+                vorple.notify.show( 'Top right notification', { layout: 'topRight' } );
+                break;                
+            case 'bottomleft':
+                vorple.notify.show( 'Bottom left notification', { layout: 'bottomLeft' } );
+                break;                
+            case 'bottomright':
+                vorple.notify.show( 'Bottom right notification', { layout: 'bottomRight' } );
+                break;                
+            case 'center':
+                vorple.notify.show( 'Center notification', { layout: 'center' } );
+                break;                  
+            case 'error':
+                vorple.notify.show( 
+                    'Something is wrong!', 
+                    { layout: 'topLeft', type: 'error' } 
+                );
+                break;
+            case 'success':
+                vorple.notify.show( 
+                    'Everything went better than expected!', 
+                    { layout: 'topLeft', type: 'success' } 
+                );
+                break;
+            case 'question':
+                // make sure the dialog doesn't get stuck in the queue
+                vorple.notify.closeAll();
+                vorple.notify.show(
+                    'How about it?',
+                    { 
+                        buttons: [ 
+                            {
+                                type: 'button',
+                                text: 'Sure',
+                                click: function( $notification ) {
+                                    $notification.close();
+                                    vorple.notify.show( 
+                                        'Great!', 
+                                        { layout: 'bottom', type: 'success' } 
+                                    );
+                                }
+                            }, 
+                            {
+                                type: 'button',
+                                text: 'Maybe',
+                                click: function( $notification ) {
+                                    vorple.notify.show( 
+                                        'Make up your mind!', 
+                                        { layout: 'topLeft' } 
+                                    );
+                                }
+                            }, 
+                            {
+                                type: 'button',
+                                text: 'Nah',
+                                click: function( $notification ) {
+                                    $notification.close();
+                                    vorple.notify.show( 
+                                        'Such a shame.', 
+                                        { layout: 'bottom', type: 'error' } 
+                                    );
+                                }
+                            } 
+                        ],
+                        closable: true,
+                        layout: 'center', 
+                        modal: true,
+                        timeout: false
+                    } 
+                );
+            default:
+                break;
+        }
+    }
+});
+
+
+/**
  * TOOLTIPS
  */
 undum.game.situations.tooltip = new undum.Situation({
@@ -584,11 +755,18 @@ undum.game.init = function( character, system ) {
     /**
      * BUTTONS
      */
+
+    // clear the navigation element so that buttons won't be duplicated
+    // when clearing the save game (which restarts the game and re-runs 
+    // undum.game.init()
+    $( '#navButtons' ).empty();
+    
     var navButtonGroup = new vorple.button.Group([
         new vorple.button.Button( 'Cookie', function() { system.doClick( 'cookie' ); } ),
         new vorple.button.Button( 'Core', function() { system.doClick( 'core' ); } ),
         new vorple.button.Button( 'HTML', function() { system.doClick( 'html' ); } ),
         new vorple.button.Button( 'Media', function() { system.doClick( 'media' ); } ),
+        new vorple.button.Button( 'Notify', function() { system.doClick( 'notify' ); } ),
         new vorple.button.Button( 'Tooltip', function() { system.doClick( 'tooltip' ); } ),
         new vorple.button.Button( 'Undum', function() { system.doClick( 'undum' ); } )
      ], '#navButtons' );

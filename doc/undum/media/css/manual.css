@@ -157,6 +157,10 @@ table.definitions code {
 	margin:3px 0 3px 5px;
 }
 
+.syntaxhighlighter {
+	overflow-y:hidden !important;
+}
+
 .syntaxhighlighter .line.highlighted.alt1, .syntaxhighlighter .line.highlighted.alt2 {
   background-color: #fcc !important;
 }
@@ -225,5 +229,9 @@ table.definitions code {
 	
 	.note {
 		padding:0.5em 1em;
+	}
+	
+	.noprint {
+		display:none;
 	}
 }

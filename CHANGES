@@ -1,4 +1,41 @@
-Release 2 (2011-02-04)
+Release 3 (2012-??)
+===================
+
+Documentation
+-------------
+
+ - Added a fallback to local jQuery UI library if the CDN fails
+ - Added the undum namespace to examples where it was missing
+ - Removed the rather weak "resources" section from the Undum introduction
+ - Added a link to Starborn
+ - Added links to example stories' source codes
+ - Added a section about link popups to the documentation and the API
+ - Removed the vertical scroll bars from the code examples
+ 
+
+Examples
+--------
+
+ - New folder structure in preparation for Inform 7 examples
+ - Added the Inform 7 preview
+ - Fixed a bug where One With Everything would duplicate navigation buttons
+   when a save game was erased
+
+
+Libraries
+---------
+
+ - Added the jQuery UI library
+ - Added the noty library
+ 
+
+Modules
+-------
+ - Added the notify module
+    
+
+
+Release 2 (2012-02-04)
 ======================
 
 Documentation

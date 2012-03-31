@@ -10,13 +10,19 @@
 	        document.write( unescape( "%3Cscript src='../../lib/jquery-1.7.1.min.js' type='text/javascript'%3E%3C/script%3E" ) );
 	    }
 	</script>
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
+	<script type="text/javascript">
+        if( typeof jQuery === 'undefined' ) {
+            document.write( unescape( "%3Cscript src='../../lib/jquery-ui-1.8.18.custom.min.js' type='text/javascript'%3E%3C/script%3E" ) );
+        }
+    </script>
 	<script type="text/javascript" src="media/js/jquery.toc.js"></script>
 	<script type="text/javascript" src="media/js/highlighter/shCore.js"></script>
 	<script type="text/javascript" src="media/js/highlighter/shBrushJScript.js"></script>
 	<script type="text/javascript" src="media/js/highlighter/shBrushXml.js"></script>
 	<script type="text/javascript" src="../../lib/vorple.min.js"></script>
 	<script type="text/javascript" src="../../lib/jquery.qtip.min.js"></script>
+	<script type="text/javascript" src="../../lib/jquery.noty.js"></script>
 	
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" type="text/css" media="screen, print" />
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Redressed" type="text/css" />
@@ -25,6 +31,8 @@
 	<link rel="stylesheet" href="/css/common.css" />
 	<link rel="stylesheet" href="media/css/manual.css" />
 	<link rel="stylesheet" href="../../lib/qtip/jquery.qtip.min.css" />
+    <link rel="stylesheet" href="../../lib/noty/jquery.noty.css"></link>
+    <link rel="stylesheet" href="../../lib/noty/noty_theme_default.css"></link>	
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -134,10 +142,11 @@ are subject to slightly more restrictive licenses.)
 </p>
 
 
+
 <h3>Introduction to Undum</h3>
 
 <p>
-<strong>Undum</strong> is a JavaScript framework for creating works of hypertext 
+<strong><a href="http://undum.com">Undum</a></strong> is a JavaScript framework for creating works of hypertext 
 and CYOA games. It is completely browser-based and provides beautiful visual 
 design and smooth interaction out of the box. 
 Undum is created and maintained by I D Millington.
@@ -182,13 +191,16 @@ to add more features to the stories. The official Undum tutorial uses only the
 basic features, as do <em>Cavity of Time</em> and <em>The Play</em>.
 </p>
 
-<div class="resources">
-Resources
-</div>
+<p>
+As a contrast to "vanilla" Undum stories, <em>Starborn</em> is a story that
+uses Vorple to add multimedia features and e.g. an interactive map.
+</p>
 
 <ul>
-<li> <a href="http://undum.com">Undum home page</a></li>
-<li> <a href="">Undum API</a></li>
+<li>
+<a href="http://transcripts.game-testing.org/undum/starborn/">Starborn</a>
+by Juhana Leinonen
+</li>
 </ul>
 
 
@@ -259,9 +271,9 @@ The official tutorial builds the situations in a single block:
 
 <pre class="brush: js">
 undum.game.situations = { 
-    start: new SimpleSituation( "..." ), 
-    foo: new SimpleSituation( "..." ),
-    bar: new SimpleSituation( "..." )
+    start: new undum.SimpleSituation( "..." ), 
+    foo: new undum.SimpleSituation( "..." ),
+    bar: new undum.SimpleSituation( "..." )
 };
 </pre>
 
@@ -271,9 +283,9 @@ create one situation at a time independent of each other.
 </p>
 
 <pre class="brush: js">
-    undum.game.situations.start = new SimpleSituation( "..." );
-    undum.game.situations.foo = new SimpleSituation( "..." );
-    undum.game.situations.bar = new SimpleSituation( "..." );
+    undum.game.situations.start = new undum.SimpleSituation( "..." );
+    undum.game.situations.foo = new undum.SimpleSituation( "..." );
+    undum.game.situations.bar = new undum.SimpleSituation( "..." );
 </pre>
 
 <p>
@@ -284,7 +296,7 @@ it must be created using again a slightly different syntax:
 </p>
 
 <pre class="brush: js">
-    undum.game.situations[ "end-scene" ] = new SimpleSituation( "..." );
+    undum.game.situations[ "end-scene" ] = new undum.SimpleSituation( "..." );
 </pre>
 
 <p>
@@ -1051,6 +1063,33 @@ vorple.html.link({
 </pre>
 
 
+<img src="media/image/vorple/choicepopup.png" class="floatimg" />
+<p>
+If an array of multiple links is given as the first parameter,
+a choice popup is created. A choice popup is a list of choices that
+appears when the main link is clicked.
+</p>
+
+<p>
+The popup is hidden when any of the choices are selected or if the 
+reader clicks on outside the popup.
+</p>
+
+<pre class="brush: js;">
+vorple.html.link([
+    {
+        url: "http://vorple-if.com",
+        content: 'Vorple'
+    },
+    {
+        url: "http://undum.com",
+        content: 'Undum'
+    }],
+    'useful links'
+);
+</pre>
+
+
 <h4 id="html-quotes">Quotes</h4>
 <p>
 <code>vorple.html.quote()</code><a href="../API/symbols/vorple.html.html#.quote" class="api">API</a>
@@ -1522,7 +1561,6 @@ its own text to reflect the current status from "Sounds on" to "Sounds off".
 </pre>
 
 
-
 <h4>Limitations</h4>
 
 <p>
@@ -1556,6 +1594,122 @@ YouTube videos always require Flash (with some exceptions;
 iOS browsers (iPhone, iPod, iPad) can launch YouTube videos in a separate
 player).
 </p>
+
+
+<h3>Notify</h3>
+
+<p>
+Vorple uses the <a href="http://needim.github.com/noty/">noty</a>
+library to create notifications. They can be used to e.g. inform the reader of
+important events or acknowledge their actions.
+</p>
+
+<p>
+Notifications are created using 
+<code>vorple.notify.show()</code><a href="../API/symbols/vorple.notify.html#.show" class="api">API</a>
+with the content of the notification as the first parameter.
+The notification's behavior can be altered with options given as 
+the second parameter. All the available options can be found on 
+<a href="http://needim.github.com/noty/#options">noty's web site</a>.
+</p>
+
+<pre class="brush: js;">
+vorple.notify.show(
+	'Note this!',
+	{
+		speed: 2000,  // animations take 2 seconds (2000 ms)
+		closeOnSelfClick: false  // don't close the notification on click
+	}
+); 
+</pre>
+
+<p>
+The notification's position can be given with the <code>layout</code>
+option. The available positions are the four corners
+of the screen (<a href="topLeft" class="notifyTest"><code>topLeft</code></a>, 
+<a href="topRight" class="notifyTest"><code>topRight</code></a>, 
+<a href="bottomLeft" class="notifyTest"><code>bottomLeft</code></a> and 
+<a href="bottomRight" class="notifyTest"><code>bottomRight</code></a>), 
+as a wide bar on the top or the bottom of the screen 
+(<a href="top" class="notifyTest"><code>top</code></a> or 
+<a href="bottom" class="notifyTest"><code>bottom</code></a>),
+in the center on top 
+(<a href="topCenter" class="notifyTest"><code>topCenter</code></a>), 
+or in the middle of the screen 
+(<a href="center" class="notifyTest"><code>center</code></a>). 
+The default is bottom right. 
+<span class="noprint">(Click on the positions above to test 
+notifications.)</span>
+</p>
+
+<script type="text/javascript">
+$( function() {
+	$( '.notifyTest' ).on( 'click', function( event ) {
+		event.preventDefault();
+		var href = $( this ).attr( 'href' );
+		vorple.notify.show( 
+			'Notification in the ' + href + ' position',
+			{ layout: href } 
+		);
+
+		return false;
+	}); 
+});
+</script>
+
+<p>
+Multiple notifications in the four corners of the screen are displayed
+simultaneously. In every other position the notifications are put into
+a common queue and displayed sequentially. The queue can be emptied with 
+<code>vorple.notify.clearQueue()</code><a href="../API/symbols/vorple.notify.html#.clearQueue" class="api">API</a>. 
+</p>
+
+<p>
+The oldest notification can be dismissed with 
+<code>vorple.notify.close()</code><a href="../API/symbols/vorple.notify.html#.close" class="api">API</a>
+and all notifications dismissed with
+<code>vorple.notify.closeAll()</code><a href="../API/symbols/vorple.notify.html#.closeAll" class="api">API</a>,
+which will also empty the queue.
+</p>
+
+<p>
+In the noty library by default the notifications require clicking on them 
+to dismiss them, but Vorple's default is that the notifications are 
+automatically hidden after seven seconds. In addition to the default location
+(bottom right) this is the only change to
+<a href="http://needim.github.com/noty/#options">noty's defaults</a>.
+</p>
+
+<p>
+<code>vorple.notify.defaults</code> contains the story-specific defaults.
+</p>
+
+<pre class="brush: js;">
+vorple.notify.defaults.textAlign = 'left';
+vorple.notify.defaults.timeout = false;
+
+vorple.notify.show( "This notification's text is aligned left " 
+    + "and it must be clicked to dismiss." ); 
+</pre>
+
+<p class="noprint">
+<a href="#" id="customDefaultsNotifyTest">Click here to display 
+the above notification.</a>
+</p>
+
+<script type="text/javascript">
+$( function() {
+	$( '#customDefaultsNotifyTest' ).click(
+        function( event ) {
+            event.preventDefault();
+            vorple.notify.show( "This notification's text is aligned left " 
+                    + "and it must be clicked to dismiss.",
+                    { textAlign: 'left', timeout: false } ); 
+            return false;
+        }
+	);
+});
+</script>
 
 
 <h3>Tooltip</h3>
@@ -1592,7 +1746,11 @@ Or using the HTML module:
 </p>
  
 <pre class="brush: js;">
-vorple.html.link( 'foo', 'Link', { title: "This is the tooltip's content!" } );
+vorple.html.link( 
+    'foo', 
+    'Link', 
+    { title: "This is the tooltip's content!" }
+);
 </pre>
 
 <p>
@@ -1806,7 +1964,8 @@ you can probably find it in the story's source code.
 </p>
 
 <ul>
-<li><em><a href="../../stories/everything/">One With Everything</a></em></li>
+<li><em><a href="../../stories/undum/everything/">One With Everything</a></em></li>
+<li><a href="../../stories/undum/everything/everything.game.en.js">Source code</a></li>
 </ul>
 
 
@@ -1819,9 +1978,26 @@ some more advanced techniques to e.g. show custom popup windows.
 </p>
 
 <ul>
-<li><em><a href="../../stories/rabbithole/">Down the Rabbit-Hole</a></em></li>
+<li><em><a href="../../stories/undum/rabbithole/">Down the Rabbit-Hole</a></em></li>
+<li><a href="../../stories/undum/rabbithole/rabbithole.game.en.js">Source code</a></li>
 </ul>
 
+
+<h3 id="starborn">Starborn</h3>
+
+<p>
+<em>Starborn</em> is an Undum/Vorple adaptation of an 
+<a href="http://inform7.com">Inform 7</a> keyword-based
+story. The adaptation adds background music, an interactive map, clickable
+buttons and other eye candy. Some of the features are straight-up Vorple,
+some are custom-made for the story. 
+</p>
+
+<ul>
+<li><em><a href="http://transcripts.game-testing.org/undum/starborn/">Starborn</a></em></li>
+<li><a href="http://transcripts.game-testing.org/undum/starborn/starborn.game.en.js">Source code</a></li>
+<li><a href="http://ifdb.tads.org/viewgame?id=xxzy1f49yw1n6ghj">The original Inform 7 version</a></li>
+</ul>
 
 
 <footer id="footer">
