@@ -20,6 +20,7 @@ Examples
  - Added the Inform 7 preview
  - Fixed a bug where One With Everything would duplicate navigation buttons
    when a save game was erased
+<<<<<<< HEAD
 
 
 Libraries
@@ -33,6 +34,9 @@ Modules
 -------
  - Added the notify module
     
+=======
+   
+>>>>>>> refs/remotes/origin/master
 
 
 Release 2 (2012-02-04)

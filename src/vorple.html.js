@@ -182,6 +182,9 @@
      * the optional tag attributes can be given as separate parameters
      * or as a single object { url: ..., content: ..., options: ... }.
      * 
+     * If multiple links are given as an array, a choice popup is created
+     * with those options when the main link is clicked.
+     * 
      * @example 
      * vorple.html.link( 'foo', 'Bar', { classes: 'baz' } )
      *     == &lt;a href="foo" class="baz"&gt;Bar&lt;/a&gt;
@@ -189,7 +192,15 @@
      * vorple.html.link({ url: 'foo', content: 'Bar', options: { classes: 'baz' })
      *     == &lt;a href="foo" class="baz"&gt;Bar&lt;/a&gt;
      *     
-     * @param {String|Object} url The url of the link, 
+     * vorple.html.link(
+     *     [
+     *         { url: 'foo', content: 'bar' },
+     *         { url: 'baz', content: 'xyzzy' }
+     *     ],
+     *     'popup'
+     * );     
+     *     
+     * @param {String|Object|Object[]} url The url of the link, 
      * or an object containing the required data,
      * or an array of links.
      * @param {String} content The content text of the link. 
