@@ -55,5 +55,5 @@ undum.game.situations.start = new undum.SimpleSituation(
 
 undum.game.init = function( character, system ) {
     // remember to keep the initialization line inside undum.game.init.
-    vorple.core.init();
+    vorple.core.init( system );
 };
