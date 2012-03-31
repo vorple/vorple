@@ -91,7 +91,9 @@ var vorple = {};
      */
     vorple.core._init = function( system ) {
         // save the engine
-        this.system = system;
+        if( typeof system !== 'undefined' ) {
+            this.system = system;
+        }
         
         // insert the version number to the layout
         $( '.vorple-version' ).html( this.version+'.'+this.release );
@@ -204,6 +206,8 @@ var vorple = {};
      * $( document ).bind( 'vorpleInit', function() {
      *     alert( 'Hello!' );
      * });</code> 
+     * 
+     * @param {object} [system] The engine running the story
      */
     vorple.core.init = function( system ) {
         this._init( system );
