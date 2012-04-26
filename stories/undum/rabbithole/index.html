@@ -12,29 +12,19 @@
         }
     </script>
     
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.16/jquery-ui.min.js"></script>
-    <script type="text/javascript">
-        if( typeof jQuery.ui == 'undefined' ) {
-            document.write( unescape( "%3Cscript src='jquery-ui/jquery-ui-1.8.16.custom.min.js' type='text/javascript'%3E%3C/script%3E" ) );
-        }
-    </script>
-    
-     <script type="text/javascript" src="../../../lib/undum.js"></script>
+    <script type="text/javascript" src="../../../lib/undum.js"></script>
     <script type="text/javascript" src="../../../lib/jquery.qtip.min.js"></script>
     <script type="text/javascript" src="../../../lib/jquery.jplayer.min.js"></script>    
-    <script type="text/javascript" src="../../../src/vorple.core.js"></script>
-    <script type="text/javascript" src="../../../src/vorple.html.js"></script>
-    <script type="text/javascript" src="../../../src/vorple.media.js"></script>
-    <script type="text/javascript" src="../../../src/vorple.tooltip.js"></script>
-    <script type="text/javascript" src="../../../src/vorple.button.js"></script>
-    <script type="text/javascript" src="../../../src/vorple.cookie.js"></script>
-    <script type="text/javascript" src="../../../src/vorple.undum.js"></script>
+    <script type="text/javascript" src="../../../lib/jquery.noty.js"></script>    
+    <script type="text/javascript" src="../../../lib/vorple.min.js"></script>
     
     <script type="text/javascript" src="rabbithole.game.en.js"></script>
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Redressed" type='text/css'>    
     <link rel="stylesheet" href="jquery-ui/pepper-grinder/jquery-ui-1.8.16.custom.css" type="text/css">
     <link rel="stylesheet" href="../../../lib/qtip/jquery.qtip.min.css" type="text/css">
+    <link rel="stylesheet" href="../../../lib/noty/jquery.noty.css" type="text/css">
+    <link rel="stylesheet" href="../../../lib/noty/noty_theme_default.css" type="text/css">
     <link rel="stylesheet" href="css/rabbithole.css" type="text/css">
 </head>
 <body>
@@ -150,12 +140,9 @@
                     tasks much faster and easier. 
                 </p> 
                 <p>
-                    These dialog boxes are created using jQuery UI,
-                    a collection of user interface elements for jQuery.
-                    The question mark buttons are created using Vorple's
-                    button module and clicking on them generates a jQuery UI dialog.
-                    jQuery UI isn't a standard part of Vorple but works
-                    seamlessly with it if needed.
+                    These dialog boxes are created using Vorple's notification
+                    module, which is flexible enough to show the notifications
+                    as this kind of modal dialog boxes with custom buttons. 
                 </p>
             </div>
             <div id="buttons" title="Buttons">

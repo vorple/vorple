@@ -397,6 +397,7 @@ undum.game.init = function( character, system ) {
         ]);
     
     vorple.core.init( system );
+    vorple.notify.show( 'test' );
 };
 
 
@@ -404,11 +405,21 @@ undum.game.init = function( character, system ) {
  * This makes clicking on the ? buttons open the dialogs.
  * The info texts are inside the html file. 
  */
-$( document ).delegate( '.info-icon', 'click', function( event ) {
-    $( '#' + $( this ).data( 'dialog' ) ).dialog( {
-        buttons: { "Close": function() { $( this ).dialog( "close" ); } },
-        modal: true,
-        resizable: false,
-        width:800
-    });
+$( document ).on( 'click', '.info-icon', function( event ) {
+    vorple.notify.show(
+        $( '#' + $( this ).data( 'dialog' ) ).html(),
+        {
+            buttons: [{ 
+                type: 'button', 
+                text: 'ok', 
+                click: function( $notification ) {
+                    $notification.close();
+                }
+            }],
+            closeButton: true,
+            layout: 'center',
+            modal: true,
+            timeout: false 
+        }
+    );
 } );
