@@ -39,7 +39,7 @@ var vorple = {};
         /** Release number
          * @const
          */
-        release: 2,
+        release: 3,
         
         /** Major version number
          * @const
