@@ -397,7 +397,6 @@ undum.game.init = function( character, system ) {
         ]);
     
     vorple.core.init( system );
-    vorple.notify.show( 'test' );
 };
 
 
