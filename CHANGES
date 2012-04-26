@@ -1,5 +1,5 @@
-Release 3 (2012-??)
-===================
+Release 3 (2012-04-26)
+======================
 
 Documentation
 -------------
@@ -33,8 +33,15 @@ Libraries
 
 Modules
 -------
+
  - Added the notify module
     
+    
+Releases
+--------
+
+ - Added the missing qTip CSS file to the Undum theme
+ 
 
 
 Release 2 (2012-02-04)
