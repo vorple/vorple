@@ -130,10 +130,11 @@ var vorple = {};
     
     
     /**
-     * Checks which engine is running the story under the hood. Right now
-     * only Undum is supported.
+     * Checks which engine is running the story under the hood
+     * (Undum or Parchment).
      * 
-     * @param {String} [engine] Name of an engine to check, in lowercase.
+     * @param {String} [engine] Name of an engine to check, in lowercase
+     * ("undum" or "parchment").
      * True is returned if we're using this engine.  
      * 
      * @return {String|Boolean|null} The name of the current engine in lowercase
@@ -142,16 +143,24 @@ var vorple = {};
      */
     vorple.core.engine = function( engine ) {
         var isUndum = ( typeof undum !== 'undefined' );
-        
+
         if( typeof engine === 'string' ) {
-            if( engine == 'undum' ) {
-                return isUndum;
+            switch( engine ) {
+                case 'undum':
+                    return typeof undum !== 'undefined';
+                case 'parchment':
+                    return typeof parchment !== 'undefined';
+                default:
+                    return false;
             }
-            return false;
         }
         
         if( typeof undum !== 'undefined' ) {
             return 'undum';
+        }
+
+        if( typeof parchment !== 'undefined' ) {
+            return 'parchment';
         }
         
         return null;
