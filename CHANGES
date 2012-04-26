@@ -19,14 +19,14 @@ Examples
 
  - New folder structure in preparation for Inform 7 examples
  - Added the Inform 7 preview
- - Fixed a bug where One With Everything would duplicate navigation buttons
-   when a save game was erased
+ - One With Everything: Fixed a bug where navigation buttons would be
+   duplicated when a save game was erased
+ - Rabbithole: Switched to using the notify module instead of jQuery UI
 
 
 Libraries
 ---------
 
- - Added the jQuery UI library
  - Added the noty library
  - Updated to latest qTip2
  
