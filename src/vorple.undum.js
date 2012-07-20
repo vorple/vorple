@@ -181,7 +181,7 @@
 
     
     // initialization
-    $( document ).bind( 'vorpleInit', function() {
+    $( document ).bind( 'init.vorple', function() {
         if( vorple.core.engine( 'undum' ) ) {
             // Undum hooks
             if( !undum.game.afterEnter ) {

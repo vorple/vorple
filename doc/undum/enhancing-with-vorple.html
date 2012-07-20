@@ -63,7 +63,7 @@ $( function() {
     );
     
     // Have the version numbers match the current one
-    $( document ).bind( 'vorpleInit', function() {
+    $( document ).bind( 'init.vorple', function() {
         $( '.vorple-ver' ).html( vorple.core.version );
         $( '.vorple-rel' ).html( vorple.core.release );
     });
@@ -970,19 +970,20 @@ and <a href="http://vorple-if.com">Vorple <span class="vorple-version">2.15</spa
 
 <p>
 <code>vorple.core.init()</code><a href="../API/symbols/vorple.core.html#.init" class="api">API</a>
-triggers a <code>vorpleInit</code> event that 
+triggers a <code>init.vorple</code> event that 
 can be used to add custom initialization methods:
 </p>
 
 <pre class="brush: js;">
-$( document ).bind( 'vorpleInit', function() {
+$( document ).bind( 'init.vorple', function() {
     // custom initialization here
 });
 </pre>
 
 <p>
 This is mostly useful for plugins. Individual stories can just add any
-initialization they need to <code>undum.game.init()</code>.
+initialization they need to <code>undum.game.init()</code> which runs
+at the time Undum has been initialized.
 </p>
 
 

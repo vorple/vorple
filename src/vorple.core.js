@@ -208,11 +208,11 @@ var vorple = {};
     /**
      * Initialize and start Vorple.
      *  
-     * A custom event 'vorpleInit' is triggered after the core
+     * A custom event 'init.vorple' is triggered after the core
      * initialization has been done. Custom initialization functions can
      * be added using a listener: 
      * <code>
-     * $( document ).bind( 'vorpleInit', function() {
+     * $( document ).bind( 'init.vorple', function() {
      *     alert( 'Hello!' );
      * });</code> 
      * 
@@ -220,7 +220,7 @@ var vorple = {};
      */
     vorple.core.init = function( system ) {
         this._init( system );
-        $( document ).trigger( 'vorpleInit' );
+        $( document ).trigger( 'init.vorple' );
     };
     
     

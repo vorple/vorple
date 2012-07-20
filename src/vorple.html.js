@@ -295,7 +295,7 @@
     };
     
     // have any click event hide the popup
-    $( document ).bind( 'vorpleInit', function() {
+    $( document ).bind( 'init.vorple', function() {
 	    $( document ).on(
 	        'click',
 	        function() {

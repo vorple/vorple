@@ -1,3 +1,13 @@
+Release 4 (2012-??-??)
+======================
+
+Modules
+-------
+
+ - Core: changed the initialization event from "vorpleInit" to "init.vorple",
+   in preparation of namespaced parser events
+
+
 Release 3 (2012-04-26)
 ======================
 

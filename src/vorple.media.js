@@ -522,7 +522,7 @@
     
     
 
-    $( document ).bind( 'vorpleInit', function() {
+    $( document ).bind( 'init.vorple', function() {
         /**
          * If the main audio container doesn't exist, create it
          */
