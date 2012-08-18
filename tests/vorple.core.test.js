@@ -3,7 +3,7 @@ module( 'core' );
 test( 'init', function() {
     expect( 1 );
 
-    $( document ).bind( 'vorpleInit', function() {
+    $( document ).bind( 'init.vorple', function() {
         ok( true, 'Init hook triggered' );
     } );
 
