@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Vorple library unit tests</title>
+		<link rel="stylesheet" href="lib/qunit-git.css">
+		
+		<script src="../lib/jquery-1.7.1.min.js"></script>
+		<script src="../lib/jquery.jplayer.min.js"></script>
+		<script src="../lib/jquery.noty.js"></script>
+		<script src="../lib/jquery.qtip.min.js"></script>
+		
+		<script src="../src/vorple.core.js"></script>
+		<script src="../src/vorple.button.js"></script>
+		<script src="../src/vorple.cookie.js"></script>
+		<script src="../src/vorple.html.js"></script>
+		<script src="../src/vorple.media.js"></script>
+		<script src="../src/vorple.notify.js"></script>
+		<script src="../src/vorple.tooltip.js"></script>
+	</head>
+	<body>
+		<div id="qunit"></div>
+
+		<script src="lib/qunit-git.js"></script>
+
+		<script>
+			$(function() {
+				vorple.core.init();
+			});
+		</script>
+
+		<script src="vorple.button.test.js"></script>
+		<script src="vorple.cookie.test.js"></script>
+		<script src="vorple.core.test.js"></script>
+		<script src="vorple.html.test.js"></script>
+		<script src="vorple.media.test.js"></script>
+		<script src="vorple.notify.test.js"></script>
+		<script src="vorple.tooltip.test.js"></script>
+	</body>
+</html>
