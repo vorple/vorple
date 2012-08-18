@@ -6,27 +6,27 @@ test( '$toHtml', function() {
 
 test( 'attributes', function() {
     equal( vorple.html.attributes( {
-        id : 'foo'
+        id: 'foo'
     } ), ' id="foo"', 'id' );
     equal( vorple.html.attributes( {
-        classes : 'foo'
+        classes: 'foo'
     } ), ' class="foo"', 'class' );
     equal( vorple.html.attributes( {
-        id : 'foo',
-        classes : 'bar'
+        id: 'foo',
+        classes: 'bar'
     } ), ' class="bar" id="foo"', 'id+class' );
     equal( vorple.html.attributes( {
-        id : 'foo',
-        classes : 'bar',
-        foo : 'baz'
+        id: 'foo',
+        classes: 'bar',
+        foo: 'baz'
     } ), ' class="bar" id="foo"', 'Unrecognized option' );
     equal( vorple.html.attributes( {} ), '', "Empty object" );
     equal( vorple.html.attributes( {
-        foo : "bar"
+        foo: "bar"
     } ), '', "No valid matches" );
     equal( vorple.html.attributes( {
-        classes : 'foo',
-        escape : true
+        classes: 'foo',
+        escape: true
     } ), ' class=&quot;foo&quot;', 'Escape quotes' );
 } );
 
@@ -46,23 +46,23 @@ test( 'link', function() {
     equal( $link.attr( 'href' ), 'foo', 'href ok' );
 
     $link = $( vorple.html.link( 'foo', 'bar', {
-        classes : 'baz',
-        id : 'buzz'
+        classes: 'baz',
+        id: 'buzz'
     } ) );
 
     ok( $link.hasClass( 'baz' ) && $link.attr( 'id' ) == 'buzz', 'link options' );
 
     equal( vorple.html.link( {
-        url : 'foo',
-        content : 'bar'
+        url: 'foo',
+        content: 'bar'
     } ), '<a href="foo">bar</a>', 'link object' );
 
     var $link = $( vorple.html.link( {
-        url : 'foo',
-        content : 'bar',
-        options : {
-            classes : 'baz',
-            id : 'buzz'
+        url: 'foo',
+        content: 'bar',
+        options: {
+            classes: 'baz',
+            id: 'buzz'
         }
     } ) );
 
@@ -70,20 +70,31 @@ test( 'link', function() {
 
     // link popups
 
-    $( vorple.html.link( [ {
-        url : 'link1',
-        content : 'content1'
+    $( vorple.html.link( [{
+        url: 'link1',
+        content: 'content1'
     }, {
-        url : 'link2',
-        content : 'content2'
+        url: 'link2',
+        content: 'content2'
     }, {
-        url : 'link3',
-        content : 'content3'
-    } ], 'test', {
-        id : 'multipleLinkTest'
-    } ) ).appendTo( '#qunit-fixture' );
+        url: 'link3',
+        content: 'content3'
+    }], 'test', {
+        id: 'multipleLinkTest'
+    }) ).appendTo( '#qunit-fixture' );
 
-    console.log( vorple.html.$toHtml( $( '#multipleLinkTest' ) ) );
+console.log( vorple.html.link( [{
+        url: 'link1',
+        content: 'content1'
+    }, {
+        url: 'link2',
+        content: 'content2'
+    }, {
+        url: 'link3',
+        content: 'content3'
+    }], 'test', {
+        id: 'multipleLinkTest'
+    }));
     equal( $( '#multipleLinkTest' ).length, 1, 'popup link created' );
 
     $( '#multipleLinkTest' ).click();
@@ -95,21 +106,21 @@ test( 'link', function() {
 } );
 
 test( 'quotes', function() {
-    equals( vorple.html.quote( 'foo' ), '"foo"', 'normal text' );
+    equal( vorple.html.quote( 'foo' ), '"foo"', 'normal text' );
 
-    equals( vorple.html.quote( 'foo "bar" baz' ), '"foo \"bar\" baz"', 'quoted text' );
+    equal( vorple.html.quote( 'foo "bar" baz' ), '"foo \"bar\" baz"', 'quoted text' );
 
-    equals( vorple.html.quote( 'foo', "'" ), "'foo'", 'different quote style' );
+    equal( vorple.html.quote( 'foo', "'" ), "'foo'", 'different quote style' );
 
-    equals( vorple.html.quote( 'foo', [ '<<', '>>' ] ), '<<foo>>', 'different opening and closing tags' );
+    equal( vorple.html.quote( 'foo', [ '<<', '>>' ] ), '<<foo>>', 'different opening and closing tags' );
 } );
 
 test( 'replaceAttributes', function() {
     var $elem = $( '<div>' ).addClass( 'foo' ).attr( 'id', 'bar' );
     var newAttr = {
-        rel : 'test',
-        id : 'baz',
-        classes : 'xyzzy'
+        rel: 'test',
+        id: 'baz',
+        classes: 'xyzzy'
     };
 
     vorple.html.replaceAttributes( $elem, newAttr );
@@ -125,20 +136,20 @@ test( 'replaceAttributes', function() {
 
 test( 'tag', function() {
     equal( vorple.html.tag( 'div', '--', {
-        id : 'foo'
+        id: 'foo'
     } ), '<div id="foo">--</div>', 'div id' );
     equal( vorple.html.tag( 'br' ), '<br />', 'br' );
     equal( vorple.html.tag( 'div', '' ), '<div></div>', 'empty string content forces close tag' );
     equal( vorple.html.tag( 'div', null, {
-        classes : 'foo',
-        endTag : "always"
+        classes: 'foo',
+        endTag: "always"
     } ), '<div class="foo"></div>', 'div class force end tag' );
     equal( vorple.html.tag( 'div', 'bar', {
-        classes : 'foo',
-        endTag : "never"
+        classes: 'foo',
+        endTag: "never"
     } ), '<div class="foo">bar', 'div class no end tag' );
     equal( vorple.html.tag( 'br', '', {
-        endTag : "never"
+        endTag: "never"
     } ), '<br>', 'br no slash' );
 } );
 
@@ -151,5 +162,6 @@ test( 'url', function() {
     equal( vorple.html.url( '../test.html', 'foo' ), '../test.html', 'relative path' );
     equal( vorple.html.url( 'http://example.com/test.html', 'foo' ), 'http://example.com/test.html', 'url + path' );
     equal( vorple.html.url( 'baz.php?s=http://example.com/test.html', 'foo' ), 'foo/baz.php?s=http://example.com/test.html', 'url as the file parameter' );
-    equal( vorple.html.url(), '#', 'empty url -> #' );
-}); 
+    equal( vorple.html.url(), '#', 'no parameters returns #' );
+    equal( vorple.html.url( null, '/test' ), '/test', 'null filename returns path' );
+});
