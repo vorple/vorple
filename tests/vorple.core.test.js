@@ -49,8 +49,51 @@ test( 'generateId', function() {
     equal( vorple.core.generateId().length, 32, 'Default length 32' );
 
     equal( vorple.core.generateId( 10 ).length, 10, 'Custom length' );
+});
 
-} );
+test( 'onbeforeunload', function() {
+    var oldSettings = {
+        confirmWindowClose: vorple.core.settings.confirmWindowClose,
+        debug: vorple.core.settings.debug
+    };
+    
+    vorple.core.settings.confirmWindowClose = false;
+    vorple.core.settings.debug = false;
+    equal(
+        window.onbeforeunload(),
+        undefined,
+        "no return value when confirmWindowClose == false and debug == false"
+    );
+
+    vorple.core.settings.confirmWindowClose = true;
+    vorple.core.settings.debug = true;
+    equal(
+        window.onbeforeunload(),
+        undefined,
+        "no return value when confirmWindowClose == true and debug == true"
+    );
+    
+    vorple.core.settings.debug = false;
+    equal( 
+        window.onbeforeunload(), 
+        "You are about to leave the story. "
+        + "Any unsaved progress will be lost. "
+        + "Are you sure you want to continue?",
+        'default message'
+    );
+    
+    vorple.core.settings.confirmWindowClose = "Custom message";
+    
+    equal(
+        window.onbeforeunload(),
+        "Custom message",
+        'custom message'
+    );
+    
+    // reset old settings
+    vorple.core.settings.confirmWindowClose = false;
+    vorple.core.settings.debug = false;
+});
 
 test( 'requireRelease', function() {
     var currentRel = vorple.core.release;
