@@ -141,7 +141,7 @@ var vorple = {};
      * Checks which engine is running the story under the hood
      * (Undum or Parchment).
      * 
-     * @param {String} [engine] Name of an engine to check, in lowercase
+     * @param {String} [name] Name of an engine to check, in lowercase
      * ("undum" or "parchment").
      * True is returned if we're using this engine.  
      * 
@@ -153,10 +153,10 @@ var vorple = {};
     vorple.core.engine = function( name ) {
     	// If the system object contains "SimpleSituation",
         // the engine is most likely Undum.
-        var isUndum = typeof vorple.core.system.SimpleSituation === 'function';
+        var isUndum = !!( vorple.core.system && typeof vorple.core.system.SimpleSituation === 'function' );
 
         // Similar test for Parchment 
-        var isParchment = typeof vorple.core.system.vms === 'object';
+        var isParchment = !!( vorple.core.system && typeof vorple.core.system.vms === 'object' );
 
         if( typeof name === 'string' ) {
             switch( name ) {

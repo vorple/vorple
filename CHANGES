@@ -6,6 +6,18 @@ Modules
 
  - Core: changed the initialization event from "vorpleInit" to "init.vorple",
    in preparation of namespaced parser events
+ - Core: Made vorple.core.engine() return the engine that's used to initialize
+   Vorple, not the engine that is otherwise available
+ - Html: Fixed a bug where vorple.html.url() would not return correct values
+   when no filename was given
+   
+   
+Tests
+-----
+
+ - Restructured the tests so that they can be run at the same time
+ - Updated QUnit to the latest version
+
 
 
 Release 3 (2012-04-26)
