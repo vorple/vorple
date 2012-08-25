@@ -1,6 +1,10 @@
 /* vorple.core.js - Vorple core functions */
 
-/** Function inheritance, by Crockford */
+/** Function inheritance, by Crockford 
+ * will be excluded from the test coverage 
+ **/
+
+//#JSCOVERAGE_IF 0
 Function.prototype.inherits = function(Parent) {
     var d = {}, p = (this.prototype = new Parent());
     this.prototype.uber = function(name) {
@@ -25,7 +29,7 @@ Function.prototype.inherits = function(Parent) {
     };
     return this;
 };
-
+//#JSCOVERAGE_ENDIF
     
 /** Vorple main object */
 var vorple = {};
@@ -112,10 +116,12 @@ var vorple = {};
                     msg = vorple.core.settings.confirmWindowClose;
                 }
                 
-                // For IE and Firefox prior to version 4, according to MDN 
+//#JSCOVERAGE_IF 0 
+                // For IE and Firefox prior to version 4, according to MDN
                 if( e ) {
                   e.returnValue = msg;
                 }
+//#JSCOVERAGE_ENDIF
                 
                 return msg; 
             }
@@ -124,7 +130,9 @@ var vorple = {};
         // make sure console.log() exists so that possible debugging commands
         // left in the published story don't halt the execution
         if( typeof window.console === 'undefined' ) {
+//#JSCOVERAGE_IF !window.console 
             window.console = { log: function( txt ) {} };
+//#JSCOVERAGE_ENDIF
         }
     };
     
@@ -137,33 +145,44 @@ var vorple = {};
      * ("undum" or "parchment").
      * True is returned if we're using this engine.  
      * 
-     * @return {String|Boolean|null} The name of the current engine in lowercase
-     * or null if no engine is loaded. 
-     * If testing for a specific engine, true or false is returned.  
+     * @return {String|Boolean|null} The name of the current engine in lowercase,
+     * null if no engine is loaded or false if the engine is unknown.
+     *  
+     * When testing for a specific engine, true or false is returned.  
      */
-    vorple.core.engine = function( engine ) {
-        var isUndum = ( typeof undum !== 'undefined' );
+    vorple.core.engine = function( name ) {
+    	// If the system object contains "SimpleSituation",
+        // the engine is most likely Undum.
+        var isUndum = typeof vorple.core.system.SimpleSituation === 'function';
 
-        if( typeof engine === 'string' ) {
-            switch( engine ) {
+        // Similar test for Parchment 
+        var isParchment = typeof vorple.core.system.vms === 'object';
+
+        if( typeof name === 'string' ) {
+            switch( name ) {
                 case 'undum':
-                    return typeof undum !== 'undefined';
+                    return isUndum;
                 case 'parchment':
-                    return typeof parchment !== 'undefined';
+                    return isParchment;
                 default:
                     return false;
             }
         }
         
-        if( typeof undum !== 'undefined' ) {
-            return 'undum';
-        }
-
-        if( typeof parchment !== 'undefined' ) {
-            return 'parchment';
+        if( !vorple.core.system ) {
+        	return null;
         }
         
-        return null;
+        if( isUndum ) {
+        	return 'undum';
+        }
+        
+        if( isParchment ) {
+        	return 'parchment';
+        }
+
+        // unknown system
+        return false;
     };
 
     
@@ -280,14 +299,12 @@ var vorple = {};
                     break;
                 case 'string':
                     throw new Error( message );
-                    break;
                 default:
                     throw new Error( "Version mismatch: release "
                         + requiredReleaseString
                         + " required, currently running release "
                         + this.release 
                     );
-                    break;
             }
         }
         
