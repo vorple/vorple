@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<title>Vorple library unit tests</title>
+		<link rel="stylesheet" href="lib/qunit-git.css">
+		
+		<script src="../lib/jquery-1.7.1.min.js"></script>
+		<script src="../lib/jquery.jplayer.min.js"></script>
+		<script src="../lib/jquery.noty.js"></script>
+		<script src="../lib/jquery.qtip.min.js"></script>
+		<!--
+		<script src="../src/vorple.core.js"></script>
+		<script src="../src/vorple.button.js"></script>
+		<script src="../src/vorple.cookie.js"></script>
+		<script src="../src/vorple.html.js"></script>
+		<script src="../src/vorple.media.js"></script>
+		<script src="../src/vorple.notify.js"></script>
+		<script src="../src/vorple.tooltip.js"></script>
+	-->
+	
+		<script src="../../jscoverage/vorple/vorple.core.js"></script>
+		<script src="../../jscoverage/vorple/vorple.button.js"></script>
+		<script src="../../jscoverage/vorple/vorple.cookie.js"></script>
+		<script src="../../jscoverage/vorple/vorple.html.js"></script>
+		<script src="../../jscoverage/vorple/vorple.media.js"></script>
+		<script src="../../jscoverage/vorple/vorple.notify.js"></script>
+        <script src="../../jscoverage/vorple/vorple.parser.js"></script>
+		<script src="../../jscoverage/vorple/vorple.tooltip.js"></script>
+		
+		<script src="../lib/parchment.min.js"></script>
+		
+        <link rel="stylesheet" href="Inform7.test Materials/Release/interpreter/parchment.min.css">
+	</head>
+	<body>
+		<div id="qunit"></div>
+		<div id="qunit-fixture"></div>
+		
+		<div id="vorpleContainer">
+		<div id="vorple"></div>
+		<div id="vorpleInput"></div>
+		<div id="parchment"></div>
+		<div class="clearAll"></div>
+		<div id="vorple-media"></div>
+		</div>
+
+		<script src="lib/qunit-git.js"></script>
+
+		<script>
+		  // We can't let QUnit reorder tests since it might screw up
+		  // Parchment's asynchronous script loading. We must wait for
+		  // Parchment to fully load before we can run any tests with it.
+		  QUnit.config.reorder = false;
+
+		  // Initialize Vorple
+		  $(function() {
+		    vorple.core.init();
+		  });
+		</script>
+<!--
+		<script src="vorple.button.test.js"></script>
+-->
+		<script src="vorple.cookie.test.js"></script>
+		<script src="vorple.core.test.js"></script>
+		<script src="vorple.html.test.js"></script>
+		<script src="vorple.media.test.js"></script>
+		<script src="vorple.notify.test.js"></script>
+        <script src="vorple.parser.test.js"></script>
+		<script src="vorple.tooltip.test.js"></script>
+	</body>
+</html>
