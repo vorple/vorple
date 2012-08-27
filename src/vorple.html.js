@@ -100,7 +100,7 @@
      */
     vorple.html.$toHtml = function( $element ) {
         if( typeof $element.jquery === 'undefined' ) {
-            return '';
+            return false;
         }
         
         return $element.first().clone().wrap('<div></div>').parent().html();
@@ -463,8 +463,8 @@
      */
     vorple.html.url = function( filename, path ) {
         // if both filename and path are empty, return '#'
-        if( ( typeof filename == 'undefined' || !filename ) ) {
-        	if( typeof path == 'undefined' || !path ) {
+        if( ( typeof filename === 'undefined' || !filename ) ) {
+        	if( path ) {
         		return path;
         	}
             return '#';
