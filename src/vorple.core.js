@@ -244,23 +244,6 @@ var vorple = {};
     
     
     /**
-     * Process a click of a link
-     */
-    vorple.core.clickLink = function( url, options ) {
-        var self = this;
-        var opt = $.extend( {}, self.defaults, options );
-
-        // with Undum execute system.doClick()
-        if( self.engine( 'undum' ) ) {
-            self.system.doClick( url );
-        }
-        else {
-            window.location = url;
-        }
-    };
-    
-    
-    /**
      * Require a certain release of the Vorple library. 
      * 
      * The release number can be given as an array of two integers.

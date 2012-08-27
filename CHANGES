@@ -8,8 +8,12 @@ Modules
    in preparation of namespaced parser events
  - Core: Made vorple.core.engine() return the engine that's used to initialize
    Vorple, not the engine that is otherwise available
+ - Core: Removed the clickLink() method, replaced by vorple.undum.doClick() 
+   and vorple.undum.doLink()
  - Html: Fixed a bug where vorple.html.url() would not return correct values
    when no filename was given
+ - Undum: Added doClick() and doLink() that expose undum.doClick()
+   and undum.doLink()
    
    
 Tests

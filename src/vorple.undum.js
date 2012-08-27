@@ -138,6 +138,21 @@
             }
         });
     };
+    
+
+    /**
+     * Exposed undum.doClick()
+     */
+    vorple.undum.doClick = function( url ) {
+    	vorple.core.system.doClick( url );
+    };
+    
+    /**
+     * Exposed undum.doLink()
+     */
+    vorple.undum.doLink = function( url ) {
+    	vorple.core.system.doLink( url );
+    };
 
 
     /**
