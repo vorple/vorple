@@ -1,8 +1,18 @@
 module( 'html' );
 
 test( '$toHtml', function() {
-    equal( vorple.html.$toHtml( $( '<div class="foo">bar</div>' ) ), '<div class="foo">bar</div>' );
-} );
+    equal( 
+        vorple.html.$toHtml( $( '<div class="foo">bar</div>' ) ), 
+        '<div class="foo">bar</div>', 
+        'jQuery object'
+    );
+    
+    equal(
+        vorple.html.$toHtml( '<div></div>' ),
+        false,
+        'invalid parameter'
+    )
+});
 
 test( 'attributes', function() {
     equal( vorple.html.attributes( {
@@ -83,18 +93,6 @@ test( 'link', function() {
         id: 'multipleLinkTest'
     }) ).appendTo( '#qunit-fixture' );
 
-console.log( vorple.html.link( [{
-        url: 'link1',
-        content: 'content1'
-    }, {
-        url: 'link2',
-        content: 'content2'
-    }, {
-        url: 'link3',
-        content: 'content3'
-    }], 'test', {
-        id: 'multipleLinkTest'
-    }));
     equal( $( '#multipleLinkTest' ).length, 1, 'popup link created' );
 
     $( '#multipleLinkTest' ).click();
@@ -104,6 +102,10 @@ console.log( vorple.html.link( [{
 
     equal( $popup.find( 'a' ).length, 3, 'contains all the links' );
 } );
+
+test( 'p', function() {
+    equal( vorple.html.p( 'test' ), vorple.html.tag( 'p', 'test' ) ); 
+});
 
 test( 'quotes', function() {
     equal( vorple.html.quote( 'foo' ), '"foo"', 'normal text' );

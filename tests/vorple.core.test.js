@@ -3,7 +3,7 @@ module( 'core' );
 test( 'init', function() {
     expect( 1 );
 
-    $( document ).bind( 'init.vorple', function() {
+    $( document ).one( 'init.vorple', function() {
         ok( true, 'Init hook triggered' );
     } );
 
@@ -16,7 +16,15 @@ test( 'init', function() {
 test( 'engine', function() {
     equal( vorple.core.engine(), null, 'no engine loaded' );
     equal( vorple.core.engine( 'undum' ), false, 'testing for undum before it is loaded' );
-} );
+    equal( vorple.core.engine( 'parchment' ), false, 'testing for parchment before it is loaded' );
+    equal( vorple.core.engine( 'doesntexist' ), false, 'nonexisting engine' );
+    
+    vorple.core.init( {} );
+    equal( vorple.core.engine(), false, 'invalid engine' );
+    
+    // re-init
+    vorple.core.init();
+});
 
 test( 'generateId', function() {
     // This is of course way too small sample guarantee that the ids would
