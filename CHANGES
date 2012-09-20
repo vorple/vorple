@@ -4,6 +4,7 @@ Release 4 (2012-??-??)
 Modules
 -------
 
+ - Cookie: Added vorple.cookie.list()
  - Core: changed the initialization event from "vorpleInit" to "init.vorple",
    in preparation of namespaced parser events
  - Core: Made vorple.core.engine() return the engine that's used to initialize

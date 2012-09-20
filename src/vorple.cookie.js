@@ -13,6 +13,23 @@
     
     
     /**
+     * List all available cookies.
+     * 
+     * @return {String[]} An array of the names of the cookies
+     */
+    vorple.cookie.list = function() {
+        var list = [];
+        var cookies = document.cookie.split( ';' );
+        
+        for( var i = 0; i < cookies.lenght; ++i ) {
+            list.push( cookies[ i ].split( '=' )[ 0 ] );            
+        }
+        
+        return list;
+    }
+    
+    
+    /**
      * Read the contents of a cookie.
      * 
      * @param {String} name Name of the cookie to read
@@ -27,6 +44,7 @@
         var decode = opt.raw ? function (s) { return s; } : decodeURIComponent;
         return (result = new RegExp('(?:^|; )' + encodeURIComponent( name ) + '=([^;]*)').exec(document.cookie)) ? decode(result[1]) : null;
     };
+      
       
     /**
      * Remove a cookie.
