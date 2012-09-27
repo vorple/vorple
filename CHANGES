@@ -15,7 +15,13 @@ Modules
    when no filename was given
  - Undum: Added doClick() and doLink() that expose undum.doClick()
    and undum.doLink()
-   
+
+
+Libraries
+---------
+
+ - Updated the Noty library
+    
    
 Tests
 -----

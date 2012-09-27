@@ -15,6 +15,32 @@
         timeout: 7000
     };
     
+    vorple.notify._currentNoty;
+    
+    
+    /**
+     * Show a modal dialog with a button that closes it.
+     * 
+     * @param {string} text The text to show in the dialog
+     * @param {object} options Notification options. 
+     */
+    vorple.notify.alert = function( text, options ) {
+    	var defaults = {
+    		 buttons: [{
+    			 text: 'OK', 
+    			 onClick: function($noty) {
+    				 $noty.close();
+    			 }
+    		 }],
+             layout: 'center', 
+             modal: true,
+    		 timeout: false
+    	};
+    	
+        var opt = $.extend( {}, defaults, options );
+    	vorple.notify.show( text, opt);
+    };
+    
     
     /**
      * Clear the notification queue.
@@ -32,7 +58,7 @@
      * Shortcut for $.noty.close().
      */
     vorple.notify.close = function() {
-        $.noty.close();
+        $.noty.close( this._currentNoty );
     };
 
     
@@ -59,7 +85,7 @@
         var self = this;
         var opt = $.extend( {}, self.defaults, options, { text: text } );
         
-        noty( opt );
+        self._currentNoty = noty( opt );
     };
 
 })( jQuery );

@@ -1,7 +1,15 @@
 module( 'notify' );
 
 test( 'Notifications', function() {
-    expect( 5 );
+    expect( 7 );
+    
+    vorple.notify.defaults.callback = {
+        onClose: function() {
+            ok( true, 'notification removed' );
+            $( this ).remove();
+        } 
+    };
+    
     vorple.notify.show( 'test' );
     $note = $( '.noty_bar' );
 
@@ -9,15 +17,17 @@ test( 'Notifications', function() {
 
     equal( $note.text(), 'test', 'correct content' );
 
-    $( document ).on( 'noty.close', '.noty_bar', function() {
-        ok( true, 'notification removed' );
-        $( this ).remove();
-    } );
-
     vorple.notify.close();
 
     vorple.notify.show( 'test' );
     vorple.notify.show( 'test' );
 
+    vorple.notify.closeAll();
+    
+    // the span is so that it's easier to build the selector
+    vorple.notify.alert( '<span class="unittest">alert-test</span>' );
+    equal( $( '.noty_message .noty_text span.unittest' ).text(), 'alert-test' );
+    
+    // cleanup
     vorple.notify.closeAll();
 } );
