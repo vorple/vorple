@@ -1,0 +1,65 @@
+! Blurb file created by Inform build 6G60
+
+status "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/CblorbModel.html" "/var/www/vorple/stories/inform7/preview.inform/Build/StatusCblorb.html"
+
+
+! Identification
+
+project folder "/var/www/vorple/stories/inform7/preview.inform"
+release to "/var/www/vorple/stories/inform7/preview Materials/Release"
+
+! Blorb instructions
+
+storyfile leafname "Vorple Preview.zblorb"
+storyfile "/var/www/vorple/stories/inform7/preview.inform/Build/output.z8" include
+ifiction "/var/www/vorple/stories/inform7/preview.inform/Metadata.iFiction" include
+cover "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/DefaultCover.jpg"
+picture 1 "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/DefaultCover.jpg"
+release file "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Cover.jpg"
+release file "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Small Cover.jpg"
+
+! Placeholder variables
+
+placeholder [IFID] = "BBB9A4EF-0059-4BA6-96BF-3899D31507B2"
+placeholder [RELEASE] = "1"
+placeholder [YEAR] = "2012"
+placeholder [TITLE] = "Vorple Preview"
+placeholder [AUTHOR] = "The Vorple Project"
+placeholder [BLURB] = "A work of interactive fiction."
+
+! Other material to release
+
+source public
+auxiliary "/var/www/vorple/stories/inform7/preview Materials/vorple.custom.css" "Custom CSS"
+auxiliary "/var/www/vorple/stories/inform7/preview Materials/vorple.custom.js" "Custom JavaScript"
+auxiliary "/var/www/vorple/stories/inform7/preview Materials/tvscreen.png" "TV screen"
+auxiliary "/var/www/vorple/stories/inform7/preview Materials/lamp.png" "Lamp"
+auxiliary "/var/www/vorple/stories/inform7/preview Materials/teaparty.png" "Tea Party"
+auxiliary "/var/www/vorple/stories/inform7/preview Materials/alarmclock.png" "Alarm clock"
+auxiliary "/var/www/vorple/stories/inform7/preview Materials/logo-300.png" "Logo"
+
+! Website instructions
+
+placeholder [ENCODEDSTORYFILE] = "Vorple Preview.zblorb.js"
+template path "/var/www/vorple/stories/inform7/preview Materials/Templates"
+template path "/Users/jleinonen/Library/Inform/Templates"
+template path "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Templates"
+interpreter "Vorple" "z"
+base64 "/var/www/vorple/stories/inform7/preview.inform/Build/output.z8" to "/var/www/vorple/stories/inform7/preview Materials/Release/interpreter/Vorple Preview.zblorb.js"
+
+! Website instructions
+
+template path "/var/www/vorple/stories/inform7/preview Materials/Templates"
+template path "/Users/jleinonen/Library/Inform/Templates"
+template path "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Templates"
+css
+website "Standard"
+status instruction ||&nbsp;<a href="source:story.ni#line10"><img border=0 src=inform:/Reveal.tif></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line12"><img border=0 src=inform:/Reveal.tif></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line15"><img border=0 src=inform:/Reveal.tif></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line16"><img border=0 src=inform:/Reveal.tif></a>||
+status instruction ||&nbsp;<a href="source:story.ni#line125"><img border=0 src=inform:/Reveal.tif></a>||
+status alternative ||Using 'Release along with cover art', to provide something more distinctive than the default artwork above&nbsp;<a href=inform:/doc391.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with a solution'&nbsp;<a href=inform:/doc398.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with the library card'&nbsp;<a href=inform:/doc399.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with the introductory booklet'&nbsp;<a href=inform:/doc392.html><img border=0 src=inform:/help.png></a>||
