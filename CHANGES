@@ -13,6 +13,9 @@ Modules
    and vorple.undum.doLink()
  - Html: Fixed a bug where vorple.html.url() would not return correct values
    when no filename was given
+ - Media: Changed the default YouTube video width from 640 pixels to 600 pixels
+   so that the videos fit in the new Parchment version layout
+ - Parser: Added the module and Parchment/Inform 7 support
  - Undum: Added doClick() and doLink() that expose undum.doClick()
    and undum.doLink()
 
