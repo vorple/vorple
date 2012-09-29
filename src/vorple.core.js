@@ -151,9 +151,9 @@ var vorple = {};
      * When testing for a specific engine, true or false is returned.  
      */
     vorple.core.engine = function( name ) {
-    	// If the system object contains "SimpleSituation",
+    	// If the system object contains "setQuality",
         // the engine is most likely Undum.
-        var isUndum = !!( vorple.core.system && typeof vorple.core.system.SimpleSituation === 'function' );
+        var isUndum = !!( vorple.core.system && typeof vorple.core.system.setQuality === 'function' );
 
         // Similar test for Parchment 
         var isParchment = !!( vorple.core.system && typeof vorple.core.system.vms === 'object' );
