@@ -1,0 +1,162 @@
+body {
+	background-color:#ccc;
+	margin:0;
+	font-size:100%;
+	text-align:left;
+}
+
+a {
+	text-decoration:none;
+}
+
+.coverimage, .links, .interpretercredit {
+	display:none;
+}
+
+#gameport {
+	position:relative;
+	width:auto;
+	left:0;
+	background-color:transparent;
+}
+	
+#vorpleContainer {
+	background-color:#fff;
+	margin:15px auto;
+	max-width:600px;
+	padding:1em;
+	border:1px solid #ccf;
+	box-shadow:5px 5px 5px #000;
+	-webkit-box-shadow:5px 5px 5px #000;
+	-moz-box-shadow:5px 5px 5px #000;
+}
+
+#vorple {
+	margin: 0 auto;
+	text-align: left;
+	width:600px;
+	color:#666;
+}
+
+#vorple input {
+	color:#162;
+	font-weight:bold;
+}
+
+
+#parchment {
+	display:none;
+	width:600px;
+	clear:both;
+}
+
+.status {
+	display:none;
+}
+
+.clearAll {
+	clear:both;
+}
+
+.metaPopup {
+	position:fixed;
+	top:-100px;
+	left:10px;
+	max-width:800px;
+	padding:1em 1em 0.5em 1em;
+	font-size:16px;
+	text-align:left;
+	color:#fff;
+	opacity:0;
+	background-color:#000;
+	border-radius:20px;
+	box-shadow:5px 5px 5px #ccc;
+	-webkit-box-shadow:5px 5px 5px #ccc;
+	-moz-box-shadow:5px 5px 5px #ccc;
+}
+
+.previousCommand {
+	color:#162;
+	font-weight:normal;
+	text-transform:uppercase;
+	font-size:smaller;
+	margin-bottom:0.3em;
+}
+
+.previousTurn, .previousTurnFader {
+	color:#000;
+}
+
+.undoneTurn .oldPrompt {
+	font-style: italic;
+}
+
+.undoneTurn .undoClarification {
+	text-transform: none;
+	color:#666;
+}
+
+.parserError .turnContent {
+	font-style: italic;
+	color: #611;
+}
+
+.parserError .oldPrompt {
+/*	text-decoration: line-through; */
+	font-style: italic;
+	color:#666;
+}
+
+.parserErrorText {
+	text-transform: none;
+}
+
+.centered {
+	text-align:center;
+	margin:1em 0;
+}
+
+.left-aligned {
+	text-align:left;
+}
+
+.right-aligned {
+	text-align:right;
+}
+
+.left-floating {
+	float:left;
+	margin:1em 1em 1em 0;
+}
+
+.right-floating {
+	float:right;
+	margin:1em 0 1em 1em;
+}
+
+.command {
+	text-transform:uppercase;
+}
+
+.vorplePrompt input {
+	color:#162;
+	font-weight:bold;
+	width:550px;
+}
+
+.vorplePrompt input:focus {
+	outline:none;
+	border:0;
+}
+
+/* this prevents artifacts on scroll in Chrome */
+input {
+    -webkit-transform: translate3d(0,0,0);
+}
+
+/* debugging */
+
+debug {
+	color:#633;
+	font-style:italic;
+}
