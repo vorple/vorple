@@ -509,8 +509,8 @@
     };
 
     vorple.media.defaults.youtube = {
-        width: 640,
-        height: 390,
+        width: 600,
+        height: 365,
         parameters: {
                 autoplay: '1',          // start playing immediately
                 controls: '0',          // hide user controls
