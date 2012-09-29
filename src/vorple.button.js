@@ -57,7 +57,7 @@
         }
         else if( $.type( onclick )  === 'string' ) {
         	this.onclick = function( e ) {
-        		vorple.core.clickLink( onclick );
+        		vorple.undum.doClick( onclick );
         		e.preventDefault();
         	};
         }
