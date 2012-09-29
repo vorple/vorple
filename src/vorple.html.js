@@ -273,7 +273,7 @@
                     e.preventDefault();
 
                     // execute the command
-                    vorple.core.clickLink( $( this ).attr( 'href' ) );
+                    vorple.undum.doLink( $( this ).attr( 'href' ) );
 
                     // hide the popup
                     $( '.linkPopup' ).hide();
