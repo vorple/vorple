@@ -32,15 +32,15 @@ os.mkdir( destination )
 print "Updating Closure Compiler..."
 
 
-call([ "curl", 
-    "-L", "http://closure-compiler.googlecode.com/files/compiler-latest.zip",
-    "-o", minifierdir+"compiler-latest.zip"
-])
-
-call([ "unzip",
-    "-oq", minifierdir+"compiler-latest.zip",
-    "-d", minifierdir
-])
+if 0: # tmp disable
+    call([ "curl", 
+        "-L", "http://closure-compiler.googlecode.com/files/compiler-latest.zip",
+        "-o", minifierdir+"compiler-latest.zip"
+    ])    
+    call([ "unzip",
+        "-oq", minifierdir+"compiler-latest.zip",
+        "-d", minifierdir
+    ])
 
 
 # run the minifier
@@ -49,7 +49,8 @@ print "Running Closure Compiler..."
 minifiercommand = [
                   "/usr/bin/java", 
                   "-jar", minifierdir+"compiler.jar", 
-                  "--compilation_level=SIMPLE_OPTIMIZATIONS", 
+                  "--compilation_level=SIMPLE_OPTIMIZATIONS",
+#                  "--compilation_level=WHITESPACE_ONLY", # debug 
                   "--js_output_file", libdir+"vorple.min.js",
                   "--js", corelib
                   ]
@@ -156,7 +157,7 @@ for root, dirs, files in os.walk( libdir ):
 
 for file in os.listdir( i7templatepath ):
     filename = os.path.join( i7templatepath, file )
-    if not os.path.isdir( filename ):
+    if not os.path.isdir( filename ) and file != '.DS_Store':
         shutil.copy( filename, i7releasepath )
 
 # write the names of the files to the manifest
@@ -164,7 +165,7 @@ for file in os.listdir( i7templatepath ):
 manifest = open( os.path.join( i7releasepath, '(manifest).txt' ), 'a' )
 
 for file in os.listdir( i7releasepath ):
-    if not os.path.isdir( os.path.join( i7releasepath, file ) ) and file != '(manifest).txt':
+    if not os.path.isdir( os.path.join( i7releasepath, file ) ) and file != '(manifest).txt' and file != '.DS_Store':
         manifest.write( file +"\n" )
                 
 manifest.close()
