@@ -15,7 +15,7 @@
         timeout: 7000
     };
     
-    vorple.notify._currentNoty;
+    vorple.notify._currentNoty = null;
     
     
     /**
