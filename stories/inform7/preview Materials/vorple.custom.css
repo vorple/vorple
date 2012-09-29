@@ -157,7 +157,7 @@ a {
 
 
 .television {
-	background-image: url(../media/image/tvscreen.png);
+	background-image: url(tvscreen.png);
 	width: 700px;
 	height: 489px;
 	margin:10px;
@@ -180,7 +180,7 @@ a {
 }
 
 .alarmclock {
-	background-image: url(../media/image/alarmclock.png);
+	background-image: url(alarmclock.png);
 	height: 441px;
 	width: 425px;
 }
