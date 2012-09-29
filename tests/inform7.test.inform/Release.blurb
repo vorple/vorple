@@ -1,0 +1,55 @@
+! Blurb file created by Inform build 6G60
+
+status "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/CblorbModel.html" "/private/var/www/vorple/tests/inform7.test.inform/Build/StatusCblorb.html"
+
+
+! Identification
+
+project folder "/private/var/www/vorple/tests/inform7.test.inform"
+release to "/private/var/www/vorple/tests/inform7.test Materials/Release"
+
+! Blorb instructions
+
+storyfile leafname "Vorple for Inform 7 Unit Tests.zblorb"
+storyfile "/private/var/www/vorple/tests/inform7.test.inform/Build/output.z8" include
+ifiction "/private/var/www/vorple/tests/inform7.test.inform/Metadata.iFiction" include
+cover "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/DefaultCover.jpg"
+picture 1 "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/DefaultCover.jpg"
+release file "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Cover.jpg"
+release file "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Small Cover.jpg"
+
+! Placeholder variables
+
+placeholder [IFID] = "A9458A65-9A2B-435C-A1D5-E24411FFEE9D"
+placeholder [RELEASE] = "1"
+placeholder [YEAR] = "2012"
+placeholder [TITLE] = "Vorple for Inform 7 Unit Tests"
+placeholder [AUTHOR] = "The Vorple Project"
+placeholder [BLURB] = "A work of interactive fiction."
+
+! Other material to release
+
+
+! Website instructions
+
+placeholder [ENCODEDSTORYFILE] = "Vorple for Inform 7 Unit Tests.zblorb.js"
+template path "/private/var/www/vorple/tests/inform7.test Materials/Templates"
+template path "/Users/jleinonen/Library/Inform/Templates"
+template path "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Templates"
+interpreter "Recording Vorple" "z"
+base64 "/private/var/www/vorple/tests/inform7.test.inform/Build/output.z8" to "/private/var/www/vorple/tests/inform7.test Materials/Release/interpreter/Vorple for Inform 7 Unit Tests.zblorb.js"
+
+! Website instructions
+
+template path "/private/var/www/vorple/tests/inform7.test Materials/Templates"
+template path "/Users/jleinonen/Library/Inform/Templates"
+template path "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Templates"
+css
+website "Standard"
+status instruction ||&nbsp;<a href="source:story.ni#line3"><img border=0 src=inform:/Reveal.tif></a>||
+status alternative ||Using 'Release along with cover art', to provide something more distinctive than the default artwork above&nbsp;<a href=inform:/doc391.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with the "Such-and-Such" file called "whatever.pdf"', perhaps to add a manual, or a welcoming note&nbsp;<a href=inform:/doc389.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with the source text'&nbsp;<a href=inform:/doc399.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with a solution'&nbsp;<a href=inform:/doc398.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with the library card'&nbsp;<a href=inform:/doc399.html><img border=0 src=inform:/help.png></a>||
+status alternative ||Using 'Release along with the introductory booklet'&nbsp;<a href=inform:/doc392.html><img border=0 src=inform:/help.png></a>||
