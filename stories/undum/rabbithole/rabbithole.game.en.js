@@ -360,7 +360,7 @@ undum.game.init = function( character, system ) {
     $( '#reset-button' ).click( function( e ) {
         if( !character.sandbox.atStart ) {
             character.sandbox.atStart = true;
-            vorple.core.clickLink( 'start' );
+            vorple.undum.doLink( 'start' );
             e.preventDefault();
         }
         else {
