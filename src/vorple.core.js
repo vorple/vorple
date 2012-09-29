@@ -43,12 +43,12 @@ var vorple = {};
         /** Release number
          * @const
          */
-        release: 3,
+        release: 4,
         
         /** Major version number
          * @const
          */
-        version: 1,
+        version: 2,
         
         /** The interpreter engine
          */
