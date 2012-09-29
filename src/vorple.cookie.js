@@ -21,8 +21,8 @@
         var list = [];
         var cookies = document.cookie.split( ';' );
         
-        for( var i = 0; i < cookies.lenght; ++i ) {
-            list.push( cookies[ i ].split( '=' )[ 0 ] );            
+        for( var i = 0; i < cookies.length; ++i ) {
+            list.push( $.trim( cookies[ i ].split( '=' )[ 0 ] ) );            
         }
         
         return list;
