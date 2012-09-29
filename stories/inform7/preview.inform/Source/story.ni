@@ -64,6 +64,13 @@ Report switching to metric units:
 
 Chapter Dialogs
 
+Showing about is an action out of world.
+Understand "about" and "info" as showing about.
+
+Carry out showing about:
+	say "This is a preview of Vorple for Parchment. It demonstrates the Vorple library running on the Parchment web interpreter. The Z8 story file has been created with Inform 7.";
+	mark the current action "dialog".
+
 Crediting is an action out of world.
 Understand "credits" as crediting.
 

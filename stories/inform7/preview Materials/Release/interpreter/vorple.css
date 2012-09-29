@@ -75,7 +75,7 @@ a {
 	-moz-box-shadow:5px 5px 5px #ccc;
 }
 
-.oldPrompt {
+.previousCommand {
 	color:#162;
 	font-weight:normal;
 	text-transform:uppercase;
@@ -136,6 +136,17 @@ a {
 
 .command {
 	text-transform:uppercase;
+}
+
+.vorplePrompt input {
+	color:#162;
+	font-weight:bold;
+	width:550px;
+}
+
+.vorplePrompt input:focus {
+	outline:none;
+	border:0;
 }
 
 /* this prevents artifacts on scroll in Chrome */
