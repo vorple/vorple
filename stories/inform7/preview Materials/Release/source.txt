@@ -55,7 +55,7 @@ Understand "metric" as switching to metric units.
 
 Carry out switching to metric units when the thermometer is imperial:
 	now the thermometer is metric;
-	place text "16 degrees Celcius" inside element with class "temperature";
+	place text "16 degrees Celsius" inside element with class "temperature";
 	place text "4 m/s" inside element with class "windspeed".
 	
 Report switching to metric units:
@@ -268,7 +268,7 @@ Understand "temperature" and "wind" and "speed" as the thermometer.
 The thermometer can be imperial or metric. The thermometer is metric.
 
 To say outside temperature:
-	say "[if the thermometer is imperial]61 degrees Fahrenheit[otherwise]16 degrees Celcius" inside element with class "temperature".
+	say "[if the thermometer is imperial]61 degrees Fahrenheit[otherwise]16 degrees Celsius" inside element with class "temperature".
 
 To say wind speed:
 	say "[if the thermometer is imperial]13 ft/s[otherwise]4 m/s" inside element with class "windspeed".

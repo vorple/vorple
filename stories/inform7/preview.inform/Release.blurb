@@ -1,18 +1,18 @@
 ! Blurb file created by Inform build 6G60
 
-status "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/CblorbModel.html" "/var/www/vorple/stories/inform7/preview.inform/Build/StatusCblorb.html"
+status "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/CblorbModel.html" "/private/var/www/vorple/stories/inform7/preview.inform/Build/StatusCblorb.html"
 
 
 ! Identification
 
-project folder "/var/www/vorple/stories/inform7/preview.inform"
-release to "/var/www/vorple/stories/inform7/preview Materials/Release"
+project folder "/private/var/www/vorple/stories/inform7/preview.inform"
+release to "/private/var/www/vorple/stories/inform7/preview Materials/Release"
 
 ! Blorb instructions
 
 storyfile leafname "Vorple Preview.zblorb"
-storyfile "/var/www/vorple/stories/inform7/preview.inform/Build/output.z8" include
-ifiction "/var/www/vorple/stories/inform7/preview.inform/Metadata.iFiction" include
+storyfile "/private/var/www/vorple/stories/inform7/preview.inform/Build/output.z8" include
+ifiction "/private/var/www/vorple/stories/inform7/preview.inform/Metadata.iFiction" include
 cover "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/DefaultCover.jpg"
 picture 1 "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/DefaultCover.jpg"
 release file "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Cover.jpg"
@@ -30,26 +30,26 @@ placeholder [BLURB] = "A work of interactive fiction."
 ! Other material to release
 
 source public
-auxiliary "/var/www/vorple/stories/inform7/preview Materials/vorple.custom.css" "Custom CSS"
-auxiliary "/var/www/vorple/stories/inform7/preview Materials/vorple.custom.js" "Custom JavaScript"
-auxiliary "/var/www/vorple/stories/inform7/preview Materials/tvscreen.png" "TV screen"
-auxiliary "/var/www/vorple/stories/inform7/preview Materials/lamp.png" "Lamp"
-auxiliary "/var/www/vorple/stories/inform7/preview Materials/teaparty.png" "Tea Party"
-auxiliary "/var/www/vorple/stories/inform7/preview Materials/alarmclock.png" "Alarm clock"
-auxiliary "/var/www/vorple/stories/inform7/preview Materials/logo-300.png" "Logo"
+auxiliary "/private/var/www/vorple/stories/inform7/preview Materials/vorple.custom.css" "Custom CSS"
+auxiliary "/private/var/www/vorple/stories/inform7/preview Materials/vorple.custom.js" "Custom JavaScript"
+auxiliary "/private/var/www/vorple/stories/inform7/preview Materials/tvscreen.png" "TV screen"
+auxiliary "/private/var/www/vorple/stories/inform7/preview Materials/lamp.png" "Lamp"
+auxiliary "/private/var/www/vorple/stories/inform7/preview Materials/teaparty.png" "Tea Party"
+auxiliary "/private/var/www/vorple/stories/inform7/preview Materials/alarmclock.png" "Alarm clock"
+auxiliary "/private/var/www/vorple/stories/inform7/preview Materials/logo-300.png" "Logo"
 
 ! Website instructions
 
 placeholder [ENCODEDSTORYFILE] = "Vorple Preview.zblorb.js"
-template path "/var/www/vorple/stories/inform7/preview Materials/Templates"
+template path "/private/var/www/vorple/stories/inform7/preview Materials/Templates"
 template path "/Users/jleinonen/Library/Inform/Templates"
 template path "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Templates"
 interpreter "Vorple" "z"
-base64 "/var/www/vorple/stories/inform7/preview.inform/Build/output.z8" to "/var/www/vorple/stories/inform7/preview Materials/Release/interpreter/Vorple Preview.zblorb.js"
+base64 "/private/var/www/vorple/stories/inform7/preview.inform/Build/output.z8" to "/private/var/www/vorple/stories/inform7/preview Materials/Release/interpreter/Vorple Preview.zblorb.js"
 
 ! Website instructions
 
-template path "/var/www/vorple/stories/inform7/preview Materials/Templates"
+template path "/private/var/www/vorple/stories/inform7/preview Materials/Templates"
 template path "/Users/jleinonen/Library/Inform/Templates"
 template path "/Applications/Inform.app/Contents/Resources/Inform7/Extensions/Reserved/Templates"
 css
