@@ -1,7 +1,5 @@
 Vorple Core (for Z-Machine only) by The Vorple Project begins here.
 
-Include Undo Output Control by Erik Temple.
-
 Chapter JavaScript evaluation
 
 Include (-
@@ -41,25 +39,41 @@ Array streambuf buffer 200;
 	for (i=0: i < len: i++) print (char) addr->i;
 ];
 
-[ IsJS val ;
-
+[ IsZ12 val ;
 	#Ifdef TARGET_ZCODE;
 		! Check we're in a 1.2 version interpreter
 		val = HDR_SPECREVISION-->0;
 		if (val < $0102) rfalse;
 	#Endif; ! TARGET_ZCODE
+	rtrue;
+];
 
+[ IsJS val ;
 	! Checking for eval() stream support
-	if ( Gestalt($30, 0, 0) == 0 ) rfalse;
+	if ( IsZ12() == false || Gestalt($30, 0, 0) == 0 ) rfalse;
 	
 	rtrue;
 ];
 
+[ IsHTML val ;
+	! Checking for HTML stream support
+	if ( IsZ12() == false || Gestalt($31, 0, 0) == 0 ) rfalse;
 	
--).
+	rtrue;
+];
 
+Global vorpleSupported; 
 
-To decide whether Vorple/JavaScript is supported/available: (- (IsJS()) -).
+-) after "Definitions.i6t".
+
+To set Vorple support status:
+	(- vorpleSupported = ( IsJs() && IsHTML() ); -);
+
+First startup rule (this is the check whether Vorple is supported rule):
+	set Vorple support status.
+
+To decide whether Vorple/JavaScript is supported/available: (- (vorpleSupported) -).
+
 To decide whether Vorple/JavaScript is not supported/available:
 	if Vorple is supported, decide no;
 	decide yes.
