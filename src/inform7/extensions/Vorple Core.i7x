@@ -297,7 +297,7 @@ The previous example generates this markup:
 The elements are always created empty and with a closing tag. Content can be added to them with these phrases:
 
 	place "An exciting story" in the element "title";
-	display "Story so far:" in a "h2" element with class "subtitle";
+	display "Story so far:" in element "h2" with class "subtitle";
 	display "Anonymous Adventurer" in an element with class "name";
 
 The "place" phrase will use an existing element(s) with the given class, overwriting previous content. The "display" phrases create new elements. The default element, if not otherwise specified, is span.
