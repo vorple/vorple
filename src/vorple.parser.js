@@ -13,6 +13,7 @@
         _scrollPosition: 0,
         _turn: {
             commandVisible: true,
+            mode: 'line',
             outputVisible: true,
             type: 'normal'
         }
@@ -35,6 +36,59 @@
         });
         
         vorple.parser._evalqueue = [];
+    };
+    
+    vorple.parser._getTurnStructure = function( mode, $buffer ) {
+        var structure = {};
+        
+        // Don't mess with the original
+        var $contents = $buffer.clone();
+
+        // The first span contains the command given to the parser.
+        // The command ends in the first <br>.
+        var $firstSpan = $( 'span:first', $contents );
+        var $previousCommand = $firstSpan
+            .contents() // its contents including text nodes,
+            .first();   // and the first node of the contents
+        structure.previousCommand = $previousCommand.text();
+
+        // if the previous command node is a <br>,
+        // it means the command itself was empty
+        // and the `<br>` is already removed.
+        // Otherwise there's still the `<br>` to remove.
+        if( !$previousCommand.is( 'br' ) ) {
+            $( 'br:first', $firstSpan ).remove();
+        }
+    
+        $previousCommand.remove();
+
+
+        if( mode == 'line' ) {
+            // The last span contains the new prompt.
+            var $parchmentPromptContainer = $( 'span:last', $contents );
+            
+            // The prompt is the first text node
+            structure.prompt = $parchmentPromptContainer.contents().filter(function() {
+                  return this.nodeType == 3;
+            }).first().text();
+            
+            // In some cases (parser errors etc) there's a <br> inside
+            // the last span. We need to move that out of there so that
+            // it won't get deleted when we remove the original prompt line.
+            $( 'br', $parchmentPromptContainer ).appendTo( $parchmentPromptContainer.prev() );
+    
+            // Remove the prompt line so that $contents contains
+            // only the turn text now
+            $parchmentPromptContainer.remove();
+        }
+        else {
+            structure.prompt = '';
+        }
+        
+        structure.$turn = $contents;
+        
+        console.log( structure );
+        return structure;
     };
 
     vorple.parser._metaTurnFilters = function( turn, metadata ) {
@@ -296,7 +350,6 @@
     };
     
     
-    
     /**
      * Unregisters (removes) a filter.
      * 
@@ -310,7 +363,7 @@
     
     
     /** Initialization */
-    $( document ).on( 'init.vorple', function() { 
+    $( document ).on( 'init.vorple', function( e ) { 
         if( vorple.core.engine( 'parchment' ) ) {
             vorple.parser._container.parchment = vorple.core.system.options.container;
             
@@ -380,10 +433,24 @@
 					{
 						return false;
 					}
+					
+					if( vorple.parser._turn.mode === 'char' ) {
+                        $( 'input.TextInput' ).trigger( $.Event( 'keypress', { which: e.which } ) );
+					}
 				}
 			});
-    				
-            
+    	
+    	/*
+    	   // DEBUG			
+            $( document ).bind( 'TextInput.vorple', function( e ) {
+                console.log( e );
+            });                
+
+           // DEBUG         
+            $( document ).bind( 'TurnComplete.vorple', function( e ) {
+                console.log( e );
+            });                
+            */
             
             // Events happening right after text input
             $( document ).bind( 'TextInput.vorple', function( e ) {
@@ -402,10 +469,10 @@
             // At that point we can take what's in the buffer and
             // do all the Vorple stuff with it.
             $( document ).bind( 'TurnComplete.vorple', function( e ) {
+                console.log( e );
                 var $buffer = $( ".main", vorple.parser._container.parchment );
-                // console.log( $buffer.html() );
                 var $target = $( vorple.parser._container.vorple );
-  
+                
                 
                 /* Split the buffer contents into actual content, prompt,
                  * old command and status line.
@@ -415,61 +482,28 @@
                  * <span>[old command]<br>[content]</span><span><br>[prompt]<input class="TextInput"></span>
                  */
                 
-                var $contents = $buffer.clone();
+                var structure = vorple.parser._getTurnStructure( e.mode, $buffer );
                 
-                // The first span contains the command given to the parser.
-                // The command ends in the first <br>.
-                var $firstSpan = $( 'span:first', $contents );
-                var $previousCommand = $firstSpan
-	            	.contents() // its contents including text nodes,
-	            	.first();	// and the first node of the contents
-                var previousCommandText = $previousCommand.text();
-
-                // if the previous command node is a <br>,
-                // it means the command itself was empty
-                // and the `<br>` is already removed.
-                // Otherwise there's still the `<br>` to remove.
-                if( !$previousCommand.is( 'br' ) ) {
-                	$( 'br:first', $firstSpan ).remove();
-                }
-                
-                $previousCommand.remove();
-                
-                // The last span contains the new prompt.
-                var $parchmentPromptContainer = $( 'span:last', $contents );
-                
-                // The prompt is the first text node
-                var promptText = $parchmentPromptContainer.contents().filter(function() {
-                	  return this.nodeType == 3;
-                }).first().text();
-                
-                // In some cases (parser errors etc) there's a <br> inside
-                // the last span. We need to move that out of there so that
-                // it won't get deleted when we remove the original prompt line.
-                $( 'br', $parchmentPromptContainer ).appendTo( $parchmentPromptContainer.prev() );
-
-                // Remove the prompt line so that $contents contains
-                // only the turn text now
-                $parchmentPromptContainer.remove();
                 
                 // Run the contents through filters
                 var filteredContents = vorple.parser._runFilters(
                 	{
                 		previousCommand: {
-                			text: previousCommandText,
+                			text: structure.previousCommand,
                 			classes: ""
                 		},
                 		content: {
-                			text: $contents.html(),
+                			text: structure.$turn.html(),
                 			classes: ""
                 		},
                 		prompt: {
-                			text: promptText,
+                			text: structure.prompt,
                 			val: "",
                 			classes: ""
                 		},
                 		meta: false,
-                		classes: ""
+                		classes: "",
+                		mode: e.mode
                 	},
                 	'output',
             		{
@@ -492,21 +526,22 @@
                     
                     // run the code in the queue
                     vorple.parser._evaluateQueue();
-                    
+  
+                    vorple.parser._turn.mode = e.mode;
+                                  
                 	return false;
                 }
 
                 if( vorple.parser._turn.outputVisible ) {
 	                // Replace the contents with filtered text
-	                $contents
+	                structure.$turn
 	                	.html( filteredContents.content.text )
 	                	.addClass( filteredContents.content.classes );
-	                
 	                
 	                // Now we can display the results.
 	
 	                // Put the turn contents into a container
-	                var $newTurn = $( '<div></div>' ).append( $contents );
+	                var $newTurn = $( '<div></div>' ).append( structure.$turn );
 
                 }
                 
@@ -525,7 +560,7 @@
                     promptContents = $( '.vorplePrompt input', $target ).val();
                     $( '.vorplePrompt:last', $target ).remove();
                 }
-
+                
                 // Set the new turn's classes
                 $newTurn
                 	.addClass( 'turnContent' )
@@ -538,7 +573,7 @@
 	            	.append( $newTurn );
 
                 // Remove the previous turn class from the old content
-                if( !filteredContents.meta ) {
+                if( !filteredContents.meta && e.mode == 'line' ) {
 	                $( '.penultimateTurn' ).removeClass( 'penultimateTurn' );
 	                $( '.previousTurn' ).addClass( 'penultimateTurn' ).removeClass( 'previousTurn' ).addClass( 'previousTurnFader' ).removeClass( 'previousTurnFader', 1000 );
 	                $newTurnContainer.addClass( 'previousTurn' );
@@ -568,6 +603,11 @@
                 // Clear the buffer
                 $buffer.empty();
                 
+                // Insert a fake command for the next turn if there will
+                // not be one (char input)
+                if( e.mode === 'char' ) {
+                    $( '<span><br></span>' ).appendTo( $buffer );
+                }
 
                 // reset hidden commands/output
                 vorple.parser.hideCommand( false );
@@ -577,7 +617,9 @@
                 // Scroll to where the new turn begins
                 vorple.parser.scrollTo( $newTurn );
   
-
+  
+                vorple.parser._turn.mode = e.mode;
+                
             });
             
             /* we should NOT do this (no extension-specific code in the
