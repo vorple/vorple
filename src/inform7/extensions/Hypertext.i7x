@@ -1,4 +1,4 @@
-Hypertext (for Z-Machine only) by The Vorple Project begins here
+Hypertext (for Z-Machine only) by The Vorple Project begins here.
 
 Include Vorple Core by The Vorple Project.
 

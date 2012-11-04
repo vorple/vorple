@@ -1,4 +1,4 @@
-Tooltips by The Vorple Project begins here.
+Tooltips (for Z-Machine only) by The Vorple Project begins here.
 
 Include Vorple Core by The Vorple Project.
 
