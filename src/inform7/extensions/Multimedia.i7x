@@ -60,15 +60,17 @@ Multimedia ends here.
 ---- DOCUMENTATION ----
 
 
-Chapter: Directories
+Chapter: Including media files
 
-The media files should be placed to the following directories in the project folder:
+Media files (images and audio) should be declared in the story source so that Inform knows to include them in the release version.
 
-	Release/media/image
-	Release/media/audio
-	Release/media/music
+	Release along with a file of "Some picture" called "whatever.png".
 
-You should first release the project once (with the 'release along with the "Vorple" interpreter' line) so that the Release directory is created. Then create the subdirectories and place the media files there.
+The files should be placed in the Materials directory, as per chapter 23.7. in Writing with Inform.
+
+It doesn't matter what you call the resource ("Some picture" in the above example). Only the filename ("whatever.png") is significant.
+
+Note that we shouldn't use the "Figure of ..." or "Sound of ..." directives described in chapter 22 of Writing with Inform. Files declared this way won't be included as such in the release folder.
 
 
 Chapter: Images
@@ -123,3 +125,5 @@ We can play YouTube videos with:
 
 The string of numbers and letters is the id of the video we want to show. The id can be seen in the browser's address bar when viewing the video in YouTube, for example "http://www.youtube.com/watch?v=9d4Fu90ubmA".
 	
+
+
