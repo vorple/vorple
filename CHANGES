@@ -3,9 +3,24 @@ Release 2.5 (2012-??-??)
 
 Extensions
 ----------
+ - Hypertext: Added a missing full stop at the end of first line which
+   prevented the extension from installing correctly
+ - Hypertext: Added an option for external links to open in the same
+   window
+ - Multimedia: Replaced documentation about including resources with 
+   the current version
+ - Tooltips: Added the missing "Z-machine only" directive 
  - Vorple Core: Separate checks for new Z-machine 1.2 streams
    and caching Vorple availability (closes #1) 
  - Vorple Core: Removed the Undo Output Control which is now unneeded
+ - Vorple Core: Fixed a wording in an example (closes pull request #2 
+   by Michael Bikovitsky)
+   
+   
+Modules
+-------
+
+ - Parser: Character input support
 
 
 

@@ -5,10 +5,12 @@ Include Vorple Core by The Vorple Project.
 
 Chapter Hyperlinks
 
-To display (txt - indexed text) linking to url (url - indexed text):
+To display (txt - indexed text) linking to url (url - indexed text), in the same window:
 	let id be unique identifier;
 	display txt inside element "a" with class id;
-	eval "$('.[id]').attr('href','[escaped url]').attr('target','_blank')";
+	eval "$('.[id]').attr('href','[escaped url]')";
+	if not in the same window:
+		eval "$('.[id]').attr('target','_blank')";
 	if Vorple is not supported:
 		say txt.
 
@@ -34,9 +36,13 @@ Chapter: Links
 
 A hyperlink can link to either a web URL or clicking on it can trigger a command that's sent to the parser. 
 
-Hyperlinks open web pages in new browser windows. The URLs should include the "http://" prefix.
+Hyperlinks open web pages in new browser windows. The URLs should include the "http://" (or "https://") prefix.
 
 	display "Vorple web page" linking to url "http://vorple-if.com";
+
+The link can be opened in the same window by passing an option:
+
+	display "Vorple web page" linking to url "http://vorple-if.com", in the same window;
 
 Links to commands by default work just as if they would have been typed on the prompt.
 
