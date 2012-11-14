@@ -101,6 +101,9 @@ To say element (element - indexed text) with/-- class/classes (class - indexed t
 		open HTML channel;
 		say "[element] [class]";
 		close HTML channel.
+
+To say element (name - indexed text):
+	say element name with class "".
    
 To say div (class - indexed text):
 	say element "div" class class.
@@ -296,7 +299,7 @@ The previous example generates this markup:
 
 The elements are always created empty and with a closing tag. Content can be added to them with these phrases:
 
-	place "An exciting story" in the element "title";
+	place "An exciting story" in the element with class "title";
 	display "Story so far:" in element "h2" with class "subtitle";
 	display "Anonymous Adventurer" in an element with class "name";
 

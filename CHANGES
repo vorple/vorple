@@ -15,6 +15,9 @@ Extensions
  - Vorple Core: Removed the Undo Output Control which is now unneeded
  - Vorple Core: Fixed a wording in an example (closes pull request #2 
    by Michael Bikovitsky)
+ - Vorple Core: Added the "say element" phrase that was referred to
+   in the documentation but not implemented, and fixed wrong wording
+   of another phrase in the documentation (closes #3) 
    
    
 Modules
