@@ -78,7 +78,7 @@ z
 			$( '#vorpleContainer' ).unwrap(); 
 		});
 
-		vorple.media.defaults.swfPath = 'Jplayer.swf';
+		vorple.media.defaults.swfPath = 'interpreter/Jplayer.swf';
 		vorple.media.defaults.audioPath = '.';
 		vorple.media.defaults.imagePath = '.';
 		vorple.media.defaults.musicPath = '.';
