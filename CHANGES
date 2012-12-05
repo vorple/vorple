@@ -19,12 +19,24 @@ Extensions
    in the documentation but not implemented, and fixed wrong wording
    of another phrase in the documentation (closes #3) 
    
+
+Libraries
+---------
+
+ - Updated Parchment, should work with IE8 now
+
    
 Modules
 -------
 
  - Parser: Character input support
 
+
+Templates
+---------
+
+ - I7: Fixed the Jplayer.swf path which fixes sound issues in 
+   Firefox on Windows
 
 
 Release 2.4 (2012-09-29)
