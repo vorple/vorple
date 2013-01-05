@@ -1,45 +1,114 @@
 module( 'media' );
 
 $(function() {
-    vorple.media.defaults.swfPath = '../lib';
-    vorple.media.defaults.audioPath = '../stories/demo/media/audio';
-    vorple.media.defaults.videoPath = '../stories/demo/media/video';
+    vorple.media.defaults.audioPath = '../stories/undum/everything/media/audio';
+    vorple.media.defaults.musicPath = '../stories/undum/everything/media/music';
 });
 
-test( 'Container', function( ) {
-    var $playerContainer = $( '<div id="playerContainer"></div>' );
-    var $mainContainer = $( '<div id="mainContainer"></div>' );
+test( 'playSound', function() {
+    expect( 18 );
+    
+    // soundManager needs time to initialize;
+    // start the tests only when it's ready.
+    if( !soundManager.ok() ) {
+        stop();
+        soundManager.onready( audioTests );
+    }
+    else {
+        audioTests();
+    }
+});
 
-    $( 'body' ).append( $playerContainer );
-    $( 'body' ).append( $mainContainer );
+function audioTests() {
+    start();
 
-    var $container1 = vorple.media._createPlayer( );
+    var audioId1 = vorple.media.playSound( 'cheer.mp3' );
+    var audioObject1 = soundManager.getSoundById( audioId1 );
+    ok( audioObject1.playState, 'Sound playing or buffering' );
+    
+    var audioId2 = vorple.media.playSound( 'cheer.mp3' );
+    var audioObject2 = soundManager.getSoundById( audioId2 );
+    stop();
+    vorple.media.stopSound( audioId1, 100, function() { 
+        start();
+        ok( 
+            audioObject1.volume === 0
+                && audioObject2.volume > 0, 
+            'One sound stopped' 
+        );
+    });
+    
+    audioId1 = vorple.media.playSound( 'cheer.mp3' );
+    audioObject1 = soundManager.getSoundById( audioId1 );
+    var audioId3 = vorple.media.playSound( 'cheer.mp3' );
+    var audioObject3 = soundManager.getSoundById( audioId3 );
+    stop();
+    vorple.media.stopSounds( 100, function() {
+        start();
+        ok( 
+            audioObject1.volume === 0
+                && audioObject2.volume === 0
+                && audioObject3.volume === 0,
+            'All sounds stopped'
+        );
+    });
+    
+    // music
+    vorple.media.playMusic( 'emptyrooms.mp3' );
+    ok( soundManager.getSoundById( 'vorpleBgMusic' ).playState, 'Music playing or buffering' );
+    
+    stop();
+    vorple.media.stopMusic( 100, function() {
+        start();
+        equal( soundManager.getSoundById( 'vorpleBgMusic' ).playState, 0, 'Music stopped' );
+    });
+    
+    vorple.media.playMusic( 'emptyrooms.mp3' );
+    audioId1 = vorple.media.playSound( 'cheer.mp3' );
+    
+    vorple.media.mute({ sound: true, music: true });
+    
+    ok( soundManager.getSoundById( audioId1 ).muted, 'Sound muted' );
+    ok( soundManager.getSoundById( 'vorpleBgMusic' ).muted, 'Music muted' );
 
-    ok( $( '#' + vorple.media.defaults.mainContainer ).children( ).length == 1, 'player created in main container' );
+    vorple.media.mute({ sound: false, music: false });
 
-    equal( vorple.media._createPlayer( {
-        element : $playerContainer
-    } ), $playerContainer, 'jQuery object as container returned as is' );
+    ok( !soundManager.getSoundById( audioId1 ).muted, 'Sound unmuted' );
+    ok( !soundManager.getSoundById( 'vorpleBgMusic' ).muted, 'Music unmuted' );
+    
+    vorple.media.muteAll();
 
-    equal( vorple.media._createPlayer( {
-        element : 'playerContainer'
-    } ).attr( 'id' ), 'playerContainer', 'string as container returned as a jQuery object' );
+    ok( soundManager.getSoundById( audioId1 ).muted, 'Sound muted with all' );
+    ok( soundManager.getSoundById( 'vorpleBgMusic' ).muted, 'Music muted with all' );
 
-    equal( vorple.media._createPlayer( {
-        parent : $mainContainer
-    } ).parent( ).attr( 'id' ), 'mainContainer', 'jQuery main container' );
+    vorple.media.muteAll( false );
+    
+    ok( !soundManager.getSoundById( audioId1 ).muted, 'Sound unmuted with all' );
+    ok( !soundManager.getSoundById( 'vorpleBgMusic' ).muted, 'Music unmuted with all' );
 
-    equal( vorple.media._createPlayer( {
-        parent : 'secondMainContainer'
-    } ).parent( ).attr( 'id' ), 'secondMainContainer', "string main container, doesn't exist" );
+    vorple.media.toggleMute([ 'sound', 'music' ]);
 
-    equal( vorple.media._createPlayer( {
-        parent : 'mainContainer'
-    } ).parent( ).attr( 'id' ), 'mainContainer', "string main container, existing" );
+    ok( soundManager.getSoundById( audioId1 ).muted, 'Sound muted with toggle' );
+    ok( soundManager.getSoundById( 'vorpleBgMusic' ).muted, 'Music muted with toggle' );
 
-} );
+    vorple.media.toggleMute([ 'sound', 'music' ]);
+    
+    ok( !soundManager.getSoundById( audioId1 ).muted, 'Sound unmuted with toggle' );
+    ok( !soundManager.getSoundById( 'vorpleBgMusic' ).muted, 'Music unmuted with toggle' );
 
-test( 'image', function( ) {
+    stop();
+    vorple.media.stopAll( 100 );
+    setTimeout( function() {
+        start();
+        ok(
+            !soundManager.getSoundById( 'vorpleBgMusic' ).playState
+            && !soundManager.getSoundById( audioId1 ).playState,
+            'All audio stopped'
+        );
+    }, 80 );
+}
+
+test( 'image', function() {
     equal( vorple.media.image( 'foo.jpg' ), '<img src="media/image/foo.jpg" />' );
 
     equal( vorple.media.image( '/foo.jpg' ), '<img src="/foo.jpg" />' );
@@ -51,15 +120,14 @@ test( 'image', function( ) {
     ok( $img.hasClass( 'baz' ) && $img.attr( 'id' ) == 'fizz', 'image options' )
 } );
 
-test( 'preloadImage', function( ) {
+test( 'preloadImage', function() {
     vorple.media.defaults.imagePath = '../stories/everything/media/image';
 
     equal( typeof vorple.media.preloadImage( 'dodo.jpg' ), 'object', 'one image' );
-
     equal( typeof vorple.media.preloadImage( [ 'dodo.jpg', 'puppy,jpg' ] ), 'object', 'two images' );
 } );
 
-test( 'YouTube', function( ) {
+test( 'YouTube', function() {
     var $youtube = $( vorple.media.youtube( 'foo', {
         width : 100,
         height : 200

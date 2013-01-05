@@ -4,10 +4,10 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Enhancing Undum Hypertext Fiction with Vorple</title>
 	
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript">
 	    if( typeof jQuery === 'undefined' ) {
-	        document.write( unescape( "%3Cscript src='../../lib/jquery-1.7.1.min.js' type='text/javascript'%3E%3C/script%3E" ) );
+	        document.write( unescape( "%3Cscript src='../../lib/jquery-1.8.3.min.js' type='text/javascript'%3E%3C/script%3E" ) );
 	    }
 	</script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
@@ -473,7 +473,7 @@ In the standard Undum template the line is almost at the end of the file.
 
 &lt;!-- ...and add these lines below it: --&gt;
 &lt;script type="text/javascript" src="lib/jquery.qtip.min.js"&gt;&lt;/script&gt;
-&lt;script type="text/javascript" src="lib/jquery.jplayer.min.js"&gt;&lt;/script&gt;
+&lt;script type="text/javascript" src="lib/soundmanager.min.js"&gt;&lt;/script&gt;
 &lt;script type="text/javascript" src="lib/vorple.min.js"&gt;&lt;/script&gt;
 
 &lt;!-- Make sure those lines come before the line that loads your story file,
@@ -1277,25 +1277,18 @@ The sounds are played automatically with sound down if the reader has
 
 <p>
 Audio and local video files are played using the
-<a href="http://jplayer.org/">jPlayer</a> library.
+<a href="http://www.schillmania.com/projects/soundmanager2/">SoundManager 2</a>
+library.
 </p>
 
 <p>
 Sound effects can be played by using 
 <code>vorple.media.playSound()</code><a href="../API/symbols/vorple.media.html#.playSound" class="api">API</a>.
-</p>
-
-<p>
-Since the support for audio files in browsers varies quite a bit, 
-for best compatibility you can supply the same sound file in
-several different formats.
+Mp3 files are probably the best supported, but OGG files should work as well.
 </p>
 
 <pre class="brush: js;">
-vorple.media.playSound({
-    mp3: "sound.mp3",
-    oga: "sound.ogg"
-});
+vorple.media.playSound( "sound.mp3" );
 </pre>
 
 <p>
@@ -1308,9 +1301,12 @@ The default path is stored in <code>vorple.media.defaults.audioPath</code>.
 <code>vorple.media.stopSounds()</code><a href="../API/symbols/vorple.media.html#.stopSounds" class="api">API</a>
 stops all currently playing sounds. If you need to stop or pause
 a single sound, you have to manipulate the player object directly.
-<code>vorple.media.playSound()</code> returns a jPlayer object.
-If you assign the return value to a variable, you can use any
-<a href="http://jplayer.org/">jPlayer methods</a> to manipulate the player.
+<code>vorple.media.playSound()</code> returns the sound objects id.
+If you assign the return value to a variable, you can use 
+<code>vorple.media.stopSound()</code><a href="../API/symbols/vorple.media.html#.stopSound" class="api">API</a>
+to stop the sound, or us any 
+<a href="http://www.schillmania.com/projects/soundmanager2/">SoundManager
+methods</a> to manipulate the sound.
 </p>
 
 <div class="note">
@@ -1375,6 +1371,72 @@ There are a couple of key differences:
     the story is loaded unless it was manually stopped. 
 </li>
 </ul>
+
+<p>
+Another difference is that music is set to loop automatically (the same track
+starts again right after it has ended). If looping is not desired it can be
+disabled with a <code>loop: false</code> option: 
+</p>
+
+<pre class="brush: js;">
+vorple.media.playMusic( "filename.mp3", { loop: false } );
+</pre>
+
+<p>
+Conversely the same option set to <code>true</code> can be passed to
+<code>vorple.media.playSound()</code> to make sound effects looping.
+</p>
+
+
+<h4>Volume, fading out and callbacks</h4>
+
+<p>
+The default volume for sound effects and music is 80, with 100 being the 
+maximum. It can be changed with the <code>volume</code> option.
+</p>
+
+<p>
+All functions that stop sounds, including the 
+<code>vorple.media.playMusic()</code> when it stops the previous music,
+have an option to fade the sound out gradually instead of stopping it abruptly. 
+</p>
+
+<p>
+The fade out speed is given as a number between 1 and 100, where higher number
+means faster fade out. The volume is decreased every 50 milliseconds 
+(0.05 seconds) and the number tells
+how much the volume is decreased each time until it reaches zero.
+With fade out speed 5 it takes 80 / 5 * 50 = 800 milliseconds (0.8 seconds) 
+for a sound to fade out from the default volume.
+</p>
+
+<p>
+Passing a fade out speed of 100 will stop the sound immediately without fading.
+<code>vorple.media.stopSound()</code> and <code>vorple.media.stopSounds()</code>
+have 100 as the default. <code>vorple.media.stopAll()</code>,
+<code>vorple.media.stopMusic()</code> and <code>vorple.media.playMusic()</code>
+have 5.
+</p>
+
+<p>
+Functions that stop sounds also have an option to pass a <em>callback 
+function</em> that's executed when the sound has actually stopped, i.e.
+when the fade out has completed.
+</p>
+
+<p>
+Here's an example of stopping background music with slow fade out and
+showing a notification when the fade out is completed.
+</p>
+
+<pre class="brush: js;">
+vorple.media.stopMusic( 
+	3, 
+	function() { 
+		vorple.notify.show( 'The music has stopped!' ); 
+	}
+);
+</pre>
 
 
 <h4>YouTube videos</h4>
@@ -1568,27 +1630,9 @@ its own text to reflect the current status from "Sounds on" to "Sounds off".
 <p>
 Native audio and video support in web browsers is still far from standard.
 Some browsers can play only MP3 files, some only OGG files, some both, some
-neither. (The current situation is covered in the 
-<a href="http://jplayer.org/latest/developer-guide/#reference-html5-media">jPlayer
-documentation</a>.) 
-jPlayer tries to use the browser's native playback capabilities
-and falls back to a Flash solution if it doesn't work. 
-</p>
-
-<p>
-For this reason, to make sure the reader gets to see the videos and hear
-the sounds you should provide two versions of all files: an MP3 and an OGG
-file for sounds, and an M4V and an OGG file for videos. 
-This will cover practically all modern desktop browsers and many of the mobile
-browsers.
-</p>
-
-<p>
-If you don't want to make two or more versions of each media file,
-the safest alternative is to use only MP3 and M4V files. 
-Some readers will then not be able to see or hear
-the media, but the percentage is probably very low 
-(Firefox or Opera users who don't have Flash installed).   
+neither. 
+SoundManager uses primarily a Flash player and tries to use the browser's native
+playback capabilities if Flash player isn't available. 
 </p>
 
 <p>
