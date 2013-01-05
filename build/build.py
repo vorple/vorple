@@ -44,13 +44,12 @@ if 0: # tmp disable
 
 
 # run the minifier
-print "Running Closure Compiler..."
+print "Running Closure Compiler for Vorple..."
 
 minifiercommand = [
                   "/usr/bin/java", 
                   "-jar", minifierdir+"compiler.jar", 
                   "--compilation_level=SIMPLE_OPTIMIZATIONS",
-#                  "--compilation_level=WHITESPACE_ONLY", # debug 
                   "--js_output_file", libdir+"vorple.min.js",
                   "--js", corelib
                   ]
@@ -58,6 +57,47 @@ minifiercommand = [
 for filename in srcfiles:
     minifiercommand.append( "--js" )
     minifiercommand.append( filename )
+
+call( minifiercommand )
+
+
+print "Running Closure Compiler for library files..."
+
+
+minifiercommand = [
+                  "/usr/bin/java", 
+                  "-jar", minifierdir+"compiler.jar", 
+                  "--compilation_level=SIMPLE_OPTIMIZATIONS",
+                  "--warning_level", "QUIET",
+                  "--js_output_file", libdir+"vorple.undum.min.js",
+                  "--js", libdir+"jquery-1.8.3.min.js",
+                  "--js", libdir+"jquery.noty.js",
+                  "--js", libdir+"noty/default.js",
+                  "--js", libdir+"noty/layouts.js",
+                  "--js", libdir+"jquery.qtip.min.js",
+                  "--js", libdir+"soundmanager2.min.js",
+                  "--js", libdir+"undum.js",
+                  "--js", libdir+"vorple.min.js"
+                  ]
+
+call( minifiercommand )
+
+
+minifiercommand = [
+                  "/usr/bin/java", 
+                  "-jar", minifierdir+"compiler.jar", 
+                  "--compilation_level=SIMPLE_OPTIMIZATIONS",
+                  "--warning_level", "QUIET",
+                  "--js_output_file", libdir+"vorple.parchment.min.js",
+                  "--js", libdir+"jquery-1.8.3.min.js",
+                  "--js", libdir+"jquery.noty.js",
+                  "--js", libdir+"noty/default.js",
+                  "--js", libdir+"noty/layouts.js",
+                  "--js", libdir+"jquery.qtip.min.js",
+                  "--js", libdir+"soundmanager2.min.js",
+                  "--js", libdir+"parchment.min.js",
+                  "--js", libdir+"vorple.min.js"
+                  ]
 
 call( minifiercommand )
 

@@ -338,10 +338,7 @@ undum.game.situations.media = new undum.Situation({
             case 'video':
                 break;
             case 'emptyrooms':
-                vorple.media.playMusic({ 
-                    mp3: 'emptyrooms.mp3',
-                    oga: 'emptyrooms.ogg'
-                });
+                vorple.media.playMusic( 'emptyrooms.mp3' );
                 break;
             case 'steady':
             /**
@@ -349,10 +346,7 @@ undum.game.situations.media = new undum.Situation({
              *  "Empty rooms (small theme)" by _ghost (http://ccmixter.org/files/_ghost/31006)
              *  "Steady" by Nethis (http://ccmixter.org/files/Nethis/33225)
              */
-                vorple.media.playMusic({ 
-                    mp3: 'steady.mp3',
-                    oga: 'steady.ogg'
-                });
+                vorple.media.playMusic( 'steady.mp3' );
                 break;
             /**
              * Sound effect credits:
@@ -363,10 +357,7 @@ undum.game.situations.media = new undum.Situation({
             case 'whoosh':
             case 'pong':
             case 'cheer':
-                vorple.media.playSound({
-                    mp3: action+'.mp3',
-                    oga: action+'.ogg'
-                });
+                vorple.media.playSound( action+'.mp3' );
                 break;
             case 'stop-music':
                 vorple.media.stopMusic();
@@ -780,6 +771,7 @@ undum.game.init = function( character, system ) {
     
     vorple.undum.settings.disposableLinks = [ 'dispose-now' ];
  
+    vorple.media.defaults.swfPath = '../../../lib/soundmanager';
     
     /** Initialize and start Vorple. This line is mandatory. */
     vorple.core.init( system );
