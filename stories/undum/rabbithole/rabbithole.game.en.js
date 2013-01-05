@@ -266,10 +266,7 @@ undum.game.situations.music = new undum.Situation({
             case 'gramophone':
                 // "Alpine Summer" by rocavaco (feat. Mihai Sorohan, Die lustigen Toggenburger, vo1k1, Clarence Simpson)
                 // http://ccmixter.org/files/rocavaco/28950
-                vorple.media.playMusic({ 
-                    mp3: 'Alpine_Summer.mp3',
-                    oga: 'Alpine_Summer.ogg'
-                });
+                vorple.media.playMusic( 'Alpine_Summer.mp3' );
                 system.write(
                     vorple.html.p(
                         'The gramophone starts playing a tune. You can '
@@ -297,10 +294,7 @@ undum.game.situations.music = new undum.Situation({
              * drum: Zajo CC Sampling+ (http://www.freesound.org/people/Zajo/sounds/4853/)
              */
             default:
-                vorple.media.playSound({
-                    mp3: action+'.mp3',
-                    oga: action+'.ogg'
-                });
+                vorple.media.playSound( action+'.mp3' );
                 break;
         }
     }
@@ -395,6 +389,8 @@ undum.game.init = function( character, system ) {
         'teaparty.jpg',
         'rabbit.jpg'
         ]);
+        
+    vorple.media.defaults.swfPath = '../../../lib/soundmanager';
     
     vorple.core.init( system );
 };

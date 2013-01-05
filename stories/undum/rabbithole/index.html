@@ -4,22 +4,7 @@
     <meta charset="utf-8">
     <title>Down the Rabbit-Hole</title>
 
-
-    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        if( typeof jQuery == 'undefined' ) {
-            document.write( unescape( "%3Cscript src='../../../lib/jquery-1.7.1.min.js' type='text/javascript'%3E%3C/script%3E" ) );
-        }
-    </script>
-    
-    <script type="text/javascript" src="../../../lib/undum.js"></script>
-    <script type="text/javascript" src="../../../lib/jquery.qtip.min.js"></script>
-    <script type="text/javascript" src="../../../lib/jquery.jplayer.min.js"></script>    
-    <script type="text/javascript" src="../../../lib/jquery.noty.js"></script>    
-    <script type="text/javascript" src="../../../lib/noty/layouts.js"></script>
-    <script type="text/javascript" src="../../../lib/noty/default.js"></script>
-    <script type="text/javascript" src="../../../lib/vorple.min.js"></script>
-    
+    <script type="text/javascript" src="../../../lib/vorple.undum.min.js"></script>
     <script type="text/javascript" src="rabbithole.game.en.js"></script>
 
     <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Redressed" type='text/css'>    
@@ -226,11 +211,9 @@
             		to turn sounds off.
             	</p>
             	<p>
-            		Vorple uses the jPlayer library to play audio.
-            		It offers probably the most versatile range of
-            		browser support. It uses the browser's native
-            		audio player if one is available, or falls back
-            		to a Flash player in older browsers.
+            		Vorple uses the SoundManager 2 library to play audio.
+            		It uses a Flash player or if Flash is not available
+            		it tries to use native HTML5 audio.
             	</p>
             </div>
             <div id="undum" title="New Undum features">
