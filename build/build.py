@@ -6,7 +6,8 @@ import os
 import shutil
 import argparse
 import sys
-from subprocess import call
+import re
+import subprocess
 from glob import glob
 
 # handle command line arguments
@@ -58,6 +59,7 @@ if not arguments.tasks:
     sys.exit( "You must give either --tasks, --all or --coverage as an argument. --help for more options." )
 
 builddir = os.path.abspath( "./" ) + "/"
+tmpdir = os.path.abspath ( "tmp" ) + "/"
 srcdir = os.path.abspath( "../src" ) + "/"
 libdir = os.path.abspath( "../lib" ) + "/"
 themedir = os.path.abspath( "../themes" ) + "/"
@@ -66,11 +68,13 @@ apigeneratordir = os.path.abspath( "../../jsdoc-toolkit" ) + "/"
 minifierdir = os.path.abspath( "../../closure/closure-compiler" ) + "/"
 exampledir = os.path.abspath( "../stories/undum" ) + "/"
 unittestdir = os.path.abspath( "../tests" ) + "/"
+i7dir = "/Applications/Inform DEV.app/Contents/Resources/"
 i7extensiondir = os.path.abspath( "../src/inform7/extensions" ) + "/"
 i7mediadir = os.path.abspath( "../src/inform7/media" ) + "/"
 i7templatedir = os.path.abspath( "../src/inform7/templates/Vorple" ) + "/" # TODO: handle multiple templates
 
 destination = os.path.abspath( "release" ) + "/"
+i7extensiondestination = os.path.abspath( "../doc/inform7/examples" ) + "/"
 
 srcfiles = glob( srcdir+"vorple.*.js" )
 corelib = srcdir+"vorple.core.js"
@@ -81,13 +85,18 @@ if os.path.exists( destination ):
 
 os.mkdir( destination )
 
+if os.path.exists( tmpdir ):
+    shutil.rmtree( tmpdir )
+
+os.mkdir( tmpdir )
+
 if arguments.update:
     print "Updating Closure Compiler..."
-    call([ "curl", 
+    subprocess.call([ "curl", 
         "-L", "http://closure-compiler.googlecode.com/files/compiler-latest.zip",
         "-o", minifierdir+"compiler-latest.zip"
     ])    
-    call([ "unzip",
+    subprocess.call([ "unzip",
         "-oq", minifierdir+"compiler-latest.zip",
         "-d", minifierdir
     ])
@@ -109,7 +118,7 @@ if "minify_vorple" in arguments.tasks:
         minifiercommand.append( "--js" )
         minifiercommand.append( filename )
         
-    call( minifiercommand )
+    subprocess.call( minifiercommand )
 
 
 if "minify_lib" in arguments.tasks:
@@ -131,7 +140,7 @@ if "minify_lib" in arguments.tasks:
                       "--js", libdir+"vorple.min.js"
                       ]
     
-    call( minifiercommand )
+    subprocess.call( minifiercommand )
 
     minifiercommand = [
                       "/usr/bin/java", 
@@ -149,7 +158,7 @@ if "minify_lib" in arguments.tasks:
                       "--js", libdir+"vorple.min.js"
                       ]
     
-    call( minifiercommand )
+    subprocess.call( minifiercommand )
 
 
 # create API
@@ -157,7 +166,7 @@ if "minify_lib" in arguments.tasks:
 if "api" in arguments.tasks:
     print "Generating the API..."
     
-    call([ "/usr/bin/java",
+    subprocess.call([ "/usr/bin/java",
            "-jar", apigeneratordir+"jsrun.jar", apigeneratordir+"app/run.js",
            "-a",
            "-t="+apigeneratordir+"templates/codeview",
@@ -193,7 +202,7 @@ if "themes" in arguments.tasks:
             os.mkdir( target+"/media/music" )
             os.mkdir( target+"/media/video" )
             os.chdir( target )
-            call([
+            subprocess.call([
                   "zip",
                   "-rq",
                   destination+"vorple-"+themename+".zip",
@@ -210,7 +219,7 @@ if "undum_examples" in arguments.tasks:
     print "Packaging Undum example stories..."
     os.chdir( exampledir )
     os.chdir( "../../" )
-    call([
+    subprocess.call([
           "zip",
           "-rq",
           destination+"example-stories.zip",
@@ -220,7 +229,7 @@ if "undum_examples" in arguments.tasks:
     
     os.chdir( libdir )
     os.chdir( "../" )
-    call([
+    subprocess.call([
           "zip",
           "-grq",
           destination+"example-stories.zip",
@@ -266,25 +275,99 @@ if "i7_templates" in arguments.tasks:
     print "Packaging the I7 interpreter..."
     os.chdir( i7releasedir )
     os.chdir( "../" )
-    call([
+    subprocess.call([
           "zip",
           "-rq",
           destination+"i7-Vorple.zip",
           "Vorple",
           "-x", '*.DS_Store*'
         ])
+  
+    
+# Extracting and compiling examples from the extensions
     
 if "i7_examples" in arguments.tasks:
     print "Compiling I7 examples from the extensions..."
+    extensionroot = glob( i7extensiondir+"*" )
+    extensions = []
+    
+    #if os.path.exists( i7extensiondestination ):
+    #    shutil.rmtree( i7extensiondestination )
+    #os.makedirs( i7extensiondestination )
+    
+    nifiles = []
+    
+    for extensionsource in extensionroot:
+        extensionname = os.path.basename( extensionsource )
+        print " - "+extensionname + ": ",
+        targetdir = os.path.splitext( i7extensiondestination+extensionname )[0].replace( ' ', '_' ) + '/'
+        if not os.path.exists( targetdir ):
+            os.mkdir( targetdir )
+        extension = open( i7extensiondir+extensionname, 'r' )
+        examplename = ''
+        for line in extension:
+            if re.match( 'Example: \*', line ):
+                if examplename is not '':
+                    print '-',
+                examplename = re.match( 'Example: \** (.*?)( -.*)?$', line ).group( 1 )
+                print examplename,
+                nifiles.append( targetdir + examplename )
+                examplefile = open( targetdir + examplename + '.ni', 'w' )
+            elif examplename and ( re.match( '\t', line ) or line.strip() == '' ):
+                examplefile.write( re.sub( '\t(\*: ?)?', '', line, 1 ) )
+        print
+        if examplefile:
+            examplefile.close()
+        extension.close()
+
+    os.chdir( tmpdir )
+    os.mkdir( 'Build' )
+    os.mkdir( 'Source' )
+    os.mkdir( 'Index' )
+    
+    for ni in nifiles:
+        shutil.copy( ni+'.ni', 'Source/story.ni' )
+        try:
+            p = subprocess.check_output([
+                  'ni',
+                  "-package",
+                  ".",
+                  "-rules",
+                  i7dir + "Inform7/Extensions",
+                  "-extension=z8"
+              ], stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError, e:
+            print os.path.basename( ni ) + ': ni compile error'
+            print e.output
+        else:
+            try:
+                p = subprocess.check_output([
+                  'inform-6.32-biplatform',
+                  'Build/auto.inf',
+                  '+"'+i7dir+'Library/6.11/"',
+                  '-kE2SDwv8',
+                  '-o',
+                  ni+'.z8'
+                ], stderr=subprocess.PIPE)
+            except subprocess.CalledProcessError, e:
+                print os.path.basename( ni ) + ': Inform 6 compile error'
+                print e.output
+            
+        
+        
+# Library files modified for the unit test coverage
 
 if "coverage" in arguments.tasks:
     print "Creating library coverage tests..."
-    os.chdir( unittestdir )
-    call([
+    subprocess.call([
           'jscoverage',
           libdir,
-          'coverage/'
+          unittestdir+'coverage/'
       ])
     
+# cleanup
+
+#if os.path.exists( tmpdir ):
+#    shutil.rmtree( tmpdir )
     
 print "Done.\n"
