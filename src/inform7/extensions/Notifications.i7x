@@ -1,7 +1,8 @@
-Notifications (for Z-Machine only) by The Vorple Project begins here.
+Notifications (for Z-Machine only) by Juhana Leinonen begins here.
 
-Include Vorple Core by The Vorple Project.
+Include Vorple Core by Juhana Leinonen.
 
+Use authorial modesty.
 
 Chapter Locations
 
@@ -105,7 +106,7 @@ The default fallback can also be turned off completely:
 
 Example: * How To I - Showing small tips to new players who might not be familiar with the standard IF conventions.
 
-	*: Include Notifications by The Vorple Project.  
+	*: Include Notifications by Juhana Leinonen.  
 	Release along with the "Vorple" interpreter.
 
 	Lab is a room. "You're in a fancy laboratory."
@@ -119,7 +120,7 @@ Example: * How To I - Showing small tips to new players who might not be familia
 
 	After taking something for the first time:
 		show notification "Type INVENTORY (or just I) to see a list of what you're carrying";
-	continue the action.
+		continue the action.
 
 	After examining the trolley for the first time:
 		show notification "You can push the trolley between rooms by commanding PUSH TROLLEY followed by a compass direction".
@@ -132,20 +133,35 @@ Example: * How To I - Showing small tips to new players who might not be familia
 
 Example: ** Score Notifications - A visual notification when the player is awarded points.
 
-We'll create a rule that will show the score change as Vorple notification, or use the original score notification rule if the game is being played in a non-Vorple interpreter.
-
-	*: Include Notifications by The Vorple Project.
+We'll create a rule that will show the score change as a Vorple notification, or use the original score notification rule if the game is being played in a non-Vorple interpreter.
+	
+	*: Include Notifications by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
-
+	
+	Use scoring. The maximum score is 5.
+	
+	
+	Chapter New score notifications
+	
 	To say score notification message:
 		(- NotifyTheScore(); -).
-
+	
 	This is the enhanced notify score changes rule:
 		if Vorple is supported:
 			show notification "[score notification message]" at top center;
 		otherwise:
 			follow the notify score changes rule.
 	
-	The notify plain score changes rule is listed instead of the notify score changes rule in the turn sequence rulebook.
-
-
+	The enhanced notify score changes rule is listed instead of the notify score changes rule in the turn sequence rulebook.
+	
+	
+	Chapter Treasure chamber
+	
+	Treasure Chamber is a room. "Wealth beyond your dreams is piled all over this room."
+	
+	A valuable is a kind of thing. The pearls, gold coins, diamonds, rubies and emeralds are plural-named valuables in the Treasure Chamber. 
+	
+	Carry out taking a valuable when the noun is not handled (this is the award points for finding valuables rule):
+		increase the score by one.
+	
+	Test me with "take coins/take diamonds and rubies/take all".

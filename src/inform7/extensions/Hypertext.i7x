@@ -1,13 +1,17 @@
-Hypertext (for Z-Machine only) by The Vorple Project begins here.
+Hypertext (for Z-Machine only) by Juhana Leinonen begins here.
 
-Include Vorple Core by The Vorple Project.
+"Hyperlinks that either open a web site or execute a parser command."
+
+Include Vorple Core by Juhana Leinonen.
+
+Use authorial modesty.
 
 
 Chapter Hyperlinks
 
 To display (txt - indexed text) linking to url (url - indexed text), in the same window:
 	let id be unique identifier;
-	display txt inside element "a" with class id;
+	display txt inside element "a" called id;
 	eval "$('.[id]').attr('href','[escaped url]')";
 	if not in the same window:
 		eval "$('.[id]').attr('target','_blank')";
@@ -22,7 +26,7 @@ To display (txt - indexed text) linking to a/the/-- command (command - indexed t
 		let classes be "[classes] hideCommand";
 	if without showing the response:
 		let classes be "[classes] hideResponse";
-	display txt inside element "a" with class classes;
+	display txt inside element "a" called classes;
 	eval "$('.[id]').attr('href','[escaped command]')";
 	if Vorple is not supported:
 		say txt.
@@ -65,8 +69,7 @@ Email links ("mailto:") open an external mail program with the address pre-fille
 Note how we mark the action "normal" - otherwise the out of world action would be shown in a notification instead of in the normal story flow.
 
 
-	*: Include Hypertext by The Vorple Project.
-
+	*: Include Hypertext by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
 	Lounge is a room.

@@ -1,8 +1,13 @@
 Release 2.5 (2013-??-??)
 ========================
 
-Extensions
-----------
+I7 Extensions
+-------------
+
+ - Updated to work with the new I7 release
+ - Changed the author's name from "The Vorple Project" to "Juhana Leinonen"
+   to conform with Inform 7 extension guidelines
+ - Added and fixed examples across the board
  - Hypertext: Added a missing full stop at the end of first line which
    prevented the extension from installing correctly
  - Hypertext: Added an option for external links to open in the same
@@ -15,9 +20,15 @@ Extensions
  - Vorple Core: Removed the Undo Output Control which is now unneeded
  - Vorple Core: Fixed a wording in an example (closes pull request #2 
    by Michael Bikovitsky)
- - Vorple Core: Added the "say element" phrase that was referred to
-   in the documentation but not implemented, and fixed wrong wording
+ - Vorple Core: Added the "say element" phrase (as "display element") that was 
+   referred to in the documentation but not implemented, and fixed wrong wording
    of another phrase in the documentation (closes #3) 
+ - Vorple Core: Changed the "say" phrases to "display" phrases
+ - Vorple Core: Changed "with class(es)" wording to "called"
+ - Vorple Core: Changed "say div" and "say span" to "display block element" and
+   "display inline element" respectively
+ - Vorple Core: Changed the "say (content) in an (elem) element" phrase to
+   "say (content) in an element (elem)", in line with the other phrases
    
 
 Libraries
@@ -44,6 +55,8 @@ Modules
 
 Release 2.4 (2012-09-29)
 ========================
+
+Support for Parchment (Z-machine) and Inform 7.
 
 Modules
 -------

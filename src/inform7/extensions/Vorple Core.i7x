@@ -1,6 +1,10 @@
-Vorple Core (for Z-Machine only) by The Vorple Project begins here.
+Vorple Core (for Z-Machine only) by Juhana Leinonen begins here.
+
+"Core functionality of Vorple, including JavaScript evaluation, HTML elements and turn type marking."
 
 Chapter JavaScript evaluation
+
+Use authorial modesty.
 
 Include (-
 
@@ -77,83 +81,85 @@ To decide whether Vorple/JavaScript is supported/available: (- (vorpleSupported)
 To decide whether Vorple/JavaScript is not supported/available:
 	if Vorple is supported, decide no;
 	decide yes.
+
 To decide whether Vorple/JavaScript is unsupported/unavailable:
 	decide on whether or not Vorple is not supported.
 	
 To open JavaScript channel: (- @output_stream 5 streambuf; -).
 To close JavaScript channel: (- @output_stream( -5 ); -).
 
-To eval (javascript code - indexed text):
+To eval/evaluate code/-- (javascript code - text):
 	if Vorple is supported:
 		open JavaScript channel;
 		say "[javascript code]";
 		close JavaScript channel.
 		
-To queue code (javascript code - indexed text):
+To queue code (javascript code - text):
 	if Vorple is supported:
 		eval "vorple.parser._evalqueue.push(function(){[javascript code]})".
 
 To open HTML channel: (- @output_stream 6 streambuf; -).
 To close HTML channel: (- @output_stream( -6 ); -).
 
-To say element (element - indexed text) with/-- class/classes (class - indexed text):
+To display an/-- element (element - text) called (classes - text):
 	if Vorple is supported:
 		open HTML channel;
-		say "[element] [class]";
+		say "[element] [classes]";
 		close HTML channel.
 
-To say element (name - indexed text):
-	say element name with class "".
+To display an/-- element (name - text):
+	display element name called "".
    
-To say div (class - indexed text):
-	say element "div" class class.
+To display a/-- block element/-- called (classes - text):
+	display element "div" called classes.
 	
-To say span (class - indexed text):
-	say element "span" class class.
+To display an/-- inline element/-- called (classes - text):
+	display element "span" called classes.
 	
-To decide which indexed text is unique identifier:
-	let id be indexed text;
+To decide which text is unique identifier:
 	let id be "id";
 	repeat with X running from 1 to 3:
 		let rnd be a random number from 1000 to 9999;
 		let id be "[id][rnd]";
 	decide on id.
-
 		
-To display Vorple method (code - indexed text) in a/an/the/-- element (elem - indexed text) with class/classes (class - indexed text):
+To display Vorple method (code - text) in a/an/the/-- element (elem - text) called (class - text):
 	let id be unique identifier;
-	say element elem class "[id] [class]";
+	display element elem called "[id] [class]";
 	eval "$( '.[id]' ).html([code])".
 
-To display Vorple method (code - indexed text) in a/an/the/-- element with class/classes (class - indexed text):
-	display Vorple method code in an element "span" with class class.
+To display Vorple method (code - text) in a/-- block element/-- called (class - text):
+	display Vorple method code in element "div" called class.
+
+To display Vorple method (code - text) in an/-- inline/-- element called (class - text):
+	display Vorple method code in element "span" called class.
 		
-To display Vorple method (code - indexed text):
-	display Vorple method code in an element with class "".
+To display Vorple method (code - text):
+	display Vorple method code in an inline element called "".
 	
-To place text/-- (content - indexed text) inside/in a/an/the/-- element with class/classes (class - indexed text):
+To place text/-- (content - text) inside/in a/an/the/-- element called (class - text):
 	eval "$( '.[class]' ).html('[escaped content]')".
 	
-To display (content - indexed text) inside/in a/an/the/-- element (elem - indexed text) with class/classes (class - indexed text):
+To display (content - text) inside/in a/an/the/-- element (elem - text) called (class - text):
 	let id be unique identifier;
-	say element elem class "[id] [class]";
+	display element elem called "[id] [class]";
 	eval "$( '.[id]' ).html('[content]')".
 	
-To display (content - indexed text) inside/in a/an/the/-- element with class/classes (class - indexed text):
-	display content inside an element "span" with class class.
+To display (content - text) inside/in a/an/the/-- inline/-- element called (class - text):
+	display content inside an element "span" called class.
 	
-To say (content - indexed text) inside/in a/an/the/-- (elem - indexed text) element with class/classes (class - indexed text):
-	display content inside element elem with class class;
+To say (content - text) inside/in a/an/the/-- element (elem - text) called (class - text):
+	display content inside element elem called class;
 	if Vorple is not supported:
 		say content.
 
-To say (content - indexed text) inside/in a/an/the/-- element with class/classes (class - indexed text):
-	display content inside element with class class;
+To say (content - text) inside/in a/an/the/-- inline/-- element called (class - text):
+	display content inside element called class;
 	if Vorple is not supported:
 		say content.
 
-To say transient text/-- (content - indexed text):
-	say content inside element with class "transient".
+To say transient text/-- (content - text):
+	say content inside element called "transient".
 
 To (vorple-phrase - phrase) or/with/but fall/-- back/fallback with/to (fallback - phrase):
 	(- if( IsJS() ) {vorple-phrase} } else {fallback}; -).
@@ -167,40 +173,40 @@ Chapter Turn types
 To mark the/-- current action (type - text):
 	eval "vorple.parser.setTurnType('[type]');".
 
-Before printing a parser error:
+Before printing a parser error (this is the mark parser errors for Vorple rule):
 	mark the current action "error";
 	make no decision.
 
 Include (-
 [ Perform_Undo;
-#ifdef PREVENT_UNDO; L__M(##Miscellany, 70); return; #endif;
-if (turns == 1) { L__M(##Miscellany, 11); return; }
-if (undo_flag == 0) { L__M(##Miscellany, 6); return; }
-if (undo_flag == 1) { L__M(##Miscellany, 7); return; }
+#ifdef PREVENT_UNDO; IMMEDIATELY_UNDO_RM('A'); new_line; return; #endif;
+if (turns == 1) { IMMEDIATELY_UNDO_RM('B'); new_line; return; }
+if (undo_flag == 0) { IMMEDIATELY_UNDO_RM('C'); new_line; return; }
+if (undo_flag == 1) { IMMEDIATELY_UNDO_RM('D'); new_line; return; }
 if( isJS() ) {
 	@output_stream 5 streambuf;
 	print "vorple.parser.setTurnType('undo')";
 	@output_stream( -5 );
 }
-if (VM_Undo() == 0) L__M(##Miscellany, 7);
+if (VM_Undo() == 0) { IMMEDIATELY_UNDO_RM('A'); new_line; }
 ];
 -) instead of "Perform Undo" in "OutOfWorld.i6t".
 	
 To decide whether current action is out of world:
      (- meta -)
     
-First specific action-processing rule:
+First specific action-processing rule (this is the mark out of world actions for Vorple rule):
 	if current action is out of world:
 		mark the current action "meta".
 
 
 Chapter Escaping
 
-To decide which indexed text is escaped (string - indexed text):
+To decide which text is escaped (string - text):
 	decide on escaped string using "" as line breaks.
 
-To decide which indexed text is escaped (string - indexed text) using (lb - text) as line breaks:
-	let safe-string be indexed text;
+To decide which text is escaped (string - text) using (lb - text) as line breaks:
+	let safe-string be text;
 	repeat with X running from 1 to number of characters in string:
 		let char be character number X in string;
 		if char is "'" or char is "[apostrophe]" or char is "\":
@@ -223,7 +229,7 @@ Chapter Credits
 First after printing the banner text (this is the display Vorple credits rule):
 	if Vorple is supported:
 		say "Vorple version ";
-		say span "vorple-version";
+		display inline element called "vorple-version";
 		eval "$( '.vorple-version' ).html( vorple.core.version+'.'+vorple.core.release );";
 		say paragraph break.
 	
@@ -286,7 +292,7 @@ Chapter: Embedding HTML elements
 We can embed simple HTML elements into story text with some helper phrases.
 
 	say element "article";
-	say element "h1" with class "title";
+	say element "h1" called "title";
 	say div "inventory transient";
 	say span "name";
 
@@ -299,9 +305,9 @@ The previous example generates this markup:
 
 The elements are always created empty and with a closing tag. Content can be added to them with these phrases:
 
-	place "An exciting story" in the element with class "title";
-	display "Story so far:" in element "h2" with class "subtitle";
-	display "Anonymous Adventurer" in an element with class "name";
+	place "An exciting story" in the element called "title";
+	display "Story so far:" in element "h2" called "subtitle";
+	display "Anonymous Adventurer" in an element called "name";
 
 The "place" phrase will use an existing element(s) with the given class, overwriting previous content. The "display" phrases create new elements. The default element, if not otherwise specified, is span.
 
