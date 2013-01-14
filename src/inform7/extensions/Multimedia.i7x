@@ -96,10 +96,13 @@ Section: Preloading images
 
 Images can be preloaded either individually or as a list:
 
-	preload image "pic.jpg";
-	preload images { "pic1.jpg", "pic2.png" };
+	When play begins:
+		preload image "pic.jpg";
+		preload images { "pic1.jpg", "pic2.png" }.
 
 Preloading images makes them appear immediately when they are needed. Otherwise the images are loaded only when they are first displayed which may take some time with slower connections.
+
+Images must be preloaded inside a rule, most commonly in a When play begins -rule. We can save bandwidth by preloading in later stages when the story is closer to the point when it should display the image, but note that preloading at the same time when the image is displayed is too late and preloading images that are shown right when the story begins is not useful.
 
 
 Chapter: Audio
