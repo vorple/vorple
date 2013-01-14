@@ -38,8 +38,6 @@ Libraries
  - Replaced jPlayer with SoundManager 2
  - Updated jQuery to 1.8.3
  - Updated Noty
- - The build script now creates single files with all JavaScript in them
-   for easier inclusion to HTML
 
    
 Modules
@@ -50,7 +48,19 @@ Modules
  - Media: Music now fades out when stopped or another song is played, and
    all functions that stop sounds can fade out instead
  - Parser: Character input support
+ - Parser: Commands triggered while a turn is running are put into a queue
+   and ran when the prompt is ready
 
+
+Releases
+--------
+
+ - The library is now packaged to three complete minified library files that
+   includes everything needed by the system, one for each engine and one
+   "vanilla" with no engine
+ - Added a configurable loader message for Parchment
+ - Revised the build script
+ 
 
 
 Release 2.4 (2012-09-29)

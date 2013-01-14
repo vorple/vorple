@@ -3,12 +3,14 @@
 (function($) {
     /** @namespace Parser-specific features */
     vorple.parser = {
+        _commandqueue: [],
         _container: {
             parchment: null,
             vorple: "#vorple"
         },
         _evalqueue: [],
         _filters: {},
+        _interactive: false, // true: waiting for reader action
         _skipFilters: false,
         _scrollPosition: 0,
         _turn: {
@@ -31,7 +33,9 @@
                 value();
             }
             catch( e ) {
-                console.log( 'Invalid JavaScript: '+value );
+                if( console && console.log ) {
+                    console.log( 'Invalid JavaScript: '+value );
+                }
             }
         });
         
@@ -87,7 +91,6 @@
         
         structure.$turn = $contents;
         
-        console.log( structure );
         return structure;
     };
 
@@ -98,7 +101,6 @@
     	
         switch( metadata.turn.type ) {
             case 'error':
-            //	console.log( turn );
             	turn.classes += "parserError ";
             	turn.previousCommand.classes += "parserError ";
             	turn.content.classes += "transient ";
@@ -148,44 +150,98 @@
     };
     
     
-    vorple.parser._runFilters = function( content, type, metadata ) {
-    	if( this._skipFilters ) {
-    		return content;
-    	}
-    	
-    	var result = content;
-    	
-    	// make a deep copy of the filters
-    	var filters = $.extend( {}, vorple.parser._filters );
-    	
-    	// cache the number of filters in case some filter changes the
-    	// filter registry
-    	var numberOfFilters = 0;
+    /**
+     * Run a command from the queue and remove it from the queue.
+     * 
+     * @return false if the queue was already empty, true otherwise
+     * @private
+     */
+    vorple.parser._runCommandQueue = function( command, options ) {
+        var self = this;
 
-    	// count the number of filters
-    	for( key in filters ) {
+        if( self._commandqueue.length === 0 ) {
+            return false;
+        }
+        
+        var cmd = self._commandqueue[ 0 ];
+        var opt = $.extend( { hideCommand: false, hideOutput: false, skipFilters: false }, cmd.options );
+        var $input = $( 'input.TextInput' );
+        var oldCommand = $input.val();
+
+        // remove the first command (which will be executed now)
+        self._commandqueue.shift();
+        
+        // raise a flag that makes the output from the command not show
+        if( opt.hideOutput ) {
+            self.hideOutput();
+        }
+
+        if( opt.hideCommand ) {
+            self.hideCommand();
+
+            // return the previous content to the prompt if the sent command
+            // should be silent
+            $( document ).one( 'TurnComplete', function() {
+                $( '.TextInput' ).val( oldCommand );
+            });
+        }
+        
+        if( opt.skipFilters ) {
+            self._skipFilters = true;
+        }
+
+        vorple.parser._interactive = false;
+        
+        // send the command to the engine by triggering an enter keypress
+        $input
+            .val( cmd.command )
+            .trigger( $.Event( 'keydown', { which: 13 } ) ); // enter
+            
+        self._skipFilters = false;
+        
+        return true; 
+    }
+    
+    
+    vorple.parser._runFilters = function( content, type, metadata ) {
+        if( this._skipFilters ) {
+            return content;
+        }
+        
+        var result = content;
+        
+        // make a deep copy of the filters
+        var filters = $.extend( {}, vorple.parser._filters );
+        
+        // cache the number of filters in case some filter changes the
+        // filter registry
+        var numberOfFilters = 0;
+
+        // count the number of filters
+        for( key in filters ) {
             if( filters.hasOwnProperty( key ) ) {
-           		numberOfFilters++;
+                numberOfFilters++;
             }
         }
-    	
-    	// loop through all filters, executing them in priority order 
-    	for( var i = 0; i < numberOfFilters; ++i ) {
-    		var highestPriority = undefined;
-    		$.each( filters, function( name, filter ) {
-    			if( filter.type === type && ( highestPriority === undefined || highestPriority.priority < filter.priority ) ) {
-    				highestPriority = filter;
-    			}
-    		});
-    		
-    		if( highestPriority !== undefined ) {
-    			result = highestPriority.filter( result, metadata );
-    			delete filters[ highestPriority.name ];
-    		}
-    	}
-    	
-    	return result;
+        
+        // loop through all filters, executing them in priority order 
+        for( var i = 0; i < numberOfFilters; ++i ) {
+            var highestPriority = undefined;
+            $.each( filters, function( name, filter ) {
+                if( filter.type === type && ( highestPriority === undefined || highestPriority.priority < filter.priority ) ) {
+                    highestPriority = filter;
+                }
+            });
+            
+            if( highestPriority !== undefined ) {
+                result = highestPriority.filter( result, metadata );
+                delete filters[ highestPriority.name ];
+            }
+        }
+        
+        return result;
     };
+    
     
     
     /**
@@ -203,7 +259,6 @@
     };
     
 
-    
     /**
      * Sets the current turn silent, i.e. its output will be hidden.
      * 
@@ -217,7 +272,6 @@
         
         this._turn.outputVisible = !silent;
     };
-    
     
     
     /**
@@ -294,37 +348,17 @@
      */
     vorple.parser.sendCommand = function( command, options ) {
         var self = this;
-        var opt = $.extend( { hideCommand: false, hideOutput: false, skipFilters: false }, options );
-        var $input = $( 'input.TextInput' );
-        var oldCommand = $input.val();
-
-        // raise a flag that makes the output from the command not show
-        if( opt.hideOutput ) {
-            self.hideOutput();
-        }
-
-        if( opt.hideCommand ) {
-            self.hideCommand();
-
-	        // return the previous content to the prompt if the sent command
-	        // should be silent
-/*        	$( document ).one( 'TurnComplete', function() {
-                $( '.TextInput' ).val( oldCommand );
-        	});
-        	*/
-        }
         
-        if( opt.skipFilters ) {
-        	self._skipFilters = true;
+        // put the command to the queue
+        vorple.parser._commandqueue.push({ 
+            command: command,
+            options: options
+        });
+        
+        // resolve the queue if the story is waiting for input
+        if( vorple.parser._interactive ) {
+            vorple.parser._runCommandQueue();
         }
-        
-        // send the command to the engine by triggering an enter keypress
-        $input
-            .val( command )
-            .trigger( $.Event( 'keydown', { which: 13 } ) ); // enter 
-
-        self._skipFilters = false;
-        
     };
    
     
@@ -436,6 +470,7 @@
 					
 					if( vorple.parser._turn.mode === 'char' ) {
                         $( 'input.TextInput' ).trigger( $.Event( 'keypress', { which: e.which } ) );
+                        vorple.parser._interactive = false;
 					}
 				}
 			});
@@ -453,7 +488,7 @@
             */
             
             // Events happening right after text input
-            $( document ).bind( 'TextInput.vorple', function( e ) {
+            $( document ).on( 'TextInput.vorple', function( e ) {
                 $( '.transient', vorple.parser._container.vorple ).
                     animate({opacity: 0}, 1500).
                     slideUp(500, function() {
@@ -464,12 +499,15 @@
                 vorple.parser.setTurnType( 'normal' );
             });
             
+            $( document ).one( 'TurnComplete.vorple', function() {
+                $( '#vorpleLoader' ).slideUp(); 
+            });
+            
             // Parchment triggers a TurnComplete event when all the turn's
             // content has printed and the story waits for reader input.
             // At that point we can take what's in the buffer and
             // do all the Vorple stuff with it.
-            $( document ).bind( 'TurnComplete.vorple', function( e ) {
-                console.log( e );
+            $( document ).on( 'TurnComplete.vorple', function( e ) {
                 var $buffer = $( ".main", vorple.parser._container.parchment );
                 var $target = $( vorple.parser._container.vorple );
                 
@@ -617,30 +655,11 @@
                 // Scroll to where the new turn begins
                 vorple.parser.scrollTo( $newTurn );
   
-  
                 vorple.parser._turn.mode = e.mode;
-                
+                vorple.parser._interactive = true;
+                vorple.parser._runCommandQueue();
             });
-            
-            /* we should NOT do this (no extension-specific code in the
-               main js files) --- just a hack to get the cookie extension working. */
-              /*
-              vorple.parser._persistentStorage = false;
 
-              $( document ).one( 
-                  'TurnComplete.vorple', 
-                  function() {
-                      console.log( vorple.parser._persistentStorage );
-                      if( vorple.parser._persistentStorage ) {
-                          var list = vorple.cookie.list();
-                          for( var i = 0; i < list.length; ++i ) {
-                              console.log( 'sending '+list[i] );
-                              vorple.parser.sendCommand( '__set_cookie ' + list[i] + '=' + vorple.cookie.read( list[i] ) );
-                          } 
-                      } 
-                  }
-              );
-              */
         }
     });
     
