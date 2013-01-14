@@ -361,4 +361,59 @@ By default newlines are removed. If we want to preserve them, or turn them into 
 	To greet (name - text):
 		let safe name be escaped name using "\n" as line breaks;
 		eval "alert( 'Hello [safe name]!' )".
+		
 
+Chapter: Custom JavaScript and CSS
+
+Vorple tries to load a JavaScript file called "vorple.custom.js" and a CSS file called "vorple.custom.css" if they exist. They can contain any custom JavaScript code or CSS rules needed by the project.
+
+Place the files in the project's Resources directory (just like any other file that should be released with the story) and use the following phrases to include them:   
+
+	*: Release along with a file of "Custom JavaScript" called "vorple.custom.js".
+	Release along with a file of "Custom CSS" called "vorple.custom.css".
+	
+Note that the file names must be exactly like this. The interpreter won't try to load anything else.
+
+
+Example: *** Sprechen Sie Deutsch - Passing data from the browser to the story file
+
+We check what language the reader's browser is set to and offer a translated version of the story if one is available. The "window.navigator.language" JavaScript variable holds a language code, e.g. "de" or "en-GB". Except in Internet Explorer, but we'll keep the example simple this time. 
+
+A  function in the Vorple JavaScript library called vorple.parser.sendCommand() can be used to trigger commands from outside the actual prompt. The first parameter is the command to send; in this case it passes the language code to the story file. With {hideCommand:true} as the second parameter we specify that the command should not be visible to the player. We can use vorple.parser.sendSilentCommand() when neither the command nor the output should be visible.
+
+(Strictly speaking the {hideCommand:true} parameter isn't necessary, because out of world actions' commands are never shown on screen.)
+
+The grammar for a command used only for data passing should begin with two underscores. Vorple will strip the underscores from the reader's command if they try to enter them into the prompt manually which prevents "cheating".
+
+	*: Include Vorple Core by Juhana Leinonen.
+	Release along with the "Vorple" interpreter.
+	
+	There is a room.
+	
+	When play begins (this is the query browser language rule):
+		eval "if(window.navigator.language) { vorple.parser.sendCommand('__lang '+window.navigator.language, {hideCommand:true}) }".
+		
+	Checking browser language is an action out of world applying to one topic.
+	Understand "__lang [text]" as checking browser language.
+	
+	Report checking browser language when the topic understood matches the text "de":
+			say "If you would prefer the German version, you can find it from ..."
+		
+
+Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a third party service
+
+Here we set up an encyclopedia that can be used to query articles from Wikipedia. The actual querying code is a bit longer so it's placed in the vorple.custom.js file, which can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/vorple.custom.js . 
+
+	*: Include Vorple Core by Juhana Leinonen.
+	Release along with the "Vorple" interpreter.
+	Release along with a file of "Custom JavaScript" called "vorple.custom.js".
+	
+	Library is a room. "The shelves are filled with volumes of an encyclopedia. You can look up any topic you want."
+	
+	Looking up is an action applying to one topic.
+	Understand "look up [text]" as looking up.
+	
+	Carry out looking up:
+		display a block element called "dictionary-entry";
+		eval "wikipedia_query('[escaped topic understood]')" or fall back to say "You find the correct volume and learn about [topic understood].".
+		
