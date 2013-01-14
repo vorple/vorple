@@ -1,6 +1,8 @@
 # build.py
 # 
 # A script that creates a release version of Vorple.
+from datetime import datetime
+startTime = datetime.now()
 
 import os
 import shutil
@@ -13,8 +15,7 @@ from glob import glob
 # handle command line arguments
 
 available_tasks = [ 
-             'minify_vorple', 
-             'minify_lib', 
+             'minify', 
              'api', 
              'themes', 
              'undum_examples', 
@@ -103,7 +104,7 @@ if arguments.update:
 
 
 # run the minifier
-if "minify_vorple" in arguments.tasks:
+if "minify" in arguments.tasks:
     print "Minifying Vorple..."
     
     minifiercommand = [
@@ -120,10 +121,9 @@ if "minify_vorple" in arguments.tasks:
         
     subprocess.call( minifiercommand )
 
-
-if "minify_lib" in arguments.tasks:
-    print "Minifying complete library packages..."
+    print "Minifying complete library packages:"
     
+    print " - for Undum..."
     minifiercommand = [
                       "/usr/bin/java", 
                       "-jar", minifierdir+"compiler.jar", 
@@ -139,9 +139,9 @@ if "minify_lib" in arguments.tasks:
                       "--js", libdir+"undum.js",
                       "--js", libdir+"vorple.min.js"
                       ]
-    
     subprocess.call( minifiercommand )
-
+    
+    print " - for Parchment..."
     minifiercommand = [
                       "/usr/bin/java", 
                       "-jar", minifierdir+"compiler.jar", 
@@ -157,9 +157,24 @@ if "minify_lib" in arguments.tasks:
                       "--js", libdir+"parchment.min.js",
                       "--js", libdir+"vorple.min.js"
                       ]
-    
     subprocess.call( minifiercommand )
 
+    print " - without engine..."
+    minifiercommand = [
+                      "/usr/bin/java", 
+                      "-jar", minifierdir+"compiler.jar", 
+                      "--compilation_level=SIMPLE_OPTIMIZATIONS",
+                      "--warning_level", "QUIET",
+                      "--js_output_file", libdir+"vorple.vanilla.min.js",
+                      "--js", libdir+"jquery-1.8.3.min.js",
+                      "--js", libdir+"jquery.noty.js",
+                      "--js", libdir+"noty/default.js",
+                      "--js", libdir+"noty/layouts.js",
+                      "--js", libdir+"jquery.qtip.min.js",
+                      "--js", libdir+"soundmanager2.min.js",
+                      "--js", libdir+"vorple.min.js"
+                      ]
+    subprocess.call( minifiercommand )
 
 # create API
 
@@ -295,9 +310,14 @@ if "i7_examples" in arguments.tasks:
     #    shutil.rmtree( i7extensiondestination )
     #os.makedirs( i7extensiondestination )
     
-    nifiles = []
+    
+    os.chdir( tmpdir )
+    os.mkdir( 'Build' )
+    os.mkdir( 'Source' )
+    os.mkdir( 'Index' )
     
     for extensionsource in extensionroot:
+        nifiles = []
         extensionname = os.path.basename( extensionsource )
         print " - "+extensionname + ": ",
         targetdir = os.path.splitext( i7extensiondestination+extensionname )[0].replace( ' ', '_' ) + '/'
@@ -319,42 +339,37 @@ if "i7_examples" in arguments.tasks:
         if examplefile:
             examplefile.close()
         extension.close()
-
-    os.chdir( tmpdir )
-    os.mkdir( 'Build' )
-    os.mkdir( 'Source' )
-    os.mkdir( 'Index' )
-    
-    for ni in nifiles:
-        shutil.copy( ni+'.ni', 'Source/story.ni' )
-        try:
-            p = subprocess.check_output([
-                  'ni',
-                  "-package",
-                  ".",
-                  "-rules",
-                  i7dir + "Inform7/Extensions",
-                  "-extension=z8"
-              ], stderr=subprocess.PIPE)
-        except subprocess.CalledProcessError, e:
-            print os.path.basename( ni ) + ': ni compile error'
-            print e.output
-        else:
+        
+        for ni in nifiles:
+            shutil.copy( ni+'.ni', 'Source/story.ni' )
             try:
                 p = subprocess.check_output([
-                  'inform-6.32-biplatform',
-                  'Build/auto.inf',
-                  '+"'+i7dir+'Library/6.11/"',
-                  '-kE2SDwv8',
-                  '-o',
-                  ni+'.z8'
-                ], stderr=subprocess.PIPE)
+                      'ni',
+                      "-package",
+                      ".",
+                      "-rules",
+                      i7dir + "Inform7/Extensions",
+                      "-extension=z8"
+                  ], stderr=subprocess.STDOUT)
             except subprocess.CalledProcessError, e:
-                print os.path.basename( ni ) + ': Inform 6 compile error'
+                print os.path.basename( ni ) + ': ni compile error'
                 print e.output
+            else:
+                try:
+                    p = subprocess.check_output([
+                      'inform-6.32-biplatform',
+                      'Build/auto.inf',
+                      '+"'+i7dir+'Library/6.11/"',
+                      '-kE2SDwv8',
+                      '-o',
+                      ni+'.z8'
+                    ], stderr=subprocess.PIPE)
+                except subprocess.CalledProcessError, e:
+                    print os.path.basename( ni ) + ': Inform 6 compile error'
+                    print e.output
+                
             
-        
-        
+            
 # Library files modified for the unit test coverage
 
 if "coverage" in arguments.tasks:
@@ -370,4 +385,4 @@ if "coverage" in arguments.tasks:
 #if os.path.exists( tmpdir ):
 #    shutil.rmtree( tmpdir )
     
-print "Done.\n"
+print "Completed in", datetime.now()-startTime
