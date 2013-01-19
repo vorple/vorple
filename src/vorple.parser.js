@@ -566,6 +566,10 @@
                     vorple.parser._evaluateQueue();
   
                     vorple.parser._turn.mode = e.mode;
+                    
+                    // run commands in the command queue
+                    vorple.parser._interactive = true;
+                    vorple.parser._runCommandQueue();
                                   
                 	return false;
                 }
