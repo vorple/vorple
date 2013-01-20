@@ -50,6 +50,8 @@ Modules
  - Parser: Character input support
  - Parser: Commands triggered while a turn is running are put into a queue
    and ran when the prompt is ready
+ - Parser: Meta and dialog commands that have no output will not pop up
+   a notification/dialog
 
 
 Releases

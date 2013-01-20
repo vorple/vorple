@@ -121,25 +121,29 @@
 */
             	break;
             case 'meta':
-            	vorple.notify.show( turn.content.text );
+                if( $.trim( $( turn.content.text ).text() ) !== "" ) {
+            	   vorple.notify.show( turn.content.text );
+        	    }
                 return false;
                 break;
             case 'dialog':
-            	vorple.notify.show(
-            		turn.content.text,
-        			{
-                        buttons: [{ 
-                            type: 'button', 
-                            text: 'ok', 
-                            click: function( $notification ) {
-                                $notification.close();
-                            }
-                        }],
-                        closeButton: true,
-                        layout: 'center',
-                        modal: true,
-                        timeout: false 
-        			});
+                if( $.trim( $( turn.content.text ).text() ) !== "" ) {
+                	vorple.notify.show(
+                		turn.content.text,
+            			{
+                            buttons: [{ 
+                                type: 'button', 
+                                text: 'ok', 
+                                click: function( $notification ) {
+                                    $notification.close();
+                                }
+                            }],
+                            closeButton: true,
+                            layout: 'center',
+                            modal: true,
+                            timeout: false 
+            			});
+            	}
                 return false;
                 break;
             default:
