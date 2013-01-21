@@ -149,6 +149,13 @@ a {
 	border:0;
 }
 
+#vorpleLoader {
+	text-align:center;
+	color:#333;
+	margin:2em 0;
+	font-style:italic;
+}
+
 /* this prevents artifacts on scroll in Chrome */
 input {
     -webkit-transform: translate3d(0,0,0);
@@ -156,7 +163,7 @@ input {
 
 /* debugging */
 
-debug {
+.debug {
 	color:#633;
 	font-style:italic;
 }

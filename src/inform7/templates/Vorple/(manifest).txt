@@ -44,22 +44,18 @@ z
 ! to be) "story.zblorb.js".
 
 [INTERPRETERHEAD]
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
-    <script type="text/javascript">
-        if( typeof jQuery == 'undefined' ) {
-            document.write( unescape( "%3Cscript src='jquery-1.7.1.min.js' type='text/javascript'%3E%3C/script%3E" ) );
-        }
-    </script>
-    
-    <script type="text/javascript" src="interpreter/jquery.jplayer.min.js"></script>
-    <script type="text/javascript" src="interpreter/jquery.qtip.min.js"></script>
-    <script type="text/javascript" src="interpreter/jquery.noty.js"></script>
-    <script type="text/javascript" src="interpreter/default.js"></script>
-    <script type="text/javascript" src="interpreter/layouts.js"></script>
-    
-	<script type="text/javascript" src="interpreter/parchment.min.js"></script>
-    <script type="text/javascript" src="interpreter/vorple.min.js"></script>
+	<script type="text/javascript">
+		// This is the content that's displayed when the interpreter is loading.
+		// It can be overwritten in vorple.custom.js. 
+		var vorpleLoaderMessage = "Loading..."
+	</script>
+    <script type="text/javascript" src="interpreter/vorple.parchment.min.js"></script>
     <script type="text/javascript" src="vorple.custom.js"></script>
+	<script type="text/javascript">
+    	$( function() {
+    		$( '#vorpleLoader' ).html( vorpleLoaderMessage );
+    	});
+	</script>
     
 	<link rel="stylesheet" href="interpreter/parchment.min.css">
 	<link rel="stylesheet" href="interpreter/jquery.qtip.min.css">
@@ -78,7 +74,7 @@ z
 			$( '#vorpleContainer' ).unwrap(); 
 		});
 
-		vorple.media.defaults.swfPath = 'interpreter/Jplayer.swf';
+		vorple.media.defaults.swfPath = 'interpreter/';
 		vorple.media.defaults.audioPath = '.';
 		vorple.media.defaults.imagePath = '.';
 		vorple.media.defaults.musicPath = '.';
@@ -94,11 +90,10 @@ z
 
 [INTERPRETERBODY]
 <div id="vorpleContainer">
-    <div id="vorple"></div>
+    <div id="vorple"><div id="vorpleLoader"></div></div>
     <div id="vorpleInput"></div>
     <div id="parchment"></div>
     <div class="clearAll"></div>
-    <div id="vorple-media"></div>
 </div>
 []
 
