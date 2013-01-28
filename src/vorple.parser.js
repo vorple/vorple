@@ -474,7 +474,6 @@
 					
 					if( vorple.parser._turn.mode === 'char' ) {
                         $( 'input.TextInput' ).trigger( $.Event( 'keypress', { which: e.which } ) );
-                        vorple.parser._interactive = false;
 					}
 				}
 			});
