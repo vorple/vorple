@@ -60,6 +60,9 @@ Releases
  - The library is now packaged to three complete minified library files that
    includes everything needed by the system, one for each engine and one
    "vanilla" with no engine
+ - Using a single library file also fixes the problem where jQuery was not
+   loaded correctly in the Inform 7 interpreter template when there was no 
+   Internet connection
  - Added a configurable loader message for Parchment
  - Revised the build script
  

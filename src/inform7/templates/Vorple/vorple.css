@@ -96,7 +96,7 @@ a {
 	color:#666;
 }
 
-.parserError .turnContent {
+.previousCommand.parserError{
 	font-style: italic;
 	color: #611;
 }
