@@ -143,23 +143,21 @@ To place text/-- (content - text) inside/in a/an/the/-- element called (class - 
 To display (content - text) inside/in a/an/the/-- element (elem - text) called (class - text):
 	let id be unique identifier;
 	display element elem called "[id] [class]";
-	eval "$( '.[id]' ).html('[content]')".
+	eval "$( '.[id]' ).html('[content]')";
+	if Vorple is not supported:
+		say content.
 	
 To display (content - text) inside/in a/an/the/-- inline/-- element called (class - text):
 	display content inside an element "span" called class.
+
+To display (content - text) inside/in a/an/the/-- block element called (class - text):
+	display content inside an element "div" called class.
 	
-To say (content - text) inside/in a/an/the/-- element (elem - text) called (class - text):
-	display content inside element elem called class;
-	if Vorple is not supported:
-		say content.
+To display transient text/-- (content - text):
+	display content inside element called "transient".
 
-To say (content - text) inside/in a/an/the/-- inline/-- element called (class - text):
-	display content inside element called class;
-	if Vorple is not supported:
-		say content.
 
-To say transient text/-- (content - text):
-	say content inside element called "transient".
+Chapter Fallback
 
 To (vorple-phrase - phrase) or/with/but fall/-- back/fallback with/to (fallback - phrase):
 	(- if( IsJS() ) {vorple-phrase} } else {fallback}; -).
@@ -171,7 +169,7 @@ To (vorple-phrase - phrase) without a/-- fallback:
 Chapter Turn types
 
 To mark the/-- current action (type - text):
-	eval "vorple.parser.setTurnType('[type]');".
+	eval "vorple.parser.setTurnType('[type]')".
 
 Before printing a parser error (this is the mark parser errors for Vorple rule):
 	mark the current action "error";
@@ -240,30 +238,30 @@ Vorple Core ends here.
 
 The Vorple Core extension defines some of the basic structure that's needed for Vorple to communicate with the story file. 
 
-Those authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage.
+Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage.
 
 
 Chapter: Vorple setup
 
-Every Vorple story project must include at least one Vorple extension and the custom web interpreter.
+Every Vorple story must include at least one Vorple extension and the custom web interpreter.
 
-	*: Include Vorple Core by The Vorple Project.
+	*: Include Vorple Core by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
-The Vorple interpreter must be installed to Inform. Installation instructions can be found in http://vorple-if.com and chapter 23.11. of Writing with Inform.
-
 All standard Vorple extensions already have the "Include Vorple Core" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
+
+At the moment Vorple supports Z-machine only,
 
 
 Chapter: Fallback phrases
 
 Even though with Vorple we can accomplish many things that are just impossible to do with traditional interpreters, it's always a good idea to make the story playable text-only as well if at all possible. There are a lot of players to whom a web interpreter or Vorple's features aren't accessible, and it's the Right Thing To Do to not exclude people if it's possible to include them.
 
-A story file can detect if it's being run on an interpreter that supports Vorple (or more specifically, on an interpreter that supports the Z-Machine v. 1.2 draft). The same story file can therefore be run on both the Vorple web interpreter and other interpreters that have text-only features and display substitute content if necessary. We can test for Vorple's presence with "if Vorple is supported":
+A story file can detect if it's being run on an interpreter that supports Vorple (or more specifically, on an interpreter that supports the Z-machine v. 1.2 draft). The same story file can therefore be run on both the Vorple web interpreter and other interpreters that have text-only features and display substitute content if necessary. We can test for Vorple's presence with "if Vorple is supported":
 
 	Instead of going north:
 		if Vorple is supported:
-			play mp3 sound file "marching_band.mp3";
+			play sound file "marching_band.mp3";
 		otherwise:
 			say "A marching band crossing the street blocks your way."
 
@@ -274,27 +272,39 @@ The say phrase in the above example is called a "fallback" and it's displayed on
 When the fallback consists of only one phrase (most commonly a say-phrase like in the example), we can use a shorthand "... or fall back with ...":
 
 	Instead of going north:
-		play mp3 sound file "marching_band.mp3" or fall back with say "A marching band crossing the street blocks your way."
+		play sound file "marching_band.mp3" or fall back with say "A marching band crossing the street blocks your way."
 
-Sometimes a phrase already includes a default fallback method. For example, in the Notifications extension displaying a notification will automatically show the same text in a normal interpreter as plain text. We can override that behavior by using the technique described above:
+Sometimes a phrase already includes a default fallback. For example, in the Notifications extension displaying a notification will automatically show the same text in a normal interpreter as plain text. We can override that behavior by using the technique described above:
 
 	show notification "Click on your inventory items to examine them more closely" or fall back with say "Type EXAMINE followed by an inventory item's name to examine them more closely."
 
-If we want to suppress the default fallback method completely, we can use "...without a fallback" modifier. This is a shorthand for "...or fall back with do nothing."
+If we want to suppress the default fallback completely, we can use "...without a fallback" modifier. This is equivalent to "...or fall back with do nothing."
 
 	show notification "Welcome to Vorple-enhanced [story title]!" without a fallback.
 
-Note that most Vorple-specific phrases already do nothing if Vorple isn't supported and can be safely used without extra modifiers. Those that do have a default fallback are described in their documentation.
+Most Vorple-specific phrases already do nothing if Vorple isn't supported and can be safely used without extra modifiers. Those that do have a default fallback are described in their documentation.
+
+
+Chapter: Custom JavaScript and CSS
+
+Vorple tries to load a JavaScript file called "vorple.custom.js" and a CSS file called "vorple.custom.css" if they exist. They can contain any custom JavaScript code or CSS rules needed by the project.
+
+Place the files in the project's Resources directory (just like any other file that should be released with the story) and use the following phrases to include them:   
+
+	*: Release along with a file of "Custom JavaScript" called "vorple.custom.js".
+	Release along with a file of "Custom CSS" called "vorple.custom.css".
+	
+Note that the file names must be exactly like this. The interpreter won't try to load anything else.
 
 
 Chapter: Embedding HTML elements
 
 We can embed simple HTML elements into story text with some helper phrases.
 
-	say element "article";
-	say element "h1" called "title";
-	say div "inventory transient";
-	say span "name";
+	display element "article";
+	display element "h1" called "title";
+	display block element called "inventory transient";
+	display inline element called "name";
 
 The previous example generates this markup:
 
@@ -309,16 +319,16 @@ The elements are always created empty and with a closing tag. Content can be add
 	display "Story so far:" in element "h2" called "subtitle";
 	display "Anonymous Adventurer" in an element called "name";
 
-The "place" phrase will use an existing element(s) with the given class, overwriting previous content. The "display" phrases create new elements. The default element, if not otherwise specified, is span.
+The "place" phrase will use an existing element(s) with the given class, overwriting previous content. The "display" phrases create new elements. The default element, if not otherwise specified, is <span>.
 
 The "transient" class is special: if an element has that class, it will fade out at the start of the next turn. Transient text can be created easily with:
 
-	say transient text "All happiness fades."
+	display transient text "All happiness fades."
 
 
 Chapter: Evaluating JavaScript expressions
 
-The story file breaks out of the Z-Machine sandbox by having the web browser running the interpreter evaluate JavaScript expressions. An "eval" phrase is provided to do just this:
+The story file breaks out of the Z-Machine sandbox by having the web browser evaluate JavaScript expressions. An "eval" phrase is provided to do just this:
 
 	eval "alert('Hello World!')";
 
@@ -347,7 +357,7 @@ The string being evaluated will be
 
 which will cause an error because of unescaped double quotes. Changing the string delimiters to single quotes wouldn't help since there's an unescaped single quote as well inside the string.
 
-To escape a string we can preface it with "escaped":
+To escape text we can preface it with "escaped":
 
 	To greet (name - text):
 		eval "alert( 'Hello [escaped name]!' )".
@@ -363,16 +373,78 @@ By default newlines are removed. If we want to preserve them, or turn them into 
 		eval "alert( 'Hello [safe name]!' )".
 		
 
-Chapter: Custom JavaScript and CSS
+Example: ** Scrambled Eggs - Hints that are initially shown obscured and revealed on request
 
-Vorple tries to load a JavaScript file called "vorple.custom.js" and a CSS file called "vorple.custom.css" if they exist. They can contain any custom JavaScript code or CSS rules needed by the project.
+The system works by wrapping scrambled hints in named elements. Their contents can then be later replaced with unscrambled text.
 
-Place the files in the project's Resources directory (just like any other file that should be released with the story) and use the following phrases to include them:   
-
-	*: Release along with a file of "Custom JavaScript" called "vorple.custom.js".
-	Release along with a file of "Custom CSS" called "vorple.custom.css".
 	
-Note that the file names must be exactly like this. The interpreter won't try to load anything else.
+	*: Include Vorple Core by Juhana Leinonen.
+	Release along with the "Vorple" interpreter.
+	
+	
+	Chapter World
+	
+	Kitchen is a room. "Your task is to find a frying pan!"
+	The table is a fixed in place supporter in the kitchen.
+	The frying pan is on the table. 
+	
+	After taking the frying pan:
+		end the story finally saying "You found the pan!"
+	
+	After looking for the first time:
+		say "(Type HINTS to get help.)".
+	
+	
+	Chapter Hints
+	
+	Table of Hints
+	hint	revealed (truth state)
+	"The table is relevant."	false
+	"Have you looked on the table?"	false 
+	"The pan is on the table."	false
+	
+	Requesting hints is an action out of world.
+	Understand "hint" and "hints" as requesting hints.
+	 
+	Carry out requesting hints (this is the un-meta hint requesting rule):
+		mark the current action "normal".
+		
+	Carry out requesting hints (this is the scramble hints rule):
+		let the alphabet be { "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u", "v", "w", "x", "y", "z" };
+		let row number be 1;
+		repeat through table of hints:
+			let scrambled hint be "";
+			say "[row number]) ";
+			if revealed entry is true:
+				now scrambled hint is hint entry;
+			otherwise:
+				repeat with index running from 1 to the number of characters in hint entry:
+					if character number index in hint entry is " ":
+						now scrambled hint is "[scrambled hint] ";
+					otherwise:
+						let rnd be a random number between 1 and the number of entries in the alphabet;
+						now scrambled hint is "[scrambled hint][entry rnd in the alphabet]";
+			display scrambled hint in an element called "hint-[row number]";
+			say line break;
+			increment row number;
+		say "[line break](Type REVEAL # where # is the number of the hint you want to unscramble.)".
+		
+	Revealing hint is an action out of world applying to one number.
+	Understand "reveal [number]" as revealing hint.
+	
+	Check revealing hint (this is the check boundaries rule):
+		if the number understood is less than 1 or the number understood is greater than the number of rows in the table of hints:
+			say "Please choose a number between 1 and [number of rows in table of hints]." instead.
+	
+	Carry out revealing hint when Vorple is not supported (this is the unscrambling fallback rule):
+		choose row number understood in the table of hints;
+		say "[hint entry][line break]".
+		
+	Carry out revealing hint (this is the change past transcript rule):
+		choose row number understood in the table of hints;
+		place hint entry in the element called "hint-[number understood]".
+		
+	Test me with "hints/reveal 1/reveal 2/reveal 3".
 
 
 Example: *** Sprechen Sie Deutsch - Passing data from the browser to the story file
