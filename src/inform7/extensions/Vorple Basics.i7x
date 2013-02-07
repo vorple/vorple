@@ -1,4 +1,4 @@
-Vorple Core (for Z-Machine only) by Juhana Leinonen begins here.
+Vorple Basics (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Core functionality of Vorple, including JavaScript evaluation, HTML elements and turn type marking."
 
@@ -231,12 +231,12 @@ First after printing the banner text (this is the display Vorple credits rule):
 		eval "$( '.vorple-version' ).html( vorple.core.version+'.'+vorple.core.release );";
 		say paragraph break.
 	
-Vorple Core ends here.
+Vorple Basics ends here.
 
 
 ---- DOCUMENTATION ----
 
-The Vorple Core extension defines some of the basic structure that's needed for Vorple to communicate with the story file. 
+The Vorple Basics extension defines some of the basic structure that's needed for Vorple to communicate with the story file. 
 
 Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage.
 
@@ -245,10 +245,10 @@ Chapter: Vorple setup
 
 Every Vorple story must include at least one Vorple extension and the custom web interpreter.
 
-	*: Include Vorple Core by Juhana Leinonen.
+	*: Include Vorple Basics by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
-All standard Vorple extensions already have the "Include Vorple Core" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
+All standard Vorple extensions already have the "Include Vorple Basics" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
 
 At the moment Vorple supports Z-machine only,
 
@@ -378,7 +378,7 @@ Example: ** Scrambled Eggs - Hints that are initially shown obscured and reveale
 The system works by wrapping scrambled hints in named elements. Their contents can then be later replaced with unscrambled text.
 
 	
-	*: Include Vorple Core by Juhana Leinonen.
+	*: Include Vorple Basics by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	
@@ -457,7 +457,7 @@ A  function in the Vorple JavaScript library called vorple.parser.sendCommand() 
 
 The grammar for a command used only for data passing should begin with two underscores. Vorple will strip the underscores from the reader's command if they try to enter them into the prompt manually which prevents "cheating".
 
-	*: Include Vorple Core by Juhana Leinonen.
+	*: Include Vorple Basics by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	There is a room.
@@ -476,7 +476,7 @@ Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a
 
 Here we set up an encyclopedia that can be used to query articles from Wikipedia. The actual querying code is a bit longer so it's placed in the vorple.custom.js file, which can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/vorple.custom.js . 
 
-	*: Include Vorple Core by Juhana Leinonen.
+	*: Include Vorple Basics by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	Release along with a file of "Custom JavaScript" called "vorple.custom.js".
 	

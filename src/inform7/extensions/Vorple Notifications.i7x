@@ -1,6 +1,6 @@
-Notifications (for Z-Machine only) by Juhana Leinonen begins here.
+Vorple Notifications (for Z-Machine only) by Juhana Leinonen begins here.
 
-Include Vorple Core by Juhana Leinonen.
+Include Vorple Basics by Juhana Leinonen.
 
 Use authorial modesty.
 
@@ -55,7 +55,7 @@ Before reading a command (this is the empty displayed notifications list rule):
 	truncate displayed notifications to 0 entries.
 
 
-Notifications ends here.
+Vorple Notifications ends here.
 
 
 ---- DOCUMENTATION ----
@@ -106,7 +106,7 @@ The default fallback can also be turned off completely:
 
 Example: * How To I - Showing small tips to new players who might not be familiar with the standard IF conventions.
 
-	*: Include Notifications by Juhana Leinonen.  
+	*: Include Vorple Notifications by Juhana Leinonen.  
 	Release along with the "Vorple" interpreter.
 
 	Lab is a room. "You're in a fancy laboratory."
@@ -135,13 +135,13 @@ Example: ** Score Notifications - A visual notification when the player is award
 
 We'll create a rule that will show the score change as a Vorple notification, or use the original score notification rule if the game is being played in a non-Vorple interpreter.
 	
-	*: Include Notifications by Juhana Leinonen.
+	*: Include Vorple Notifications by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	Use scoring. The maximum score is 5.
 	
 	
-	Chapter New score notifications
+	Chapter 1 - New score notifications
 	
 	To say score notification message:
 		(- NotifyTheScore(); -).
@@ -155,7 +155,7 @@ We'll create a rule that will show the score change as a Vorple notification, or
 	The enhanced notify score changes rule is listed instead of the notify score changes rule in the turn sequence rulebook.
 	
 	
-	Chapter Treasure chamber
+	Chapter 2 - Treasure chamber
 	
 	Treasure Chamber is a room. "Wealth beyond your dreams is piled all over this room."
 	

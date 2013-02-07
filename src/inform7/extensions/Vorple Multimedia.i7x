@@ -1,8 +1,8 @@
-Multimedia (for Z-Machine only) by Juhana Leinonen begins here.
+Vorple Multimedia (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Displaying images, playing sounds and music, and showing videos from YouTube."
 
-Include Vorple Core by Juhana Leinonen.
+Include Vorple Basics by Juhana Leinonen.
 
 Use authorial modesty.
 
@@ -58,7 +58,7 @@ Chapter Video
 To play a/the/-- YouTube video (id - text):
 	display Vorple method "vorple.media.youtube('[id]',{width:600})" in an element "div" called "youtube".
 	
-Multimedia ends here.
+Vorple Multimedia ends here.
 
 
 ---- DOCUMENTATION ----
@@ -136,12 +136,17 @@ We can play YouTube videos with:
 The string of numbers and letters is the id of the video we want to show. The id can be seen in the browser's address bar when viewing the video in YouTube, for example "http://www.youtube.com/watch?v=9d4Fu90ubmA".
 	
 
-Example: * Serinette - 
+Example: * Serinette - Basic example of playing music and sound effects.
 
 The serinette (a type of music box) plays music when it opens and a sound effect when it's wound. We'll also show its picture when it's examined.
 	
-	*:Include Multimedia by Juhana Leinonen.
+	*: "Serinette"
+	
+	Include Vorple Multimedia by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
+	
+	Release along with the file "winding.mp3".
+	Release along with the file "musicbox.mp3".
 	
 	Drawing room is a room. "The drawing room is tastefully decorated."
 	The serinette is an openable closed container in the drawing room. "A beautiful music box sits on a table." The description is "There's a winding key behind the box."
@@ -160,23 +165,32 @@ The serinette (a type of music box) plays music when it opens and a sound effect
 	
 	Carry out winding:
 		now the serinette is wound;
-		play sound file "winding.mp3".
+		play sound file "winding.mp3";
+		if the serinette is open:
+			start playing the tune.
 	
 	Report winding:
 		say "You turn the winding key until it turns no more.";
 	
-	Instead of turning the winding key:
+	Instead of turning or winding the winding key:
 		try winding the serinette.
 	
 	Instead of inserting something into the serinette:
 		say "It's not the kind of box that can contain anything other than its own mechanism."
-	
+			
+	To start playing the tune:
+		play music file "musicbox.mp3".
+		
+	Carry out opening the serinette when the serinette is wound:
+		start playing the tune.
+		
+	Carry out closing the serinette when the serinette is wound:
+		stop music.
 	
 	Test me with "x serinette/wind serinette/open serinette".
 
 
-
-Example: ** Port Royal Reggae
+Example: ** Port Royal Reggae - Applying background music to different regions
 
 We'll spice up example 9 - Port Royal 3 with some background music.
 
@@ -188,6 +202,8 @@ The first part is identical with Port Royal 3. Vorple-specific code starts from 
 
 	*:"1691"
 		
+	Chapter 1 - World
+	
 	Fort James is a room. "The enclosure of Fort James is a large, roughly hexagonal court walled with heavy stone.  The walls face the entrance to Port Royal Harbour, and the battery of guns is prepared to destroy any enemy ship arriving."
 	
 	Thames Street End is south of Fort James. "The ill-named Thames Street runs from here -- at the point of the peninsula -- all the way east among houses and shops, through the Fish Market, edging by the round front of Fort Carlisle, to the point where the town stops and there is only sandy spit beyond.  Most of that stretch is full of people at all hours.  Imported goods are moved off of ships and taken to distributors; exported goods are brought to be loaded; and there is one public house and brothel for every ten inhabitants.[paragraph break]Lime Street, wider and healthier but not as rich, runs directly south, and to the north the road opens up into the courtyard of Fort James."	
@@ -236,15 +252,15 @@ The first part is identical with Port Royal 3. Vorple-specific code starts from 
 	Tavern is a region. It is in Inland. Feathers and Feathers Bedroom are in Tavern.
 	
 	
-	Chapter Background music
+	Chapter 2 - Background music
 	
-	Include Multimedia by Juhana Leinonen.
+	Include Vorple Multimedia by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.	
 
-	Release along with a file of "Inland background audio" called "inland.mp3".
-	Release along with a file of "Waterfront background audio" called "waterfront.mp3".
-	Release along with a file of "Military Holdings background audio" called "military.mp3".
-	Release along with a file of "Tavern background audio" called "tavern.mp3".
+	Release along with the file "inland.mp3".
+	Release along with the file "waterfront.mp3".
+	Release along with the file "military.mp3".
+	Release along with the file "tavern.mp3".
 	
 	A region has some text called the background audio.
 	The current audio is text that varies.

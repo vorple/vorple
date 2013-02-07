@@ -6,29 +6,31 @@ I7 Extensions
 
  - Updated to work with the new I7 release
  - Changed the author's name from "The Vorple Project" to "Juhana Leinonen"
-   to conform with Inform 7 extension guidelines
+   to conform with Inform 7 extension guidelines, added "Vorple" in front
+   of extension names, renamed "Core" to "Basics" and "Hypertext" to 
+   "Hyperlinks"
  - Added and fixed examples across the board
- - Hypertext: Added a missing full stop at the end of first line which
+ - Basics: Separate checks for new Z-machine 1.2 streams
+   and caching Vorple availability (closes #1) 
+ - Basics: Removed the Undo Output Control which is now unneeded
+ - Basics: Fixed a wording in an example (closes pull request #2 
+   by Michael Bikovitsky)
+ - Basics: Added the "say element" phrase (as "display element") that was 
+   referred to in the documentation but not implemented, and fixed wrong wording
+   of another phrase in the documentation (closes #3) 
+ - Basics: Changed the "say" phrases to "display" phrases
+ - Basics: Changed "with class(es)" wording to "called"
+ - Basics: Changed "say div" and "say span" to "display block element" and
+   "display inline element" respectively
+ - Basics: Changed the "say (content) in an (elem) element" phrase to
+   "say (content) in an element (elem)", in line with the other phrases
+ - Hyperlinks: Added a missing full stop at the end of first line which
    prevented the extension from installing correctly
- - Hypertext: Added an option for external links to open in the same
+ - Hyperlinks: Added an option for external links to open in the same
    window
  - Multimedia: Replaced documentation about including resources with 
    the current version
  - Tooltips: Added the missing "Z-machine only" directive 
- - Vorple Core: Separate checks for new Z-machine 1.2 streams
-   and caching Vorple availability (closes #1) 
- - Vorple Core: Removed the Undo Output Control which is now unneeded
- - Vorple Core: Fixed a wording in an example (closes pull request #2 
-   by Michael Bikovitsky)
- - Vorple Core: Added the "say element" phrase (as "display element") that was 
-   referred to in the documentation but not implemented, and fixed wrong wording
-   of another phrase in the documentation (closes #3) 
- - Vorple Core: Changed the "say" phrases to "display" phrases
- - Vorple Core: Changed "with class(es)" wording to "called"
- - Vorple Core: Changed "say div" and "say span" to "display block element" and
-   "display inline element" respectively
- - Vorple Core: Changed the "say (content) in an (elem) element" phrase to
-   "say (content) in an element (elem)", in line with the other phrases
    
 
 Libraries
@@ -64,6 +66,7 @@ Releases
    loaded correctly in the Inform 7 interpreter template when there was no 
    Internet connection
  - Added a configurable loader message for Parchment
+ - Fixed a rejected command's CSS rule so that it's styled correctly
  - Revised the build script
  
 

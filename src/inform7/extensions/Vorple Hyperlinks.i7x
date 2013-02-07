@@ -1,8 +1,8 @@
-Hypertext (for Z-Machine only) by Juhana Leinonen begins here.
+Vorple Hyperlinks (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Hyperlinks that either open a web site or execute a parser command."
 
-Include Vorple Core by Juhana Leinonen.
+Include Vorple Basics by Juhana Leinonen.
 
 Use authorial modesty.
 
@@ -31,7 +31,7 @@ To display (txt - indexed text) linking to a/the/-- command (command - indexed t
 	if Vorple is not supported:
 		say txt.
 
-Hypertext ends here.
+Vorple Hyperlinks ends here.
 
 
 ---- DOCUMENTATION ----
@@ -69,7 +69,7 @@ Email links ("mailto:") open an external mail program with the address pre-fille
 Note how we mark the action "normal" - otherwise the out of world action would be shown in a notification instead of in the normal story flow.
 
 
-	*: Include Hypertext by Juhana Leinonen.
+	*: Include Vorple Hyperlinks by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
 	Lounge is a room.

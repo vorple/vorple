@@ -1,6 +1,6 @@
-Tooltips (for Z-Machine only) by Juhana Leinonen begins here.
+Vorple Tooltips (for Z-Machine only) by Juhana Leinonen begins here.
 
-Include Vorple Core by Juhana Leinonen.
+Include Vorple Basics by Juhana Leinonen.
 
 Use authorial modesty.
 
@@ -18,7 +18,7 @@ To show tooltip (tip - text) on/at the/-- last element called (class - text):
 To show tooltip (tip - text) on/at the/-- prompt:
 	queue code "vorple.tooltip.show('input','[escaped tip]')".
 
-Tooltips ends here.
+Vorple Tooltips ends here.
 
 
 ---- DOCUMENTATION ----
@@ -53,7 +53,9 @@ We'll show a tooltip on the prompt to direct the player to use the keyboard, hin
 
 Parser errors are automatically given the class "parserError" which we can use.
 
-	*: Include Tooltips by Juhana Leinonen.  
+	*: "How To II"
+	
+	Include Vorple Tooltips by Juhana Leinonen.  
 	Release along with the "Vorple" interpreter.
 	
 	The bedroom is a room.
