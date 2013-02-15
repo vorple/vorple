@@ -1,10 +1,12 @@
 Vorple Notifications (for Z-Machine only) by Juhana Leinonen begins here.
 
+"Notifications and dialogs."
+
 Include Vorple Basics by Juhana Leinonen.
 
 Use authorial modesty.
 
-Chapter Locations
+Chapter 1 - Locations
 
 An element position has some text called noty name. 
 
@@ -21,30 +23,30 @@ The noty name of bottom center is "bottomCenter".
 The noty name of bottom right is "bottomRight".
 
 
-Chapter Vorple wrappers
+Chapter 2 - Vorple wrappers
 
-To show notification (msg - indexed text):
-	eval "vorple.notify.show('[escaped msg]')";
+To show notification (msg - text):
+	execute JavaScript command "vorple.notify.show('[escaped msg]')";
 	add msg to the displayed notifications.
 
 To hide all/-- notifications:
-	eval "vorple.notify.closeAll()".
+	execute JavaScript command "vorple.notify.closeAll()".
 
-To show notification (msg - indexed text) at/in (pos - element position):
-	eval "vorple.notify.show('[escaped msg]',{layout:'[noty name of pos]'})";
+To show notification (msg - text) at/in (pos - element position):
+	execute JavaScript command "vorple.notify.show('[escaped msg]',{layout:'[noty name of pos]'})";
 	add msg to the displayed notifications.
 
-To show alert (msg - indexed text):
-	eval "vorple.notify.alert('[escaped msg]')";
+To show alert (msg - text):
+	execute JavaScript command "vorple.notify.alert('[escaped msg]')";
 	add msg to the displayed notifications.
 
 To set the/-- default notification position to (pos - element position):
-	eval "vorple.notify.defaults.layout='[noty name of pos]'".
+	execute JavaScript command "vorple.notify.defaults.layout='[noty name of pos]'".
 
 
-Chapter Fallback
+Chapter 3 - Fallback
 
-Displayed notifications is a list of indexed text that varies.
+Displayed notifications is a list of text that varies.
 
 Before reading a command (this is the print notifications fallback rule):
 	if Vorple is not supported:
@@ -94,10 +96,15 @@ Multiple notifications are shown on the screen at the same time; a new notificat
 
 Chapter: Fallback
 
-If Vorple isn't available, the fallback is to display the notifications at the end of turn as plain text. The feature can be overridden or disabled like any Vorple fallbacks:
+If Vorple isn't available, the fallback is to display the notifications at the end of turn as plain text. The feature can be overridden by checking Vorple's availability:
 
-	show notification "Click on your inventory items to examine them more closely" or fall back with say "Type EXAMINE followed by an inventory item's name to examine them more closely.";
-	show notification "Welcome to Vorple-enhanced [story title]!" without a fallback;
+	if Vorple is available:
+		show notification "Click on your inventory items to examine them more closely";
+	otherwise:
+		say "Type EXAMINE followed by an inventory item's name to examine them more closely.";
+		
+	if Vorple is available:
+		show notification "Welcome to Vorple-enhanced [story title]!";
 
 The default fallback can also be turned off completely:
 
@@ -106,7 +113,9 @@ The default fallback can also be turned off completely:
 
 Example: * How To I - Showing small tips to new players who might not be familiar with the standard IF conventions.
 
-	*: Include Vorple Notifications by Juhana Leinonen.  
+	*: "How To I"
+	
+	Include Vorple Notifications by Juhana Leinonen.  
 	Release along with the "Vorple" interpreter.
 
 	Lab is a room. "You're in a fancy laboratory."
@@ -135,7 +144,9 @@ Example: ** Score Notifications - A visual notification when the player is award
 
 We'll create a rule that will show the score change as a Vorple notification, or use the original score notification rule if the game is being played in a non-Vorple interpreter.
 	
-	*: Include Vorple Notifications by Juhana Leinonen.
+	*: "Score Notifications"
+	
+	Include Vorple Notifications by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	Use scoring. The maximum score is 5.
@@ -149,6 +160,7 @@ We'll create a rule that will show the score change as a Vorple notification, or
 	This is the enhanced notify score changes rule:
 		if Vorple is supported:
 			show notification "[score notification message]" at top center;
+			now the last notified score is the score;
 		otherwise:
 			follow the notify score changes rule.
 	

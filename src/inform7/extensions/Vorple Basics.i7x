@@ -2,9 +2,11 @@ Vorple Basics (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Core functionality of Vorple, including JavaScript evaluation, HTML elements and turn type marking."
 
-Chapter JavaScript evaluation
-
 Use authorial modesty.
+
+Chapter 1 - JavaScript evaluation
+
+Section 1 - Eval stream (I6)
 
 Include (-
 
@@ -12,20 +14,11 @@ Include (-
 ! Currently only for Z-Machine
 ! by Dannii
 
-Constant HDR_SPECREVISION  $32;
-
-Global gg_mainwin = 0;
-Array gg_event --> 4;
-
 Array streambuf buffer 200;
 
-[ Version;
-	! Print the version number
-	print HDR_SPECREVISION->0, ".", HDR_SPECREVISION->1;
-];
+Constant HDR_SPECREVISION  $32;
 
 [ Gestalt zid gid arg val;
-
 	! Check a gestalt value
 	#Ifdef TARGET_ZCODE;
 		@"EXT:30S" zid arg -> val;
@@ -36,14 +29,7 @@ Array streambuf buffer 200;
 	return val;
 ];
 
-
-[ PrintBuffer addr i len;
-	len = addr-->0;
-	addr = addr + 2;
-	for (i=0: i < len: i++) print (char) addr->i;
-];
-
-[ IsZ12 val ;
+[ Vp_IsZ12 val ;
 	#Ifdef TARGET_ZCODE;
 		! Check we're in a 1.2 version interpreter
 		val = HDR_SPECREVISION-->0;
@@ -52,31 +38,57 @@ Array streambuf buffer 200;
 	rtrue;
 ];
 
-[ IsJS val ;
+[ Vp_IsJS val ;
 	! Checking for eval() stream support
-	if ( IsZ12() == false || Gestalt($30, 0, 0) == 0 ) rfalse;
-	
+	if ( Vp_IsZ12() == false || Gestalt($30, 0, 0) == 0 ) rfalse;
 	rtrue;
 ];
 
-[ IsHTML val ;
+[ Vp_IsHTML val ;
 	! Checking for HTML stream support
-	if ( IsZ12() == false || Gestalt($31, 0, 0) == 0 ) rfalse;
-	
+	if ( Vp_IsZ12() == false || Gestalt($31, 0, 0) == 0 ) rfalse;
 	rtrue;
 ];
 
-Global vorpleSupported; 
+Global Vp_vorpleSupported; 
 
 -) after "Definitions.i6t".
 
-To set Vorple support status:
-	(- vorpleSupported = ( IsJs() && IsHTML() ); -);
+To open JavaScript channel: (- @output_stream 5 streambuf; -).
+To close JavaScript channel: (- @output_stream( -5 ); -).
 
-First startup rule (this is the check whether Vorple is supported rule):
+To open HTML channel: (- @output_stream 6 streambuf; -).
+To close HTML channel: (- @output_stream( -6 ); -).
+
+To open HTML tag (name - text) called (classes - text):
+	execute JavaScript command "vorple.parser.openTag('[name]','[classes]')".
+	
+To open HTML tag (name - text):
+	open HTMl tag name called "".
+	
+To close HTML tag:
+	execute JavaScript command "vorple.parser.closeTag()".
+	
+To execute JavaScript code/command (JavaScript code - text):
+	if Vorple is supported:
+		open JavaScript channel;
+		say JavaScript code;
+		close JavaScript channel.
+		
+To queue JavaScript code/command (javascript code - text):
+	if Vorple is supported:
+		execute JavaScript command "vorple.parser._evalqueue.push(function(){[javascript code]})".
+
+
+Section 2 - Vorple support detection
+
+To set Vorple support status:
+	(- Vp_vorpleSupported = ( Vp_IsJs() && Vp_IsHTML() ); -);
+
+First startup rule (this is the set a flag for whether Vorple is supported rule):
 	set Vorple support status.
 
-To decide whether Vorple/JavaScript is supported/available: (- (vorpleSupported) -).
+To decide whether Vorple/JavaScript is supported/available: (- (Vp_vorpleSupported) -).
 
 To decide whether Vorple/JavaScript is not supported/available:
 	if Vorple is supported, decide no;
@@ -84,92 +96,65 @@ To decide whether Vorple/JavaScript is not supported/available:
 
 To decide whether Vorple/JavaScript is unsupported/unavailable:
 	decide on whether or not Vorple is not supported.
-	
-To open JavaScript channel: (- @output_stream 5 streambuf; -).
-To close JavaScript channel: (- @output_stream( -5 ); -).
 
-To eval/evaluate code/-- (javascript code - text):
-	if Vorple is supported:
-		open JavaScript channel;
-		say "[javascript code]";
-		close JavaScript channel.
+
+Chapter 2 - Placing elements and displaying content
+
+To place a/an/-- (element - text) element called (classes - text) reading (content - text):
+	open HTML tag element called classes;
+	say content;
+	close HTML tag.
 		
-To queue code (javascript code - text):
-	if Vorple is supported:
-		eval "vorple.parser._evalqueue.push(function(){[javascript code]})".
-
-To open HTML channel: (- @output_stream 6 streambuf; -).
-To close HTML channel: (- @output_stream( -6 ); -).
-
-To display an/-- element (element - text) called (classes - text):
-	if Vorple is supported:
-		open HTML channel;
-		say "[element] [classes]";
-		close HTML channel.
-
-To display an/-- element (name - text):
-	display element name called "".
-   
-To display a/-- block element/-- called (classes - text):
-	display element "div" called classes.
+To place a/an/-- (tag - text) element called (classes - text):
+	place tag element called classes reading "".
+		
+To place a/an/-- (tag - text) element reading (content - text):
+	place tag element called "" reading content.
 	
-To display an/-- inline element/-- called (classes - text):
-	display element "span" called classes.
+To place a/an/-- (tag - text) element:
+	place tag element called "" reading "".
+	
+To place an/-- inline/-- element called (classes - text) reading (content - text):
+	place "span" element called classes reading content.
+	
+To place an/-- inline/-- element called (classes - text):
+	place inline element called classes reading "". 
+
+To place an/-- inline/-- element reading (content - text):
+	place inline element called "" reading content. 
+
+To place a/-- block level/-- element called (classes - text) reading (content - text):
+	place "div" element called classes reading content.
+	
+To place a/-- block level/-- element called (classes - text):
+	place block level element called classes reading "". 
+
+To place a/-- block level/-- element reading (content - text):
+	place block level element called "" reading content.
+
+
+To display (content - text) in all the/-- (classes - text) elements:
+	let print-safe content be escaped content using "\n" as line breaks;
+	execute JavaScript command "$('.[classes]').text('[print-safe content]')".
+
+To display (content - text) in the/-- element called/-- (classes - text):
+	display content in all "[classes]:last" elements.
+
+
+Chapter 3 - Unique identifiers
 	
 To decide which text is unique identifier:
 	let id be "id";
 	repeat with X running from 1 to 3:
 		let rnd be a random number from 1000 to 9999;
-		let id be "[id][rnd]";
+		now id is "[id][rnd]";
 	decide on id.
-		
-To display Vorple method (code - text) in a/an/the/-- element (elem - text) called (class - text):
-	let id be unique identifier;
-	display element elem called "[id] [class]";
-	eval "$( '.[id]' ).html([code])".
 
-To display Vorple method (code - text) in a/-- block element/-- called (class - text):
-	display Vorple method code in element "div" called class.
-
-To display Vorple method (code - text) in an/-- inline/-- element called (class - text):
-	display Vorple method code in element "span" called class.
-		
-To display Vorple method (code - text):
-	display Vorple method code in an inline element called "".
 	
-To place text/-- (content - text) inside/in a/an/the/-- element called (class - text):
-	eval "$( '.[class]' ).html('[escaped content]')".
-	
-To display (content - text) inside/in a/an/the/-- element (elem - text) called (class - text):
-	let id be unique identifier;
-	display element elem called "[id] [class]";
-	eval "$( '.[id]' ).html('[content]')";
-	if Vorple is not supported:
-		say content.
-	
-To display (content - text) inside/in a/an/the/-- inline/-- element called (class - text):
-	display content inside an element "span" called class.
-
-To display (content - text) inside/in a/an/the/-- block element called (class - text):
-	display content inside an element "div" called class.
-	
-To display transient text/-- (content - text):
-	display content inside element called "transient".
-
-
-Chapter Fallback
-
-To (vorple-phrase - phrase) or/with/but fall/-- back/fallback with/to (fallback - phrase):
-	(- if( IsJS() ) {vorple-phrase} } else {fallback}; -).
-
-To (vorple-phrase - phrase) without a/-- fallback:
-	(- if( IsJS() ) {vorple-phrase} }; -)
-	
-	
-Chapter Turn types
+Chapter 4 - Turn types
 
 To mark the/-- current action (type - text):
-	eval "vorple.parser.setTurnType('[type]')".
+	execute JavaScript command "vorple.parser.setTurnType('[type]')".
 
 Before printing a parser error (this is the mark parser errors for Vorple rule):
 	mark the current action "error";
@@ -181,7 +166,7 @@ Include (-
 if (turns == 1) { IMMEDIATELY_UNDO_RM('B'); new_line; return; }
 if (undo_flag == 0) { IMMEDIATELY_UNDO_RM('C'); new_line; return; }
 if (undo_flag == 1) { IMMEDIATELY_UNDO_RM('D'); new_line; return; }
-if( isJS() ) {
+if( Vp_IsJS() ) {
 	@output_stream 5 streambuf;
 	print "vorple.parser.setTurnType('undo')";
 	@output_stream( -5 );
@@ -190,7 +175,7 @@ if (VM_Undo() == 0) { IMMEDIATELY_UNDO_RM('A'); new_line; }
 ];
 -) instead of "Perform Undo" in "OutOfWorld.i6t".
 	
-To decide whether current action is out of world:
+To decide whether the/-- current action is out of world:
      (- meta -)
     
 First specific action-processing rule (this is the mark out of world actions for Vorple rule):
@@ -198,7 +183,7 @@ First specific action-processing rule (this is the mark out of world actions for
 		mark the current action "meta".
 
 
-Chapter Escaping
+Chapter 5 - Escaping
 
 To decide which text is escaped (string - text):
 	decide on escaped string using "" as line breaks.
@@ -216,20 +201,21 @@ To decide which text is escaped (string - text) using (lb - text) as line breaks
 	decide on safe-string.
 
 
-Chapter Element positions
+Chapter 6 - Element positions
 
 [This value is used by other extensions.]
 An element position is a kind of value. Element positions are top left, top center, top right, left top, right top, left center, center left, screen center, right center, center right, left bottom, right bottom, bottom left, bottom center, bottom right, top banner, and bottom banner.
 
 			
-Chapter Credits
+Chapter 7 - Credits
 
 First after printing the banner text (this is the display Vorple credits rule):
 	if Vorple is supported:
 		say "Vorple version ";
-		display inline element called "vorple-version";
-		eval "$( '.vorple-version' ).html( vorple.core.version+'.'+vorple.core.release );";
+		place inline element called "vorple-version";
+		execute JavaScript command "$('.vorple-version').html(vorple.core.version+'.'+vorple.core.release)";
 		say paragraph break.
+	
 	
 Vorple Basics ends here.
 
@@ -250,12 +236,12 @@ Every Vorple story must include at least one Vorple extension and the custom web
 
 All standard Vorple extensions already have the "Include Vorple Basics" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
 
-At the moment Vorple supports Z-machine only,
+At the moment Vorple supports Z-machine only.
 
 
-Chapter: Fallback phrases
+Chapter: Compatibility with offline interpreters
 
-Even though with Vorple we can accomplish many things that are just impossible to do with traditional interpreters, it's always a good idea to make the story playable text-only as well if at all possible. There are a lot of players to whom a web interpreter or Vorple's features aren't accessible, and it's the Right Thing To Do to not exclude people if it's possible to include them.
+Even though Vorple can accomplish many things that are just impossible to do with traditional interpreters, it's always a good idea to make the story playable text-only as well if at all possible. There are a lot of players to whom a web interpreter or Vorple's features aren't accessible, and it's the Right Thing To Do to not exclude people if it's possible to include them.
 
 A story file can detect if it's being run on an interpreter that supports Vorple (or more specifically, on an interpreter that supports the Z-machine v. 1.2 draft). The same story file can therefore be run on both the Vorple web interpreter and other interpreters that have text-only features and display substitute content if necessary. We can test for Vorple's presence with "if Vorple is supported":
 
@@ -267,76 +253,70 @@ A story file can detect if it's being run on an interpreter that supports Vorple
 
 (The above example uses the Multimedia extension.)
 
-The say phrase in the above example is called a "fallback" and it's displayed only on normal non-Vorple interpreters.
-
-When the fallback consists of only one phrase (most commonly a say-phrase like in the example), we can use a shorthand "... or fall back with ...":
-
-	Instead of going north:
-		play sound file "marching_band.mp3" or fall back with say "A marching band crossing the street blocks your way."
-
-Sometimes a phrase already includes a default fallback. For example, in the Notifications extension displaying a notification will automatically show the same text in a normal interpreter as plain text. We can override that behavior by using the technique described above:
-
-	show notification "Click on your inventory items to examine them more closely" or fall back with say "Type EXAMINE followed by an inventory item's name to examine them more closely."
-
-If we want to suppress the default fallback completely, we can use "...without a fallback" modifier. This is equivalent to "...or fall back with do nothing."
-
-	show notification "Welcome to Vorple-enhanced [story title]!" without a fallback.
-
-Most Vorple-specific phrases already do nothing if Vorple isn't supported and can be safely used without extra modifiers. Those that do have a default fallback are described in their documentation.
-
-
-Chapter: Custom JavaScript and CSS
-
-Vorple tries to load a JavaScript file called "vorple.custom.js" and a CSS file called "vorple.custom.css" if they exist. They can contain any custom JavaScript code or CSS rules needed by the project.
-
-Place the files in the project's Resources directory (just like any other file that should be released with the story) and use the following phrases to include them:   
-
-	*: Release along with a file of "Custom JavaScript" called "vorple.custom.js".
-	Release along with a file of "Custom CSS" called "vorple.custom.css".
-	
-Note that the file names must be exactly like this. The interpreter won't try to load anything else.
+The say phrase in the above example is called a "fallback" and it's displayed only in normal non-Vorple interpreters.
 
 
 Chapter: Embedding HTML elements
 
 We can embed simple HTML elements into story text with some helper phrases.
 
-	display element "article";
-	display element "h1" called "title";
-	display block element called "inventory transient";
-	display inline element called "name";
+	place "article" element;
+	place "h1" element called "title";
+	place block level element called "inventory";
+	place inline element called "name";
 
 The previous example generates this markup:
 
 	<article></article>
 	<h1 class="title"></h1>
-	<div class="inventory transient"></div>
+	<div class="inventory"></div>
 	<span class="name"></span>
+	
+The element's name should be one word only and a valid CSS class name. It's safest to only use letters, numbers, underscores and dashes. The name "transient" is special: all elements called "transient" will fade out at the start of the next turn.
 
-The elements are always created empty and with a closing tag. Content can be added to them with these phrases:
+The elements are always created empty and with a closing tag. Contents can be added on creation:   
 
-	place "An exciting story" in the element called "title";
-	display "Story so far:" in element "h2" called "subtitle";
-	display "Anonymous Adventurer" in an element called "name";
+	place "h1" element called "title" reading "An exciting story";
+	place "h2" element reading "Story so far:";
 
-The "place" phrase will use an existing element(s) with the given class, overwriting previous content. The "display" phrases create new elements. The default element, if not otherwise specified, is <span>.
+...or after they've been created:
+	
+	say "You shall be known as ";
+	place inline element called "name";
+	display "Anonymous Adventurer" in the element called "name";
+	
+This technique can be used to modify the story output later (see example "Scrambled Eggs").
 
-The "transient" class is special: if an element has that class, it will fade out at the start of the next turn. Transient text can be created easily with:
+In the above examples the element contents should be plain text only. Trying to add nested tags or text styles will lead to erratic behavior. For longer and more complex contents the tags can be opened and closed manually:
 
-	display transient text "All happiness fades."
+	open HTML tag "div" called "letter";
+	place "h2" element reading "Dear Esther,";
+	say "I'm writing to tell you...";
+	close HTML tag.
+
+
+Chapter: Turn types
+
+Vorple shows different turn types differently: parser errors fade out the next turn, out of world actions are shown in a separate notification and so on.
+
+Sometimes we want to change that behavior. The turn type can be overridden manually:
+
+	mark the current turn "normal";
+	
+The turn types are "normal", "meta" (out of world actions), "error" and "dialog". The "dialog" turn type shows the turn contents in a dialog box with an "ok" that has to be clicked for the story to resume.
 
 
 Chapter: Evaluating JavaScript expressions
 
-The story file breaks out of the Z-Machine sandbox by having the web browser evaluate JavaScript expressions. An "eval" phrase is provided to do just this:
+The story file breaks out of the Z-Machine sandbox by having the web browser evaluate JavaScript expressions. An "execute JavaScript command" phrase is provided to do just this:
 
-	eval "alert('Hello World!')";
+	execute JavaScript command "alert('Hello World!')";
 
-At the moment there are no safeguards against invalid or potentially malicious JavaScript. If an illegal JavaScript expression is evaluated, the browser will display an error message in the console and the interpreter will halt.
+At the moment there are no safeguards against invalid or potentially malicious JavaScript. If an illegal JavaScript expression is evaluated, the browser will show an error message in the console and the interpreter will halt.
 
 JavaScript expressions can also be postponed to be evaluated only after the turn has completed and all the text has been displayed to the reader.
 
-	queue code "alert('Hello World!')";
+	queue JavaScript command "alert('Hello World!')";
 
 The expressions are evaluated in the same order they were added to the queue and the queue is emptied right after evaluation.
 
@@ -346,43 +326,70 @@ Chapter: Escaping strings
 When evaluating JavaScript expressions, quotation marks must often be exactly right. Inform formats quotes according to literary standards which doesn't necessarily work together with JavaScript. Consider the following example:
 
 	To greet (name - text):
-		eval "alert( 'Hello [name]!' )".
+		execute JavaScript command "alert( 'Hello [name]!' )".
 
 	When play begins:
 		greet "William 'Bill' O'Malley".
 
-The string being evaluated will be 
-	
-	alert( "Hello William "Bill" O'Malley!" )
-
-which will cause an error because of unescaped double quotes. Changing the string delimiters to single quotes wouldn't help since there's an unescaped single quote as well inside the string.
+The string being evaluated will be "Hello William "Bill" O'Malley!" which will cause an error because of unescaped double quotes. Changing the string delimiters to single quotes wouldn't help since there's an unescaped single quote as well inside the string.
 
 To escape text we can preface it with "escaped":
 
 	To greet (name - text):
-		eval "alert( 'Hello [escaped name]!' )".
+		execute JavaScript command "alert( 'Hello [escaped name]!' )".
 
-Now the string becomes:
-
-	alert( "Hello William \"Bill\" O\'Malley!" )
+Now the string can be safely used in the JavaScript expression.
 
 By default newlines are removed. If we want to preserve them, or turn them into for example HTML line breaks:
 
 	To greet (name - text):
 		let safe name be escaped name using "\n" as line breaks;
-		eval "alert( 'Hello [safe name]!' )".
+		execute JavaScript command "alert( 'Hello [safe name]!' )".
 		
+		
+Example: ** Convenience Store - Displaying the inventory styled as a HTML list
+
+We'll display the inventory listing using HTML unordered lists ("ul"). It might not be immediately obvious why one would want to do this, but if the items are displayed in a proper HTML structure it's possible to use CSS to style them further.
+		
+	*: "Convenience Store"
+	
+	Include Vorple Basics by Juhana Leinonen.
+	Release along with the "Vorple" interpreter.
+
+	Carry out taking inventory (this is the print inventory using HTML lists rule):
+		if Vorple is supported:
+			say "[We] [are] carrying:[line break]" (A);
+			open HTML tag "ul";
+			repeat with item running through things carried by the player:
+				place "li" element reading "[item]";
+				if the item contains something:
+					open HTML tag "ul";
+					repeat with content running through things contained by the item:
+						place "li" element reading "[content]";
+					close HTML tag;
+			close HTML tag;
+		otherwise:
+			follow the print standard inventory rule.
+				
+	The print inventory using HTML lists rule is listed instead of the print standard inventory rule in the carry out taking inventory rules.  
+
+	The Convenience store is a room. The eggs, the milk, the jar of pickles, the magazine, and the can opener are in the Convenience store. The paper bag is an open container in the Convenience store.
+	
+	Test me with "take all/i/put all in paper bag/i".
+
 
 Example: ** Scrambled Eggs - Hints that are initially shown obscured and revealed on request
 
 The system works by wrapping scrambled hints in named elements. Their contents can then be later replaced with unscrambled text.
 
 	
-	*: Include Vorple Basics by Juhana Leinonen.
+	*: "Scrambled Eggs"
+	
+	Include Vorple Basics by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	
-	Chapter World
+	Chapter 1 - World
 	
 	Kitchen is a room. "Your task is to find a frying pan!"
 	The table is a fixed in place supporter in the kitchen.
@@ -395,7 +402,7 @@ The system works by wrapping scrambled hints in named elements. Their contents c
 		say "(Type HINTS to get help.)".
 	
 	
-	Chapter Hints
+	Chapter 2 - Hints
 	
 	Table of Hints
 	hint	revealed (truth state)
@@ -424,7 +431,7 @@ The system works by wrapping scrambled hints in named elements. Their contents c
 					otherwise:
 						let rnd be a random number between 1 and the number of entries in the alphabet;
 						now scrambled hint is "[scrambled hint][entry rnd in the alphabet]";
-			display scrambled hint in an element called "hint-[row number]";
+			place an element called "hint-[row number]" reading "[scrambled hint]";
 			say line break;
 			increment row number;
 		say "[line break](Type REVEAL # where # is the number of the hint you want to unscramble.)".
@@ -442,7 +449,7 @@ The system works by wrapping scrambled hints in named elements. Their contents c
 		
 	Carry out revealing hint (this is the change past transcript rule):
 		choose row number understood in the table of hints;
-		place hint entry in the element called "hint-[number understood]".
+		display hint entry in the element "hint-[number understood]".
 		
 	Test me with "hints/reveal 1/reveal 2/reveal 3".
 
@@ -463,7 +470,7 @@ The grammar for a command used only for data passing should begin with two under
 	There is a room.
 	
 	When play begins (this is the query browser language rule):
-		eval "if(window.navigator.language) { vorple.parser.sendCommand('__lang '+window.navigator.language, {hideCommand:true}) }".
+		execute JavaScript command "if(window.navigator.language) { vorple.parser.sendCommand('__lang '+window.navigator.language, {hideCommand:true}) }".
 		
 	Checking browser language is an action out of world applying to one topic.
 	Understand "__lang [text]" as checking browser language.
@@ -476,16 +483,24 @@ Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a
 
 Here we set up an encyclopedia that can be used to query articles from Wikipedia. The actual querying code is a bit longer so it's placed in the vorple.custom.js file, which can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/vorple.custom.js . 
 
-	*: Include Vorple Basics by Juhana Leinonen.
+	*: "The Sum of Human Knowledge"
+	
+	Include Vorple Basics by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
-	Release along with a file of "Custom JavaScript" called "vorple.custom.js".
+	Release along with JavaScript "encyclopedia.js".
 	
 	Library is a room. "The shelves are filled with volumes of an encyclopedia. You can look up any topic you want."
 	
 	Looking up is an action applying to one topic.
 	Understand "look up [text]" as looking up.
 	
-	Carry out looking up:
-		display a block element called "dictionary-entry";
-		eval "wikipedia_query('[escaped topic understood]')" or fall back to say "You find the correct volume and learn about [topic understood].".
+	Carry out looking up when Vorple is supported:
+		place a block level element called "dictionary-entry";
+		execute JavaScript command "wikipedia_query('[escaped topic understood]')".
 		
+	Carry out looking up when Vorple is not supported:
+		say "You find the correct volume and learn about [topic understood].".
+	 	
+	Test me with "look up ducks/look up mars/look up interactive fiction".
+	
+	

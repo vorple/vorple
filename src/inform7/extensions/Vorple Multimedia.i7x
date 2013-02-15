@@ -7,10 +7,12 @@ Include Vorple Basics by Juhana Leinonen.
 Use authorial modesty.
 
 
-Chapter Images
+Chapter 1 - Images
 
 To display image (file - text) in a/an/-- element called (classes - text):
-	display Vorple method "vorple.media.image('[file]')" in an element "div" called "[classes] vorple-image".
+	let id be unique identifier;
+	place a block level element called "[id] [classes] vorple-image";
+	execute JavaScript command "$('.[id]').html(vorple.media.image('[file]'))".
 
 To display image (file - text), centered, aligned left, aligned right, floating left or floating right:
 	let the alignment class be "";
@@ -22,41 +24,43 @@ To display image (file - text), centered, aligned left, aligned right, floating 
 	display image file in an element called alignment class.
 
 To preload image (file - text):
-	eval "vorple.media.preloadImage('[file]');".
+	execute JavaScript command "vorple.media.preloadImage('[file]');".
 	
 To preload images (image-list - list of text):
 	repeat with X running through image-list:
 		preload image "[X]".
 
 
-Chapter Audio
+Chapter 2 - Audio
 
 To play sound file/-- (file - text), looping:
 	if looping:
-		eval "vorple.media.playSound('[escaped file]',{loop:true})";
+		execute JavaScript command "vorple.media.playSound('[escaped file]',{loop:true})";
 	otherwise:
-		eval "vorple.media.playSound('[escaped file]',{loop:false})".
+		execute JavaScript command "vorple.media.playSound('[escaped file]',{loop:false})".
 
 To play music file/-- (file - text), looping:
 	if looping:
-		eval "vorple.media.playMusic('[escaped file]',{loop:true})";
+		execute JavaScript command "vorple.media.playMusic('[escaped file]',{loop:true})";
 	otherwise:
-		eval "vorple.media.playMusic('[escaped file]',{loop:false})".
+		execute JavaScript command "vorple.media.playMusic('[escaped file]',{loop:false})".
 
 To stop music:
-	eval "vorple.media.stopMusic()".
+	execute JavaScript command "vorple.media.stopMusic()".
 
 To stop sounds:
-	eval "vorple.media.stopSounds()".
+	execute JavaScript command "vorple.media.stopSounds()".
 
 To stop all audio:
-	eval "vorple.media.stopAll()".
+	execute JavaScript command "vorple.media.stopAll()".
 
 
-Chapter Video
+Chapter 3 - Video
 
-To play a/the/-- YouTube video (id - text):
-	display Vorple method "vorple.media.youtube('[id]',{width:600})" in an element "div" called "youtube".
+To play a/the/-- YouTube video (youtube-id - text):
+	let container-id be unique identifier;
+	place a block level element called "[container-id] youtube";
+	execute JavaScript command "$('.[container-id]').html(vorple.media.youtube('[youtube-id]',{width:600}))".
 	
 Vorple Multimedia ends here.
 
@@ -68,7 +72,7 @@ Chapter: Including media files
 
 Media files (images and audio) should be declared in the story source so that Inform knows to include them in the release version.
 
-	Release along with a file of "Some picture" called "whatever.png".
+	Release along with the file "whatever.png".
 
 The files should be placed in the Materials directory, as per chapter 23.7. in Writing with Inform.
 
@@ -149,7 +153,9 @@ The serinette (a type of music box) plays music when it opens and a sound effect
 	Release along with the file "musicbox.mp3".
 	
 	Drawing room is a room. "The drawing room is tastefully decorated."
+	
 	The serinette is an openable closed container in the drawing room. "A beautiful music box sits on a table." The description is "There's a winding key behind the box."
+	Understand "music" and "box" as the serinette.
 	
 	A winding key is part of the serinette.
 	
@@ -183,6 +189,9 @@ The serinette (a type of music box) plays music when it opens and a sound effect
 		
 	Carry out opening the serinette when the serinette is wound:
 		start playing the tune.
+		
+	After opening the serinette when the serinette is unwound:
+		say "Nothing happens. Looks like it must be wound first."
 		
 	Carry out closing the serinette when the serinette is wound:
 		stop music.
