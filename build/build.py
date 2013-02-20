@@ -81,6 +81,14 @@ srcfiles = glob( srcdir+"vorple.*.js" )
 corelib = srcdir+"vorple.core.js"
 srcfiles.remove( corelib )
 
+templatefiles = [ 
+                 libdir+"vorple.parchment.min.js",
+                 i7templatedir+"vorple.css",
+                 libdir+"parchment/parchment.min.css",
+                 libdir+"qtip/jquery.qtip.css",
+                 libdir+"soundmanager/soundmanager2.swf"
+                ]
+
 if os.path.exists( destination ):
     shutil.rmtree( destination )
 
@@ -264,22 +272,13 @@ if "i7_templates" in arguments.tasks:
     if os.path.exists( i7releasedir ):
         shutil.rmtree( i7releasedir )
     os.makedirs( i7releasedir )
-    
-    # the paths must be flattened because the template doesn't read subdirectories
-    
-    for root, dirs, files in os.walk( libdir ):
-        for file in files:
-            if file != '.DS_Store':
-                shutil.copy( os.path.join( root, file ), i7releasedir )
-    
-    for file in os.listdir( i7templatedir ):
-        filename = os.path.join( i7templatedir, file )
-        if not os.path.isdir( filename ) and file != '.DS_Store':
-            shutil.copy( filename, i7releasedir )
-    
-    # write the names of the files to the manifest
-    
+
+    shutil.copy( i7templatedir+'(manifest).txt', i7releasedir )
     manifest = open( os.path.join( i7releasedir, '(manifest).txt' ), 'a' )
+
+    for file in templatefiles:
+        shutil.copy( file, i7releasedir )
+        manifest.write( os.path.basename( file ) + "\n" )
     
     for file in os.listdir( i7releasedir ):
         if not os.path.isdir( os.path.join( i7releasedir, file ) ) and file != '(manifest).txt' and file != '.DS_Store':
@@ -293,7 +292,7 @@ if "i7_templates" in arguments.tasks:
     subprocess.call([
           "zip",
           "-rq",
-          destination+"i7-Vorple.zip",
+          destination+"i7-template.zip",
           "Vorple",
           "-x", '*.DS_Store*'
         ])
@@ -325,6 +324,7 @@ if "i7_examples" in arguments.tasks:
             os.mkdir( targetdir )
         extension = open( i7extensiondir+extensionname, 'r' )
         examplename = ''
+	examplefile = 0
         for line in extension:
             if re.match( 'Example: \*', line ):
                 if examplename is not '':

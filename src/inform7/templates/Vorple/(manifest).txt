@@ -120,9 +120,3 @@ processBase64Zcode('
 
 ! Non-comment lines are the names of files which are copied across when the
 ! release is made. Anything not listed here won't be copied.
-
-jquery.qtip.min.css
-parchment.min.css
-soundmanager2.swf
-vorple.css
-vorple.parchment.min.js
