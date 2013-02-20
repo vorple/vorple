@@ -9,6 +9,10 @@ a {
 	text-decoration:none;
 }
 
+.main {
+	white-space: pre-wrap;
+}
+
 .coverimage, .links, .interpretercredit {
 	display:none;
 }
@@ -96,7 +100,7 @@ a {
 	color:#666;
 }
 
-.previousCommand.parserError{
+.turn.parserError .main {
 	font-style: italic;
 	color: #611;
 }
@@ -155,6 +159,130 @@ a {
 	margin:2em 0;
 	font-style:italic;
 }
+
+
+/* fonts and styles (VSE) */
+
+.cursive {
+	font-family:cursive;
+}
+
+.fantasy {
+	font-family:fantasy;
+}
+
+.monospace {
+	font-family:monospace;
+}
+
+.nowrap {
+	white-space:nowrap;
+}
+
+.strikethrough {
+	text-decoration:line-through;
+}
+
+.underline {
+	text-decoration:underline;
+}
+
+.xx-small {
+	font-size:xx-small;
+}
+
+.x-small {
+	font-size:x-small;
+}
+
+.small {
+	font-size:small;
+}
+
+.large {
+	font-size:large;
+}
+
+.x-large {
+	font-size:x-large;
+}
+
+.xx-large {
+	font-size:xx-large;
+}
+
+.bold, .strong {
+	font-weight:bold;
+}
+
+.italic, .emphasized {
+	font-style:italic;
+}
+
+.red-foreground, #vorpleContainer.red-foreground #vorple .turn {
+	color:#ef0000;
+}
+
+.green-foreground, #vorpleContainer.green-foreground #vorple .turn {
+	color:#00d600;
+}
+
+.yellow-foreground, #vorpleContainer.yellow-foreground #vorple .turn {
+	color:#efef00;
+}
+
+.blue-foreground, #vorpleContainer.blue-foreground #vorple .turn {
+	color:#006bb5;
+}
+
+.magenta-foreground, #vorpleContainer.magenta-foreground #vorple .turn {
+	color:#ff00ff;
+}
+
+.cyan-foreground, #vorpleContainer.cyan-foreground #vorple .turn {
+	color:#00efef;
+}
+
+.white-foreground, #vorpleContainer.white-foreground #vorple .turn {
+	color:#ffffff;
+}
+
+.black-foreground, #vorpleContainer.black-foreground #vorple .turn {
+	color:#000000;
+}
+
+.red-background, #vorpleContainer.red-background {
+	background-color:#ef0000;
+}
+
+.green-background, #vorpleContainer.green-background {
+	background-color:#00d600;
+}
+
+.yellow-background, #vorpleContainer.yellow-background {
+	background-color:#efef00;
+}
+
+.blue-background, #vorpleContainer.blue-background {
+	background-color:#006bb5;
+}
+
+.magenta-background, #vorpleContainer.magenta-background {
+	background-color:#ff00ff;
+}
+
+.cyan-background, #vorpleContainer.cyan-background {
+	background-color:#00efef;
+}
+
+.white-background, #vorpleContainer.white-background {
+	background-color:#ffffff;
+}
+
+.black-background, #vorpleContainer.black-background {
+	background-color:#000000;
+}
+
 
 /* this prevents artifacts on scroll in Chrome */
 input {
