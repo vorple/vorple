@@ -78,7 +78,7 @@
         var self = this;
         var opt = $.extend( true, {}, self.defaults, { show: { ready: true, event: self.defaults.show.event } }, options );
 
-        return $( document ).delegate( element, opt.show.event, function( e ) {
+        return $( document ).on( opt.show.event, element, function( e ) {
             self._create( this, opt );
         });
     };

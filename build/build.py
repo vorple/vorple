@@ -302,39 +302,52 @@ if "i7_templates" in arguments.tasks:
     
 if "i7_examples" in arguments.tasks:
     print "Compiling I7 examples from the extensions..."
-    extensionroot = glob( i7extensiondir+"*" )
+    extensionroot = glob( i7extensiondir+"Vorple*" )  #take only stuff that begins with Vorple so that my other extensions aren't included
     extensions = []
     
-    #if os.path.exists( i7extensiondestination ):
-    #    shutil.rmtree( i7extensiondestination )
-    #os.makedirs( i7extensiondestination )
+    extensionstorydir = i7extensiondestination+"stories/"
     
+    if os.path.exists( extensionstorydir ):
+        shutil.rmtree( extensionstorydir )
+    os.makedirs( extensionstorydir )
     
     os.chdir( tmpdir )
     os.mkdir( 'Build' )
     os.mkdir( 'Source' )
     os.mkdir( 'Index' )
     
+    shutil.copy( i7extensiondestination+"head.html", i7extensiondestination+"list.html" )
+    exampleindex = open( i7extensiondestination+"list.html", 'a' )
+    
     for extensionsource in extensionroot:
         nifiles = []
-        extensionname = os.path.basename( extensionsource )
-        print " - "+extensionname + ": ",
-        targetdir = os.path.splitext( i7extensiondestination+extensionname )[0].replace( ' ', '_' ) + '/'
+        extensionname = os.path.splitext( os.path.basename( extensionsource ) )[0]
+        print " - "+os.path.splitext( extensionname )[0] + ": ",
+        targetdir = extensionstorydir+extensionname + '/'
         if not os.path.exists( targetdir ):
             os.mkdir( targetdir )
-        extension = open( i7extensiondir+extensionname, 'r' )
+        extension = open( i7extensiondir+extensionname+'.i7x', 'r' )
         examplename = ''
-	examplefile = 0
+        examplefile = 0
+        exampleindex.write( '<h3>'+extensionname+'</h3>\n' )
         for line in extension:
             if re.match( 'Example: \*', line ):
                 if examplename is not '':
                     print '-',
-                examplename = re.match( 'Example: \** (.*?)( -.*)?$', line ).group( 1 )
+                exampleregex = re.match( 'Example: (\**) (.*?)( -(.*))?$', line )
+                examplestars = exampleregex.group( 1 )
+                examplename = exampleregex.group( 2 )
+                exampledesc = exampleregex.group( 4 )
                 print examplename,
                 nifiles.append( targetdir + examplename )
                 examplefile = open( targetdir + examplename + '.ni', 'w' )
+                exampleindex.write( "<h4>"+examplename+"</h4>\n" )
+                exampleindex.write( '<div class="blurb">'+exampledesc+'</div>\n' )
+                exampleindex.write( '<div class="dl_links"><a href="interpreter.html?story=stories/'+extensionname+'/'+examplename+'.z8">play</a> &mdash; <a href="stories/'+extensionname+'/'+examplename+'.ni">view source</a></div>\n' )
             elif examplename and ( re.match( '\t', line ) or line.strip() == '' ):
                 examplefile.write( re.sub( '\t(\*: ?)?', '', line, 1 ) )
+                if re.match( '\tTest me with ', line ):
+                    exampleindex.write( '<div class="testme">Try: <span class="testcommands">'+re.match( '\tTest me with \"(.*)\"', line ).group( 1 )+'</span></div>' )
         print
         if examplefile:
             examplefile.close()
@@ -368,7 +381,9 @@ if "i7_examples" in arguments.tasks:
                     print os.path.basename( ni ) + ': Inform 6 compile error'
                     print e.output
                 
-            
+    shutil.copyfileobj( open( i7extensiondestination+"foot.html",'r'), exampleindex )
+    exampleindex.close()
+           
             
 # Library files modified for the unit test coverage
 

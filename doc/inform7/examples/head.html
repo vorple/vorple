@@ -1,44 +1,4 @@
-<!DOCTYPE html>
-<html>
-<head>
-  <title>Vorple examples</title>
-  <meta http-equiv="Content-Type" content="text/html;charset=utf-8">
-  <meta name="viewport" content="width=device-width, user-scalable=no">
-  <link rel="stylesheet" href="../../../src/inform7/templates/Vorple/vorple.css">
-  
-<script type="text/javascript" src="../../../lib/vorple.parchment.min.js"></script>
-<script type="text/javascript" src="vorple.custom.js"></script>
-<script type="text/javascript">
-$( function() {
-	$( '#vorpleLoader' ).html( 'Loading...' );
-});
-</script>
 
-<link rel="stylesheet" href="../../../lib/parchment/parchment.min.css">
-<link rel="stylesheet" href="../../../lib/qtip/jquery.qtip.min.css">
-<link rel="stylesheet" href="../../../src/inform7/templates/Vorple/vorple.css">
-<link rel="stylesheet" href="vorple.custom.css">
-
-<link href='http://fonts.googleapis.com/css?family=Orbitron:700' rel='stylesheet' type='text/css'>
-
-<script type="text/javascript">
-parchment.options.lib_path = '../../../lib/parchment/';
-parchment.options.lock_story = 0;
-
-// if a story is loaded
-if( window.location.search.indexOf( '?story=' ) === 0 ) {
-	vorple.media.defaults.swfPath = '../../../lib/soundmanager';
-	vorple.core.init( parchment );
-	parchment.init();
-	$( function() {
-		$( '#exampleLinks' ).hide();
-	});
-}
-</script>
-  
-</head>
-<body class="play">
-	
 <div id="exampleLinks">
 	
 
