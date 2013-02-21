@@ -590,10 +590,12 @@
     
     $( document ).on( 'init.vorple', function() {
         // init SoundManager
-        soundManager.setup({ 
-            url: vorple.media.defaults.swfPath,
-            debugMode: false
-        });        
+        if( typeof soundManager !== 'undefined' ) {
+            soundManager.setup({ 
+                url: vorple.media.defaults.swfPath,
+                debugMode: false
+            });        
+        }
         
         /**
          * Autocreated mute checkboxes
@@ -612,7 +614,7 @@
             });
         }
         
-        $( document ).delegate( 'input.mute', 'change', function() {
+        $( document ).on( 'change', 'input.mute', function() {
             var $this = $( this );
             
             if( $this.val() == 'all' ) {
@@ -625,7 +627,7 @@
             }
         });
 
-        $( document ).delegate( 'input.unmute', 'change', function() {
+        $( document ).on( 'change', 'input.unmute', function() {
             var $this = $( this );
             
             if( $this.val() == 'all' ) {
