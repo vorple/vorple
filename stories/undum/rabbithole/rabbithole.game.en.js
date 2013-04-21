@@ -390,7 +390,7 @@ undum.game.init = function( character, system ) {
         'rabbit.jpg'
         ]);
         
-    vorple.media.defaults.swfPath = '../../../lib/soundmanager';
+    vorple.media.defaults.swfPath = '../../../vendor/soundmanager';
     
     vorple.core.init( system );
 };

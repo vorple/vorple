@@ -771,7 +771,7 @@ undum.game.init = function( character, system ) {
     
     vorple.undum.settings.disposableLinks = [ 'dispose-now' ];
  
-    vorple.media.defaults.swfPath = '../../../lib/soundmanager';
+    vorple.media.defaults.swfPath = '../../../vendor/soundmanager';
     
     /** Initialize and start Vorple. This line is mandatory. */
     vorple.core.init( system );

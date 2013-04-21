@@ -63,10 +63,11 @@ builddir = os.path.abspath( "./" ) + "/"
 tmpdir = os.path.abspath ( "tmp" ) + "/"
 srcdir = os.path.abspath( "../src" ) + "/"
 libdir = os.path.abspath( "../lib" ) + "/"
+vendordir = os.path.abspath( "../vendor" ) + "/"
 themedir = os.path.abspath( "../themes" ) + "/"
 apidir = os.path.abspath( "../doc/API" ) + "/"
 apigeneratordir = os.path.abspath( "../../jsdoc-toolkit" ) + "/"
-minifierdir = os.path.abspath( "../../closure/closure-compiler" ) + "/"
+minifierdir = os.path.abspath( "compiler/closure-compiler" ) + "/"
 exampledir = os.path.abspath( "../stories/undum" ) + "/"
 unittestdir = os.path.abspath( "../tests" ) + "/"
 i7dir = "/Applications/Inform DEV.app/Contents/Resources/"
@@ -130,41 +131,42 @@ if "minify" in arguments.tasks:
     subprocess.call( minifiercommand )
 
     print "Minifying complete library packages:"
-    
+
+    libraryArguments = [
+                      "--js", vendordir+"jquery-1.8.3.min.js",
+                      "--js", vendordir+"jquery.noty.js",
+                      "--js", vendordir+"noty/default.js",
+                      "--js", vendordir+"noty/layouts.js",
+                      "--js", vendordir+"jquery.qtip.min.js",
+                      "--js", vendordir+"soundmanager2.min.js"
+                      ]
+
     print " - for Undum..."
     minifiercommand = [
                       "/usr/bin/java", 
                       "-jar", minifierdir+"compiler.jar", 
                       "--compilation_level=SIMPLE_OPTIMIZATIONS",
                       "--warning_level", "QUIET",
-                      "--js_output_file", libdir+"vorple.undum.min.js",
-                      "--js", libdir+"jquery-1.8.3.min.js",
-                      "--js", libdir+"jquery.noty.js",
-                      "--js", libdir+"noty/default.js",
-                      "--js", libdir+"noty/layouts.js",
-                      "--js", libdir+"jquery.qtip.min.js",
-                      "--js", libdir+"soundmanager2.min.js",
-                      "--js", libdir+"undum.js",
+                      "--js_output_file", libdir+"vorple.undum.min.js" ]
+    minifiercommand.extend( libraryArguments )
+    minifiercommand.extend( [
+                      "--js", vendordir+"undum.js",
                       "--js", libdir+"vorple.min.js"
-                      ]
+                      ] )
     subprocess.call( minifiercommand )
     
     print " - for Parchment..."
     minifiercommand = [
                       "/usr/bin/java", 
-                      "-jar", minifierdir+"compiler.jar", 
+                      "-jar", minifierdir+"compiler.jar",
                       "--compilation_level=SIMPLE_OPTIMIZATIONS",
                       "--warning_level", "QUIET",
-                      "--js_output_file", libdir+"vorple.parchment.min.js",
-                      "--js", libdir+"jquery-1.8.3.min.js",
-                      "--js", libdir+"jquery.noty.js",
-                      "--js", libdir+"noty/default.js",
-                      "--js", libdir+"noty/layouts.js",
-                      "--js", libdir+"jquery.qtip.min.js",
-                      "--js", libdir+"soundmanager2.min.js",
-                      "--js", libdir+"parchment.min.js",
-                      "--js", libdir+"vorple.min.js"
-                      ]
+                      "--js_output_file", libdir+"vorple.parchment.min.js" ]
+    minifiercommand.extend( libraryArguments )
+    minifiercommand.extend( [
+                    "--js", vendordir+"parchment.min.js",
+                    "--js", libdir+"vorple.min.js"
+                    ] )
     subprocess.call( minifiercommand )
 
     print " - without engine..."
@@ -173,15 +175,23 @@ if "minify" in arguments.tasks:
                       "-jar", minifierdir+"compiler.jar", 
                       "--compilation_level=SIMPLE_OPTIMIZATIONS",
                       "--warning_level", "QUIET",
-                      "--js_output_file", libdir+"vorple.vanilla.min.js",
-                      "--js", libdir+"jquery-1.8.3.min.js",
-                      "--js", libdir+"jquery.noty.js",
-                      "--js", libdir+"noty/default.js",
-                      "--js", libdir+"noty/layouts.js",
-                      "--js", libdir+"jquery.qtip.min.js",
-                      "--js", libdir+"soundmanager2.min.js",
+                      "--js_output_file", libdir+"vorple.vanilla.min.js" ]
+    minifiercommand.extend( libraryArguments )
+    minifiercommand.extend( [
                       "--js", libdir+"vorple.min.js"
-                      ]
+                      ] )
+    subprocess.call( minifiercommand )
+
+    print " - 3rd party libraries only..."
+    minifiercommand = [
+                    "/usr/bin/java",
+                    "-jar", minifierdir+"compiler.jar",
+                    "--compilation_level=SIMPLE_OPTIMIZATIONS",
+                    "--warning_level", "QUIET",
+                    "--js_output_file", libdir+"3rdparty-bundle.min.js",
+                    ]
+    minifiercommand.extend( libraryArguments )
+
     subprocess.call( minifiercommand )
 
 # create API
@@ -343,7 +353,7 @@ if "i7_examples" in arguments.tasks:
                 examplefile = open( targetdir + examplename + '.ni', 'w' )
                 exampleindex.write( "<h4>"+examplename+"</h4>\n" )
                 exampleindex.write( '<div class="blurb">'+exampledesc+'</div>\n' )
-                exampleindex.write( '<div class="dl_links"><a href="interpreter.html?story=stories/'+extensionname+'/'+examplename+'.z8">play</a> &mdash; <a href="stories/'+extensionname+'/'+examplename+'.ni">view source</a></div>\n' )
+                exampleindex.write( '<div class="dl_links"><a href="../vorple/doc/inform7/examples/interpreter.html?story=stories/'+extensionname+'/'+examplename+'.z8">play</a> &mdash; <a href="../vorple/doc/inform7/examples/stories/'+extensionname+'/'+examplename+'.ni">view source</a></div>\n' )
             elif examplename and ( re.match( '\t', line ) or line.strip() == '' ):
                 examplefile.write( re.sub( '\t(\*: ?)?', '', line, 1 ) )
                 if re.match( '\tTest me with ', line ):
