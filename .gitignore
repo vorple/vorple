@@ -1,12 +1,15 @@
 /.settings
 /.project
+/.idea
+*.iml
 .DS_Store
 .pydevproject
 /build/i7
 /build/tmp
+/build/compiler
 /doc/inform7/examples/stories
 /doc/inform7/examples/list.html
-/lib/vorple*.min.js
+/lib
 /tests/inform7.test.inform/Build
 /tests/inform7.test.inform/Settings.plist
 /tests/inform7.test.inform/Skein.skein

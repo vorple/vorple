@@ -176,8 +176,8 @@ if (VM_Undo() == 0) { IMMEDIATELY_UNDO_RM('A'); new_line; }
 -) instead of "Perform Undo" in "OutOfWorld.i6t".
 	
 To decide whether the/-- current action is out of world:
-     (- meta -)
-    
+	 (- meta -)
+	
 First specific action-processing rule (this is the mark out of world actions for Vorple rule):
 	if current action is out of world:
 		mark the current action "meta".
@@ -201,13 +201,65 @@ To decide which text is escaped (string - text) using (lb - text) as line breaks
 	decide on safe-string.
 
 
-Chapter 6 - Element positions
+Chapter 6 - Interpreter communication
+
+Section 1 - Queueing parser commands
+
+To queue parser command (cmd - text), showing the command:
+	let hideCommand be "true";
+	if leaving the command visible:
+		now hideCommand is "false";
+	execute JavaScript command "vorple.parser.sendCommand([cmd],{hideCommand:[hideCommand]})".
+
+To queue silent parser command (cmd - text):
+	execute JavaScript command "vorple.parser.sendSilentCommand([cmd])".
+
+
+Section 2 - When play hasn't begun yet rulebook
+
+[Code for basic mechanism provided by Graham Nelson]
+
+When play hasn't begun yet is a rulebook.
+
+The when play hasn't begun yet stage rule is listed before the when play begins stage rule in the startup rulebook.
+
+This is the when play hasn't begun yet stage rule:
+	follow the when play hasn't begun yet rules.
+
+To permit out-of-sequence commands:
+	(- EarlyInTurnSequence = true; -).
+
+Vorple pre-story communication finished is a truth state that varies. Vorple pre-story communication finished is false.
+
+Last when play hasn't begun yet (this is the loop pre-start prompt rule):
+	permit out-of-sequence commands;
+	follow parse command rule;
+	follow generate action rule;
+	if Vorple pre-story communication finished is false:
+		follow the loop pre-start prompt rule.
+
+
+Starting the story is an action out of world.
+Understand "__start_story" as starting the story.
+
+Carry out starting the story (this is the end pre-story communication rule):
+	now Vorple pre-story communication finished is true.
+
+
+This is the undo marking intro as meta rule:
+	mark the current action "normal".
+
+The undo marking intro as meta rule is listed after the when play begins stage rule in the startup rulebook.
+
+
+
+Chapter 7 - Element positions
 
 [This value is used by other extensions.]
 An element position is a kind of value. Element positions are top left, top center, top right, left top, right top, left center, center left, screen center, right center, center right, left bottom, right bottom, bottom left, bottom center, bottom right, top banner, and bottom banner.
 
 			
-Chapter 7 - Credits
+Chapter 8 - Credits
 
 First after printing the banner text (this is the display Vorple credits rule):
 	if Vorple is supported:
@@ -345,7 +397,47 @@ By default newlines are removed. If we want to preserve them, or turn them into 
 	To greet (name - text):
 		let safe name be escaped name using "\n" as line breaks;
 		execute JavaScript command "alert( 'Hello [safe name]!' )".
-		
+
+
+Chapter: Communication with the interpreter
+
+Instructing the interpreter from the story file is easy with "execute JavaScript command" phrases, but passing information to the other direction (from interpreter to story file) is not as simple. The interpreter/story file model wasn't designed for it and the only tool we have in our use is to have the interpreter 'type' commands to the prompt hidden from the user.
+
+There are some limitations to this method. The most important one is that you have to wait for the prompt to become available (a turn to end) to be able to pass these hidden commands. Therefore you need to plan for the communication to happen in between turns. This is why the phrase is called "queue parser command", which is what it does: all command instructions are placed in the queue which is resolved at the end of a turn.
+
+	queue parser command "'__set_name '+username";
+
+(The above example assumes there's a global JavaScript variable "username" set at some point.)
+
+Notice that the parameter is a JavaScript expression, so commands that are given as such must be enclosed in quotes.
+
+On Inform's side the counterpart is a command that handles the sent the information.
+
+	Setting the username is an action out of world applying to one topic.
+	Understand "__set_name [text]" as setting the username.
+
+	Carry out setting the username:
+		...
+
+By convention hidden commands are prefixed with two underscores. The interpreter strips the underscores if the reader uses them in their commands so they can't trigger hidden commands deliberately or accidentally.
+
+The response is displayed as it would if the player gave the command normally, except that the command itself is not shown in the transcript. That can be changed with the "showing the command" modifier:
+
+	queue parser command "'x me'", showing the command;
+
+To suppress the response as well, use "queue silent parser command".
+
+	queue silent parser command "'__do_whatever'"
+
+Sometimes we need to communicate with the interpreter before the story has properly started. Using the "when play begins" rulebook is too late -- the command would be executed only after the rulebook has run and printed the intro, the banner, and the starting room description. For this purpose we can use the "when play hasn't begun yet" rulebook:
+
+	When play hasn't begun yet:
+		queue silent parser command "'__local_time '+(new Date()).toString()".
+
+Passing commands to the story file can be a powerful tool, but it should be used only when absolutely necessary. One reason is performance: the story file has to process the command as a separate turn, even when it isn't displayed to the user. It's much faster to use for example I7's 'try' phrases to initiate actions. The other reason is that the method won't work in offline interpreters.
+
+Another drawback of this method is that the length of the command is limited. Any command that has more than 119 characters will be silently truncated.
+
 		
 Example: ** Convenience Store - Displaying the inventory styled as a HTML list
 
@@ -458,19 +550,15 @@ Example: *** Sprechen Sie Deutsch - Passing data from the browser to the story f
 
 We check what language the reader's browser is set to and offer a translated version of the story if one is available. The "window.navigator.language" JavaScript variable holds a language code, e.g. "de" or "en-GB". Except in Internet Explorer, but we'll keep the example simple this time. 
 
-A  function in the Vorple JavaScript library called vorple.parser.sendCommand() can be used to trigger commands from outside the actual prompt. The first parameter is the command to send; in this case it passes the language code to the story file. With {hideCommand:true} as the second parameter we specify that the command should not be visible to the player. We can use vorple.parser.sendSilentCommand() when neither the command nor the output should be visible.
+	*: "Sprechen Sie Deutsch"
 
-(Strictly speaking the {hideCommand:true} parameter isn't necessary, because out of world actions' commands are never shown on screen.)
-
-The grammar for a command used only for data passing should begin with two underscores. Vorple will strip the underscores from the reader's command if they try to enter them into the prompt manually which prevents "cheating".
-
-	*: Include Vorple Basics by Juhana Leinonen.
+	Include Vorple Basics by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	There is a room.
 	
-	When play begins (this is the query browser language rule):
-		execute JavaScript command "if(window.navigator.language) { vorple.parser.sendCommand('__lang '+window.navigator.language, {hideCommand:true}) }".
+	When play hasn't begun yet (this is the query browser language rule):
+		queue silent command "'__lang '+window.navigator.language".
 		
 	Checking browser language is an action out of world applying to one topic.
 	Understand "__lang [text]" as checking browser language.
