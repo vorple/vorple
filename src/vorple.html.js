@@ -396,9 +396,8 @@
      * 
      * @param {String} name Tag name 
      * @param {String|bool|null} [content] Content to be wrapped in the tag
-     * @param {Object} [attributes] Tag attributes
-     * @param {Object} [options] 
-     *  - endTag (default "auto"): "auto", "always" or "never". 
+     * @param {Object} [options]
+     *  - endTag (default "auto"): "auto", "always" or "never".
      *    If "auto", the end tag is added only if there is content, 
      *    otherwise the tag is closed with '/ >'.
      *    If "always", the end tag is always added.

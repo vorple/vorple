@@ -22,6 +22,7 @@ I7 Extensions
  - Basics: Changed "eval" to "execute JavaScript command/code" and "queue code"
    to "queue JavaScript command/code" 
  - Basics: Moved transient text to the Screen Effects extension
+ - Basics: Added phrases to issue commands directly to the parser
  - Hyperlinks: Added a missing full stop at the end of first line which
    prevented the extension from installing correctly
  - Hyperlinks: Added an option for external links to open in the same

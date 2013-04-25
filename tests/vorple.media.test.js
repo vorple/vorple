@@ -1,8 +1,6 @@
 module( 'media' );
 
 $(function() {
-    vorple.media.defaults.audioPath = '../stories/undum/everything/media/audio';
-    vorple.media.defaults.musicPath = '../stories/undum/everything/media/music';
 });
 
 test( 'playSound', function() {
@@ -32,8 +30,7 @@ function audioTests() {
     vorple.media.stopSound( audioId1, 100, function() { 
         start();
         ok( 
-            audioObject1.volume === 0
-                && audioObject2.volume > 0, 
+            audioObject1.volume === 0 && audioObject2.volume > 0,
             'One sound stopped' 
         );
     });
@@ -46,9 +43,7 @@ function audioTests() {
     vorple.media.stopSounds( 100, function() {
         start();
         ok( 
-            audioObject1.volume === 0
-                && audioObject2.volume === 0
-                && audioObject3.volume === 0,
+            audioObject1.volume === 0 && audioObject2.volume === 0 && audioObject3.volume === 0,
             'All sounds stopped'
         );
     });
@@ -101,30 +96,26 @@ function audioTests() {
     setTimeout( function() {
         start();
         ok(
-            !soundManager.getSoundById( 'vorpleBgMusic' ).playState
-            && !soundManager.getSoundById( audioId1 ).playState,
+            !soundManager.getSoundById( 'vorpleBgMusic' ).playState && !soundManager.getSoundById( audioId1 ).playState,
             'All audio stopped'
         );
     }, 80 );
 }
 
 test( 'image', function() {
-    equal( vorple.media.image( 'foo.jpg' ), '<img src="media/image/foo.jpg" />' );
+    equal( vorple.media.image( 'dodo.jpg' ), '<img src="../stories/undum/everything/media/image/dodo.jpg" />' );
+    equal( vorple.media.image( '/dodo.jpg' ), '<img src="/dodo.jpg" />' );
 
-    equal( vorple.media.image( '/foo.jpg' ), '<img src="/foo.jpg" />' );
-
-    var $img = $( vorple.media.image( 'foo.jpg', {
+    var $img = $( vorple.media.image( 'dodo.jpg', {
         classes : 'baz',
         id : 'fizz'
     } ) );
-    ok( $img.hasClass( 'baz' ) && $img.attr( 'id' ) == 'fizz', 'image options' )
+    ok( $img.hasClass( 'baz' ) && $img.attr( 'id' ) === 'fizz', 'image options' );
 } );
 
 test( 'preloadImage', function() {
-    vorple.media.defaults.imagePath = '../stories/everything/media/image';
-
     equal( typeof vorple.media.preloadImage( 'dodo.jpg' ), 'object', 'one image' );
-    equal( typeof vorple.media.preloadImage( [ 'dodo.jpg', 'puppy,jpg' ] ), 'object', 'two images' );
+    equal( typeof vorple.media.preloadImage( [ 'dodo.jpg', 'puppy.jpg' ] ), 'object', 'two images' );
 } );
 
 test( 'YouTube', function() {

@@ -24,7 +24,7 @@
         // SoundManager options
         autoPlay: true,
         destructAfter: true, // should the sound instance be destroyed when it stops playing?
-        swfPath: 'lib/soundmanager',
+        swfPath: 'vendor/soundmanager',
         volume: 80
     };
 

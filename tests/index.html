@@ -5,39 +5,24 @@
 		<title>Vorple library unit tests</title>
 		<link rel="stylesheet" href="lib/qunit-git.css">
 		
-		<script src="../lib/jquery-1.8.3.min.js"></script>
-		<script src="../lib/soundmanager2.min.js"></script>
-		<script src="../lib/jquery.noty.js"></script>
-		<script src="../lib/noty/layouts.js"></script>
-		<script src="../lib/noty/default.js"></script>
-		<script src="../lib/jquery.qtip.min.js"></script>
-		<!--
+		<script src="../lib/3rdparty-bundle.min.js"></script>
 		<script src="../src/vorple.core.js"></script>
 		<script src="../src/vorple.button.js"></script>
 		<script src="../src/vorple.cookie.js"></script>
 		<script src="../src/vorple.html.js"></script>
 		<script src="../src/vorple.media.js"></script>
 		<script src="../src/vorple.notify.js"></script>
+        <script src="../src/vorple.parser.js"></script>
 		<script src="../src/vorple.tooltip.js"></script>
-	-->
-	
-		<script src="coverage/vorple.core.js"></script>
-		<script src="coverage/vorple.button.js"></script>
-		<script src="coverage/vorple.cookie.js"></script>
-		<script src="coverage/vorple.html.js"></script>
-		<script src="coverage/vorple.media.js"></script>
-		<script src="coverage/vorple.notify.js"></script>
-        <script src="coverage/vorple.parser.js"></script>
-		<script src="coverage/vorple.tooltip.js"></script>
-		
-		<script src="../lib/parchment.min.js"></script>
+
+		<script src="../vendor/parchment.min.js"></script>
 		<!--
-		<script src="../../if-recorder/lib/jquery.browser.min.js"></script>
-		<script src="../../if-recorder/lib/if-recorder.min.js"></script>
+		<script src="../../if-recorder/vendor/jquery.browser.min.js"></script>
+		<script src="../../if-recorder/vendor/if-recorder.min.js"></script>
 		<script src="../../recorder-vorple/parchment.transcript.settings.js"></script>
 		-->
         <link rel="stylesheet" href="Inform7.test Materials/Release/interpreter/parchment.min.css">
-        <link rel="stylesheet" href="../lib/qtip/jquery.qtip.min.css">
+        <link rel="stylesheet" href="../vendor/qtip/jquery.qtip.min.css">
 	</head>
 	<body>
 		<div id="qunit"></div>
@@ -61,13 +46,14 @@
 
 		  // Initialize Vorple
 		  $(function() {
-			vorple.media.defaults.swfPath = '../lib/soundmanager';
+			vorple.media.defaults.swfPath = '../vendor/soundmanager';
+            vorple.media.defaults.audioPath = '../stories/undum/everything/media/audio';
+            vorple.media.defaults.imagePath = '../stories/undum/everything/media/image';
+            vorple.media.defaults.musicPath = '../stories/undum/everything/media/music';
 		    vorple.core.init();
 		  });
 		</script>
-<!--
-		<script src="vorple.button.test.js"></script>
--->
+
 		<script src="vorple.cookie.test.js"></script>
 		<script src="vorple.core.test.js"></script>
 		<script src="vorple.html.test.js"></script>

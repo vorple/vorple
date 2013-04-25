@@ -1,25 +1,12 @@
 module( 'parser' );
 
-
-parchment.options.lib_path = '../lib/parchment/';
-parchment.options.default_story = [ "Inform7.test Materials/Release/interpreter/Vorple for Inform 7 Unit Tests.zblorb.js" ];
-parchment.options.lock_story = 1;
-
-
 /**
  * We need to stop the test execution here and wait for Parchment
  * to finish loading. The event story will call start() when it
  * begins. Conveniently we can use this to unit test the
  * TurnComplete event at the same time.
- * 
- * We have a race condition: it's possible that the previous tests
- * take long enough for Parchment to initialize, so the parchmentLoaded
- * flag will track whether stop() needs to be called.
  */
-
 test( 'events', function() {
-	var parchmentLoaded = false;
-	
 	// set a cookie for testing later
 	vorple.cookie.write( 'old', 'ok' );
 
@@ -29,6 +16,10 @@ test( 'events', function() {
 	$( document ).one( 'TurnComplete.vorple', function() {
 		start();
 	});
+
+    parchment.options.lib_path = '../vendor/parchment/';
+    parchment.options.default_story = [ "Inform7.test Materials/Release/interpreter/Vorple for Inform 7 Unit Tests.zblorb.js" ];
+    parchment.options.lock_story = 1;
 
 	parchment.init();
 			
@@ -66,7 +57,6 @@ test( 'escaping', function() {
 	
 	vorple.parser.sendCommand( 'try core escape with line breaks' );
 	equal( $.trim( $( '.previousTurn .turnContent' ).text() ),  '\\\"line-break\\\"', 'escaping quotes with custom line breaks' );
-	
 });
 
 
