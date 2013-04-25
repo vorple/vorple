@@ -26,9 +26,9 @@
     };
     
     vorple.parser._createPrompt = function( promptText ) {
-    	return $( '<span>'+promptText+'</span>' )
-    		.addClass( 'vorplePrompt' )
-    		.append( '<input type="text" />' );
+        return $( '<span>'+promptText+'</span>' )
+            .addClass( 'vorplePrompt' )
+            .append( '<input type="text" />' );
     };
     
     vorple.parser._evaluateQueue = function() {
@@ -51,16 +51,17 @@
         
         // Don't mess with the original
         var $contents = $buffer.clone();
-        
-        // The previous command is the first line
-        structure.previousCommand = $contents.text().split( '\n' )[ 0 ];
-        
-        // remove the first line
-        $contents.html( $contents.html().replace( /^.*\n/, '' ) );
-        
+    
         $( 'input', $contents ).hide();
 
-        if( mode == 'line' ) {
+        if( mode === 'line' ) {
+        
+            // The previous command is the first line
+            structure.previousCommand = $contents.text().split( '\n' )[ 0 ];
+            
+            // remove the first line
+            $contents.html( $contents.html().replace( /^.*\n/, '' ) );
+            
             // The last span's last line contains the new prompt.
             var $parchmentPromptContainer = $( 'span:last', $contents );
             $( 'input', $parchmentPromptContainer ).appendTo( $contents );
@@ -85,20 +86,20 @@
     };
 
     vorple.parser._metaTurnFilters = function( turn, metadata ) {
-    	if( !turn ) {
-    		return false;
-    	}
-    	
+        if( !turn ) {
+            return false;
+        }
+        
         switch( metadata.turn.type ) {
             case 'error':
-            	turn.classes += "parserError ";
-            	turn.previousCommand.classes += "parserError ";
-            	turn.content.classes += "transient ";
-            	turn.meta = true;
-            	break;
+                turn.classes += "parserError ";
+                turn.previousCommand.classes += "parserError ";
+                turn.content.classes += "transient ";
+                turn.meta = true;
+                break;
             case 'undo':
-            	// TODO
-            	/*
+                // TODO
+                /*
                 $( '.previousTurn .content' ).animate({opacity: 0}, 1500).slideUp(500);
                 $( '.previousTurn' ).addClass( 'undoneTurn' ).removeClass( 'normalTurn' );
                 $( '<span>' ).text( ' (undone)' ).addClass( 'undoClarification' ).appendTo( $( '.previousTurn .oldPrompt' ) );
@@ -109,18 +110,17 @@
                 $( '.currentPrompt' ).empty();
 //              return false;
 */
-            	break;
+                break;
             case 'meta':
                 if( $.trim( $( turn.content.text ).text() ) !== "" ) {
-            	   vorple.notify.show( turn.content.text );
-        	    }
+                   vorple.notify.show( turn.content.text );
+                }
                 return false;
-                break;
             case 'dialog':
                 if( $.trim( $( turn.content.text ).text() ) !== "" ) {
-                	vorple.notify.show(
-                		turn.content.text,
-            			{
+                    vorple.notify.show(
+                        turn.content.text,
+                        {
                             buttons: [{ 
                                 type: 'button', 
                                 text: 'ok', 
@@ -132,12 +132,11 @@
                             layout: 'center',
                             modal: true,
                             timeout: false 
-            			});
-            	}
+                        });
+                }
                 return false;
-                break;
             default:
-            	break;
+                break;
         }
         
         return turn;
@@ -150,7 +149,7 @@
      * @return false if the queue was already empty, true otherwise
      * @private
      */
-    vorple.parser._runCommandQueue = function( command, options ) {
+    vorple.parser._runCommandQueue = function() {
         var self = this;
 
         if( self._commandqueue.length === 0 ) {
@@ -194,7 +193,7 @@
         self._skipFilters = false;
         
         return true; 
-    }
+    };
     
     
     vorple.parser._runFilters = function( content, type, metadata ) {
@@ -212,7 +211,7 @@
         var numberOfFilters = 0;
 
         // count the number of filters
-        for( key in filters ) {
+        for( var key in filters ) {
             if( filters.hasOwnProperty( key ) ) {
                 numberOfFilters++;
             }
@@ -220,14 +219,14 @@
         
         // loop through all filters, executing them in priority order 
         for( var i = 0; i < numberOfFilters; ++i ) {
-            var highestPriority = undefined;
+            var highestPriority;
             $.each( filters, function( name, filter ) {
-                if( filter.type === type && ( highestPriority === undefined || highestPriority.priority < filter.priority ) ) {
+                if( filter.type === type && ( typeof highestPriority === 'undefined' || highestPriority.priority < filter.priority ) ) {
                     highestPriority = filter;
                 }
-            });
+            } );
             
-            if( highestPriority !== undefined ) {
+            if( highestPriority ) {
                 result = highestPriority.filter( result, metadata );
                 delete filters[ highestPriority.name ];
             }
@@ -317,46 +316,46 @@
      * { filter: (function), name: (string), priority: (int) } 
      */
     vorple.parser.registerFilter = function( filter, options ) {
-    	var self = this;
-    	var opt = $.extend( { priority: 0, name: 'filter_'+vorple.core.generateId(), type: 'output' }, options );
-    	
-    	this._filters[ opt.name ] = {
-    			filter: filter,
-    			name: opt.name,
-    			priority: opt.priority,
-    			type: opt.type
-    	};
-    	
-    	return this._filters[ opt.name ];
+        var self = this;
+        var opt = $.extend( { priority: 0, name: 'filter_'+vorple.core.generateId(), type: 'output' }, options );
+
+        self._filters[ opt.name ] = {
+            filter: filter,
+            name: opt.name,
+            priority: opt.priority,
+            type: opt.type
+        };
+
+        return self._filters[ opt.name ];
     };
     
     
     vorple.parser.scrollTo = function( target ) {
-    	var scrollTo;
-    	var bottom = $( document ).height() - $( window ).height();
-    	
-    	switch( target ) {
-    		case 'bottom':
-    			scrollTo = bottom;
-    			break;
-    		case 'top':
-    			scrollTo = 0;
-    			break;
-    		default:
-    			if( typeof target === 'object' && target.jquery ) {
-    				scrollTo = target.offset().top;
-    			}
-    			else {
-    				scrollTo = target;
-    			}
-    			break;
-    	}
+        var scrollTo;
+        var bottom = $( document ).height() - $( window ).height();
+        
+        switch( target ) {
+            case 'bottom':
+                scrollTo = bottom;
+                break;
+            case 'top':
+                scrollTo = 0;
+                break;
+            default:
+                if( typeof target === 'object' && target.jquery ) {
+                    scrollTo = target.offset().top;
+                }
+                else {
+                    scrollTo = target;
+                }
+                break;
+        }
 
-    	// make sure the scrolling is smooth when the target is
-    	// farther than what the page's actual length is
-    	if( scrollTo > bottom ) {
-    		scrollTo = bottom;
-    	}
+        // make sure the scrolling is smooth when the target is
+        // farther than what the page's actual length is
+        if( scrollTo > bottom ) {
+            scrollTo = bottom;
+        }
 
         $('html, body').animate({ scrollTop: scrollTo }, 150 );
     }; 
@@ -369,14 +368,12 @@
      * @param {object} options Options as an object.
      */
     vorple.parser.sendCommand = function( command, options ) {
-        var self = this;
-        
         // put the command to the queue
         vorple.parser._commandqueue.push({ 
             command: command,
             options: options
         });
-        
+
         // resolve the queue if the story is waiting for input
         if( vorple.parser._interactive ) {
             vorple.parser._runCommandQueue();
@@ -392,7 +389,7 @@
      * @param {string} command The command to send
      */
     vorple.parser.sendSilentCommand = function( command ) {
-    	this.sendCommand( command, { hideCommand: true, hideOutput: true, skipFilters: true } );
+        this.sendCommand( command, { hideCommand: true, hideOutput: true, skipFilters: true } );
     };
     
     
@@ -412,14 +409,11 @@
      * @param {string} name The name of the filter to remove
      */
     vorple.parser.unregisterFilter = function( name ) {
-    	var self = this;
-    	
-    	delete this._filters[ name ];
+        delete this._filters[ name ];
     };
     
-    
     /** Initialization */
-    $( document ).on( 'init.vorple', function( e ) { 
+    $( document ).on( 'init.vorple', function() {
         if( vorple.core.engine( 'parchment' ) ) {
             vorple.parser._container.parchment = vorple.core.system.options.container;
             
@@ -441,23 +435,23 @@
             // Parchment's text input, after we've run
             // it through our own filters
             $( document ).on(
-            	'keydown.vorple',
-            	'.vorplePrompt input',
-            	function( e ) {
-            		if( e.which !== 13 ) { // enter
-            			return;
-            		}
-            		
-            		e.preventDefault();
-            		
-            		var command = vorple.parser._runFilters(
-            			$( this ).val(),
-        				'input'
-    				);
-            		
-            		vorple.parser.sendCommand( command );
-            		return false;
-            	}
+                'keydown.vorple',
+                '.vorplePrompt input',
+                function( e ) {
+                    if( e.which !== 13 ) { // enter
+                        return;
+                    }
+                    
+                    e.preventDefault();
+                    
+                    var command = vorple.parser._runFilters(
+                        $( this ).val(),
+                        'input'
+                    );
+                    
+                    vorple.parser.sendCommand( command );
+                    return false;
+                }
             );
             
             // Disable Parchment's own event handlers 
@@ -466,37 +460,37 @@
             
             // This is directly from Parchment (structio/input.js)
             $( document ).on( 'click.vorple keydown.vorple', function( e ) {
-            	var input = $( '.vorplePrompt input' );
-            	
-				// Only intercept on things that aren't inputs and if the user isn't selecting text
-				if ( e.target.nodeName !== 'INPUT' && e.target.nodeName !== 'A' && ( window.getSelection() ||
-						( document.selection ? document.selection.createRange().text : '' ) == '' ) )
-				{
-					// If the input box is close to the viewport then focus it
-					if ( $( window ).scrollTop() + $( window ).height() - input.offset().top > -60 )
-					{
-						vorple.parser.scrollTo( 'bottom' );
-						// Manually reset the target incase focus/trigger don't - we don't want the trigger to recurse
-						e.target = input[0];
-						input.focus()
-							.trigger( e );
-						// Stop propagating after re-triggering it, so that the trigger will work for all keys
-						e.stopPropagation();
-					}
-					// Intercept the backspace key if not
-					else if ( e.type == 'keydown' && e.which == 8 )
-					{
-						return false;
-					}
-					
-					if( vorple.parser._turn.mode === 'char' ) {
+                var input = $( '.vorplePrompt input' );
+                
+                // Only intercept on things that aren't inputs and if the user isn't selecting text
+                if ( e.target.nodeName !== 'INPUT' && e.target.nodeName !== 'A' && ( window.getSelection() ||
+                        ( document.selection ? document.selection.createRange().text : '' ) === '' ) )
+                {
+                    // If the input box is close to the viewport then focus it
+                    if ( $( window ).scrollTop() + $( window ).height() - input.offset().top > -60 )
+                    {
+                        vorple.parser.scrollTo( 'bottom' );
+                        // Manually reset the target incase focus/trigger don't - we don't want the trigger to recurse
+                        e.target = input[0];
+                        input.focus()
+                            .trigger( e );
+                        // Stop propagating after re-triggering it, so that the trigger will work for all keys
+                        e.stopPropagation();
+                    }
+                    // Intercept the backspace key if not
+                    else if ( e.type === 'keydown' && e.which === 8 )
+                    {
+                        return false;
+                    }
+                    
+                    if( vorple.parser._turn.mode === 'char' ) {
                         $( 'input.TextInput' ).trigger( $.Event( 'keypress', { which: e.which } ) );
-					}
-				}
-			});
-    	
-    	/*
-    	   // DEBUG			
+                    }
+                }
+            });
+        
+        /*
+           // DEBUG            
             $( document ).bind( 'TextInput.vorple', function( e ) {
                 console.log( e );
             });                
@@ -508,7 +502,7 @@
             */
             
             // Events happening right after text input
-            $( document ).on( 'TextInput.vorple', function( e ) {
+            $( document ).on( 'TextInput.vorple', function() {
                 
                 // hide transient classes
                 $( '.transient', vorple.parser._container.vorple )
@@ -520,9 +514,17 @@
                 // Reset the turn type to normal
                 vorple.parser.setTurnType( 'normal' );
             });
-            
+
+            // Things that happen only once when the story has loaded
             $( document ).one( 'TurnComplete.vorple', function() {
-                $( '#vorpleLoader' ).slideUp(); 
+                // Hide the load indicator
+                $( '#vorpleLoader' ).slideUp();
+
+                // Let the story file know it can advance to "when play begins"
+                // rules. By now the story file itself has passed whatever
+                // implicit commands it needs to the queue so the story
+                // starting command will be placed last in the queue.
+                vorple.parser.sendCommand( '__start_story', { hideCommand: true } );
             });
             
             // Parchment triggers a TurnComplete event when all the turn's
@@ -539,43 +541,41 @@
                  */
                 
                 var structure = vorple.parser._getTurnStructure( e.mode, $buffer );
-                console.log( structure.$turn.html() );
+
                 // Run the contents through filters
                 var filteredContents = vorple.parser._runFilters(
-                	{
-                		previousCommand: {
-                			text: structure.previousCommand,
-                			classes: ""
-                		},
-                		content: {
-                			text: structure.$turn.html(),
-                			classes: ""
-                		},
-                		prompt: {
-                			text: structure.prompt,
-                			val: "",
-                			classes: ""
-                		},
-                		meta: false,
-                		classes: "",
-                		mode: e.mode
-                	},
-                	'output',
-            		{
-            			turn: vorple.parser._turn
-            		} 
+                    {
+                        previousCommand: {
+                            text: structure.previousCommand,
+                            classes: ""
+                        },
+                        content: {
+                            text: structure.$turn.html(),
+                            classes: ""
+                        },
+                        prompt: {
+                            text: structure.prompt,
+                            val: "",
+                            classes: ""
+                        },
+                        meta: false,
+                        classes: "",
+                        mode: e.mode
+                    },
+                    'output',
+                    {
+                        turn: vorple.parser._turn
+                    } 
                 );
-                
-                console.log( filteredContents );
                 
                 // If the filter returned false (or not an object),
                 // do nothing except cleanup
                 if( typeof filteredContents !== 'object' || 
-                		( !vorple.parser._turn.commandVisible && !vorple.parser._turn.outputVisible ) 
+                        ( !vorple.parser._turn.commandVisible && !vorple.parser._turn.outputVisible ) 
                 ) {
                     $( 'input', $buffer ).appendTo( 'body' ).hide();
-                	$buffer.empty();
-                	$( '.vorplePrompt input' ).val( '' );
+                    $buffer.empty();
+                    $( '.vorplePrompt input' ).val( '' );
 
                     // reset hidden commands/output
                     vorple.parser.hideCommand( false );
@@ -590,32 +590,49 @@
                     vorple.parser._interactive = true;
                     vorple.parser._runCommandQueue();
                                   
-                	return false;
+                    return false;
+                }
+                
+                if( e.mode === 'char' && $( '.turn' ).length ) {
+                    $( '<span></span>' ).html( filteredContents.content.text ).appendTo( $('#vorple .main:last' ) );
+                    $( '.vorplePrompt:last', $target ).remove();
+                    $( vorple.parser._createPrompt( filteredContents.prompt.text ) )
+                        .addClass( filteredContents.prompt.classes )
+                        .appendTo( $newTurnContainer )
+                        .find( 'input' )
+                        .val( promptContents );
+                    $( 'input', $buffer ).appendTo( 'body' ).hide();
+                    $buffer.empty();
+
+                    vorple.parser._turn.mode = e.mode;
+                    vorple.parser._interactive = true;
+                
+                    return;
                 }
 
                 if( vorple.parser._turn.outputVisible ) {
-	                // Replace the contents with filtered text
-	                structure.$turn
-	                	.html( filteredContents.content.text )
-	                	.addClass( filteredContents.content.classes );
-	                
-	                // Now we can display the results.
-	
-	                // Put the turn contents into a container
-	                var $newTurn = $( '<div></div>' ).append( structure.$turn );
+                    // Replace the contents with filtered text
+                    structure.$turn
+                        .html( filteredContents.content.text )
+                        .addClass( filteredContents.content.classes );
+                    
+                    // Now we can display the results.
+    
+                    // Put the turn contents into a container
+                    var $newTurn = $( '<div></div>' ).append( structure.$turn );
 
                 }
                 
                 var promptContents = filteredContents.prompt.val;
                 
                 if( vorple.parser._turn.commandVisible ) {
-	                // Replace the old prompt with the previous command text.
-	                $( '.vorplePrompt input', $target ).replaceWith( 
-	            		$( '<span></span>' )
-	            			.addClass( 'previousCommand' )
-	            			.addClass( filteredContents.previousCommand.classes )
-	            			.html( filteredContents.previousCommand.text )
-					);
+                    // Replace the old prompt with the previous command text.
+                    $( '.vorplePrompt input', $target ).replaceWith( 
+                        $( '<span></span>' )
+                            .addClass( 'previousCommand' )
+                            .addClass( filteredContents.previousCommand.classes )
+                            .html( filteredContents.previousCommand.text )
+                    );
                 }
                 else {
                     promptContents = $( '.vorplePrompt input', $target ).val();
@@ -624,28 +641,28 @@
                 
                 // Set the new turn's classes
                 $newTurn
-                	.addClass( 'turnContent' )
-                	.addClass( filteredContents.turnClasses );
+                    .addClass( 'turnContent' )
+                    .addClass( filteredContents.turnClasses );
 
                 // Wrap it all into a div
                 $newTurnContainer = $( '<div></div>' )
-                	.addClass( 'turn' )
-	            	.addClass( filteredContents.classes )
-	            	.append( $newTurn );
+                    .addClass( 'turn' )
+                    .addClass( filteredContents.classes )
+                    .append( $newTurn );
 
                 // Remove the previous turn class from the old content
                 if( !filteredContents.meta && e.mode == 'line' ) {
-	                $( '.penultimateTurn' ).removeClass( 'penultimateTurn' );
-	                $( '.previousTurn' ).addClass( 'penultimateTurn' ).removeClass( 'previousTurn' ).addClass( 'previousTurnFader' ).removeClass( 'previousTurnFader', 1000 );
-	                $newTurnContainer.addClass( 'previousTurn' );
+                    $( '.penultimateTurn' ).removeClass( 'penultimateTurn' );
+                    $( '.previousTurn' ).addClass( 'penultimateTurn' ).removeClass( 'previousTurn' ).addClass( 'previousTurnFader' ).removeClass( 'previousTurnFader', 1000 );
+                    $newTurnContainer.addClass( 'previousTurn' );
                 }
                 
                 // Insert Vorple's own prompt input
                 $( vorple.parser._createPrompt( filteredContents.prompt.text ) )
-                	.addClass( filteredContents.prompt.classes )
-                	.appendTo( $newTurnContainer )
-                	.find( 'input' )
-                	.val( promptContents );
+                    .addClass( filteredContents.prompt.classes )
+                    .appendTo( $newTurnContainer )
+                    .find( 'input' )
+                    .val( promptContents );
                 
                 // Display to the reader
                 $newTurnContainer.appendTo( $target );
