@@ -4,35 +4,26 @@
 	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 	<title>Enrichening Inform 7 Interactive Fiction with Vorple</title>
 	
-	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
 	<script type="text/javascript">
 	    if( typeof jQuery === 'undefined' ) {
-	        document.write( unescape( "%3Cscript src='../../lib/jquery-1.7.1.min.js' type='text/javascript'%3E%3C/script%3E" ) );
+	        document.write( unescape( "%3Cscript src='../../vendor/jquery-1.8.3.min.js' type='text/javascript'%3E%3C/script%3E" ) );
 	    }
 	</script>
 	<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/jquery-ui.min.js"></script>
-	<script type="text/javascript">
-        if( typeof jQuery === 'undefined' ) {
-            document.write( unescape( "%3Cscript src='../../lib/jquery-ui-1.8.18.custom.min.js' type='text/javascript'%3E%3C/script%3E" ) );
-        }
-    </script>
 	<script type="text/javascript" src="../common/js/jquery.toc.js"></script>
 	<script type="text/javascript" src="../common/js/highlighter/shCore.js"></script>
 	<script type="text/javascript" src="../common/js/highlighter/shBrushJScript.js"></script>
 	<script type="text/javascript" src="../common/js/highlighter/shBrushXml.js"></script>
-	<script type="text/javascript" src="../../lib/vorple.min.js"></script>
-	<script type="text/javascript" src="../../lib/jquery.qtip.min.js"></script>
-	<script type="text/javascript" src="../../lib/jquery.noty.js"></script>
-	<script type="text/javascript" src="../../lib/noty/default.js"></script>
-	<script type="text/javascript" src="../../lib/noty/layouts.js"></script>
+	<script type="text/javascript" src="../../lib/vorple.vanilla.min.js"></script>
 	
-	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" type="text/css" media="screen, print" />
+	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.18/themes/smoothness/jquery-ui.css" type="text/css" media="screen, print" />
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Redressed" type="text/css" />
 	<link rel="stylesheet" href="../common/css/highlighter/shCore.css" />
 	<link rel="stylesheet" href="../common/css/highlighter/shThemeDefault.css" />
 	<link rel="stylesheet" href="/css/common.css" />
 	<link rel="stylesheet" href="../common/css/manual.css" />
-	<link rel="stylesheet" href="../../lib/qtip/jquery.qtip.min.css" />
+	<link rel="stylesheet" href="../../vendor/qtip/jquery.qtip.min.css" />
 
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
@@ -64,6 +55,7 @@ $( function() {
     );
     
     // Start Vorple
+    vorple.media.defaults.swfPath = '../../vendor/soundmanager'
     vorple.core.init(); 
 });
 </script>
@@ -97,51 +89,132 @@ $( function() {
 
 <h3>Introduction to Vorple</h3>
 
+<h4>The short version</h4>
+
 <p>
-<em>Vorple</em> is a user interface library for interactive literature. 
-Its goal is to let online hypertext fiction and parser interactive fiction systems
-break out of their sandboxes and let story authors use the full scale of the vast 
-possibilities of technologies that are commonly used in the World Wide Web.
+Vorple is a library and a custom web interpreter for 
+<a href="http://inform7.com">Inform 7</a> that lets you do things that so 
+far haven't been possible, like displaying images, playing sounds, 
+adding tooltips and notifications and much more.
+Take a look at the <a href="http://vorple-if.com/demo/#inform7">demo page</a> for 
+some examples. 
+</p>
+
+<h4>The long version</h4>
+
+<p>
+Back in the days when home computers first entered consumer markets there were
+many competing companies selling computers that weren't compatible with each other.
+<a href="http://en.wikipedia.org/wiki/Infocom">Infocom</a> had to solve the
+problem of programming and distributing their games to as wide array of 
+computers as possible (to maximize their potential customers) with varying
+specifications and limitations.  
 </p>
 
 <p>
-Most interactive fiction development systems produce story files that are
-played with a specialized interpreter. The interpreter model guarantees
-high portability and security, but comes with the cost of binding the stories
-inside the boundaries of the virtual machine. It has been very difficult if
-not impossible for an author to accomplish something that the development
-system has not provided. 
+The solution was to create a virtual machine that would harmonize the 
+differences between computer systems. The game file would always be
+the same for each system and there would be an interpreter program that would
+translate the game file into instructions the computer understood. This way
+the game could be programmed and compiled only once and it would work on
+any system that had an interpreter.
+</p>
+
+<img src="media/virtual-machine.png" alt="Virtual machine inside operating system">
+	
+<p>
+The virtual machine was called <em>Z-machine</em> after Zork, the first game
+that used it. Decades later Inform 7 still compiles to Z-machine (and Glulx, 
+the contemporary virtual machine that works basically the same way). 
 </p>
 
 <p>
-Vorple changes the game by letting the story file communicate with the
-web interpreter. An author might use Vorple just to theme their story with one 
-of the provided custom themes, or make a multimedia spectacle with pictures, 
-video, sound effects and interactive elements, or anything in between or beyond.
+To a modern consumer of interactive fiction the virtual machine model has 
+other benefits in addition to being able to play the stories in a wide selection
+of devices. The virtual machine is effectively a <em>sandbox</em> that limits
+what story files are allowed to do. They can't, for example, delete
+files from the computer or install malicious software. When you download
+an interactive fiction story file you can be certain that it isn't a virus
+and it can't do anything harmful.
 </p>
 
 <p>
-Vorple comes with a custom 
-<a href="https://github.com/curiousdannii/parchment">Parchment</a>
-web interpreter that can communicate with the story file,
-a number of <a href="http://inform7.com">Inform 7</a> extensions that 
-provide the new features, and some custom themes. 
+To an author of interactive fiction the sandbox can sometimes feel rather 
+limiting. We've come a long way since the early days of Infocom and the 
+things we now casually do with computers is far more than anyone could have dreamed
+of 30 years ago. Yet interactive fiction is still confined to streaming text,
+displaying pictures, playing sounds and performing some limited file operations.
 </p>
+
+<p>
+Cue the Internet age. Parchment is an online Z-machine/Glulx interpreter
+that lets you play interactive fiction on any computer with Internet access 
+and a web browser. A modern web browser is also a sandbox, but with quite
+a lot of more capabilities (but still restrictions in place so that in theory
+you can visit any web page and be sure that you can't catch anything malicious).
+</p>
+
+<img src="media/parchment.png" alt="Virtual machine inside web browser inside operating system">
+
+<p>
+Parchment was a small revolution by itself and turned the community focus
+from downloadable story files to Internet play, but Parchment is still "only"
+an implementation of existing virtual machines. It restricts the story files
+to the same sandbox as offline interpreters do. 
+</p>
+
+<p>
+This is where Vorple comes in. It makes a small addition to the interpreter
+so that the story files can break free of the Z-machine sandbox and communicate
+with the browser running the interpreter.
+</p>
+
+<img src="media/vorple-bridge.png" alt="Vorple creating a bridge between the virtual machine and the browser">
+
+<p>
+With this bridge in place the story file can do pretty much whatever it wants
+with the user interface and the story text&mdash;even story text that has
+already been printed.
+</p>
+
+<p>
+In addition Vorple provides a JavaScript library that makes it easier to
+add features specifically to interactive fiction stories (as opposed to
+usual web pages). The Inform 7 extensions are mainly interfaces to the
+underlying JavaScript library. 
+</p>
+
+<p>
+To recap, Vorple consists of three main features:
+</p>
+
+<ul>
+	<li>JavaScript library for building and handling user interface elements</li>
+	<li>Inform 7 extensions that can use the library</li>
+	<li>Customized interpreter that lets the extensions access the library</li>
+</ul>
 
 <p>
 The project's headquarters are at 
 <a href="http://vorple-if.com">www.vorple-if.com</a> where you'll find all
-the official material and downloads. JavaScript developers who want to dig
+the official materials and downloads. JavaScript developers who want to dig
 into the innards of the system can find the source code at
 <a href="http://github.com/juhana/vorple">Github</a>.
 </p>
 
 <p>
-The library and all official material are open source and free for anyone
+The library and all official materials are open source and free for anyone
 to use for any purpose. (Mandatory footnote: Do still read all the licenses
 if you want to use it commercially or as a part of a closed system. 
 Some third party themes, for example, 
 are subject to slightly more restrictive licenses.) 
+</p>
+
+<p>
+Vorple is available also for <a href="http://undum.com">Undum</a>,
+a hypertext fiction framework. It is described in detail in
+<em><a href="../undum/enhancing-with-vorple.html">Enhancing Undum Hypertext 
+Fiction with Vorple</a></em>.
 </p>
 
 
@@ -150,31 +223,19 @@ are subject to slightly more restrictive licenses.)
 <p>
 Vorple is experimental software and in early stages of development.
 There are a number of known issues that will be fixed in later releases:
+</p>
 
 <ul>
-<li>Single-character input is not supported, most notably pausing the
-	story ("press any key to continue") does not work.</li>
-<li>Status line isn't available, including features that are built on
-	the status line like in-game menus.</li>
 <li>Command history (browsing old commands with the up arrow key) isn't available.</li>
 <li>Undoing is not reliable if the browser communicates with the story
 	file using hidden commands.</li>
-<li>Doesn't work with Internet Explorer 8. Not tested with earlier
-	version of Internet Explorer.</li>
-<li>Sound does not work in all browsers.</li>
+<li>Saving and restoring stories is likely to work erratically.</li>
 </ul>
 
+<p>
 At the moment <strong>only Z-machine is supported</strong>. Glulx support is
 waiting for the next version of the Glulx specification. 
 This is to avoid creating a competing non-standard specification.
-</p>
-
-<p>
-There's a larger library running below the Inform layer and there isn't
-yet extension coverage for all of it. If you're feeling adventurous you can
-try to invoke the methods manually (with no guarantees of it working, 
-of course). They are described in the <a href="../API">API</a> and in the 
-<a href="../undum/enhancing-with-vorple.html">Undum sister manual</a>. 
 </p>
 
 
@@ -183,41 +244,7 @@ of course). They are described in the <a href="../API">API</a> and in the
 <h3>Getting started</h3>
 
 <p>
-First of all, you need the <a href="http://inform7.com">Inform 7</a>
-authoring system installed and the skills to use it. Inform comes with
-comprehensive documentation, and other learning resources are listed
-<a href="http://www.intfiction.org/forum/viewtopic.php?f=7&t=3988">here</a>.
-</p>
 
-<p>
-Once you're ready with Inform, continue with Vorple:
-</p>
-
-<p>
-<ol>
-<li>Download the zip files that include the interpreter template
-	and the Inform 7 extensions: 
-	<a href="../../build/release/i7-template.zip">i7-template.zip</a> and
-	<a href="../../build/release/i7-extensions.zip">i7-extensions.zip</a>.
-	The extensions can also be downloaded
-	<a href="../../src/inform7/extensions">individually</a>,
-	but they won't do anything without the interpreter.</li>
-<li>Install the interpreter template by copying the <code>Vorple</code>
-	directory to the <code>Templates</code> directory either in the 
-	Inform's library directory or in an individual project's Materials
-	directory, as per 
-	<a href="http://inform7.com/learn/man/doc394.html">chapter 23.11</a> 
-	in Writing with Inform.</li>
-<li>Install the extensions (File&rarr;Install extension... in the Inform IDE menu).
-	You must have at least the Vorple Core extension installed.</li>
-<li>Read the extension documentation (Installed Extensions link in the
-	IDE documentation page). Read at least the two first chapters of the
-	Vorple Core extension's documentation.</li>
-<li>Add a <code>Release along with the "Vorple" interpreter</code> line to
-	the story source.</li>
-<li>Click the "Release" button, then "browse play-in-browser page" link
-	in the release report page.</li>
-</ol>
 </p>
 
 <p>
@@ -226,36 +253,6 @@ Vorple-capable interpreter, so you won't see any of the new features
 when you run the story in it. You need to release the story and play
 in a web browser instead. 
 </p>
-
-
-<h3>Custom CSS and JavaScript</h3>
-
-<p>
-The interpreter tries to load a <code>vorple.custom.css</code> CSS file
-and a <code>vorple.custom.js</code> JavaScript file if they exist.
-Those are the best places to put custom CSS and JavaScript code.
-</p>
-
-Place the file(s) in the Materials folder of the Inform project and
-include them in the release:
-
-<pre>
-Release along with a file of "Custom CSS" called "vorple.custom.css".
-Release along with a file of "Custom JavaScript" called "vorple.custom.js".
-</pre>
-
-
-<h2>Complete examples</h2>
-
-<p>
-A small preview includes many of the features.
-
-<ul>
-<li><a href="../../stories/inform7/preview Materials/Release/play.html">Play the preview</a></li>
-<li><a href="../../stories/inform7/preview Materials/Release/source.txt">View the source code</a></li>
-</ul>
-</p>
-
 
 
 <h2>Support</h2>

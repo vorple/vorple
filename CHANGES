@@ -63,6 +63,8 @@ Modules
  - Parser: Meta and dialog commands that have no output will not pop up
    a notification/dialog
  - Parser: Support for nested HTML tags
+ - Parser: Support for commands issued from the story file before 
+   play begins
 
 
 Releases
@@ -70,7 +72,8 @@ Releases
 
  - The library is now packaged to three complete minified library files that
    includes everything needed by the system, one for each engine and one
-   "vanilla" with no engine
+   "vanilla" with no engine. There's also a single JavaScript file that
+   contains all third party libraries.
  - Using a single library file also fixes the problem where jQuery was not
    loaded correctly in the Inform 7 interpreter template when there was no 
    Internet connection
