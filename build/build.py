@@ -84,12 +84,10 @@ corelib = srcdir+"vorple.core.js"
 srcfiles.remove( corelib )
 
 templatefiles = [ 
-                 libdir+"vorple.parchment.min.js",
-                 i7templatedir+"vorple.css",
-                 libdir+"parchment/parchment.min.css",
-                 libdir+"qtip/jquery.qtip.css",
-                 libdir+"soundmanager/soundmanager2.swf"
-                ]
+    libdir+"vorple.parchment.min.js",
+    libdir+"vorple.min.css",
+    libdir+"soundmanager/soundmanager2.swf"
+]
 
 if os.path.exists( destination ):
     shutil.rmtree( destination )
@@ -112,6 +110,14 @@ if arguments.update:
         "-d", minifierdir
     ])
 
+    os.chdir( builddir )
+    print "Updating CSSO..."
+    subprocess.call([ "git",
+        "clone", "https://github.com/css/csso.git"
+    ])
+    subprocess.call([ "rm",
+        "-rf", "csso/.git"
+    ])
 
 # run the minifier
 if "minify" in arguments.tasks:
@@ -129,6 +135,27 @@ if "minify" in arguments.tasks:
         minifiercommand.append( "--js" )
         minifiercommand.append( filename )
         
+    subprocess.call( minifiercommand )
+
+    print "Minifying CSS..."
+
+    cssfiles = [
+        vendordir+'qtip/jquery.qtip.css',
+        vendordir+'parchment/parchment.css',
+        i7templatedir+'vorple.css'
+    ]
+
+    with open( libdir+'vorple.css', 'w' ) as outfile:
+        for fname in cssfiles:
+            with open(fname) as infile:
+                outfile.write( infile.read() )
+
+    minifiercommand = [
+        builddir+"csso/bin/csso",
+        libdir+"vorple.css",
+        libdir+"vorple.min.css"
+    ]
+
     subprocess.call( minifiercommand )
 
     print "Minifying complete library packages:"

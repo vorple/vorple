@@ -207,7 +207,7 @@ Section 1 - Queueing parser commands
 
 To queue parser command (cmd - text), showing the command:
 	let hideCommand be "true";
-	if leaving the command visible:
+	if showing the command:
 		now hideCommand is "false";
 	execute JavaScript command "vorple.parser.sendCommand([cmd],{hideCommand:[hideCommand]})".
 
@@ -250,7 +250,6 @@ This is the undo marking intro as meta rule:
 	mark the current action "normal".
 
 The undo marking intro as meta rule is listed after the when play begins stage rule in the startup rulebook.
-
 
 
 Chapter 7 - Element positions
@@ -303,7 +302,7 @@ A story file can detect if it's being run on an interpreter that supports Vorple
 		otherwise:
 			say "A marching band crossing the street blocks your way."
 
-(The above example uses the Multimedia extension.)
+(The above example uses the Vorple Multimedia extension.)
 
 The say phrase in the above example is called a "fallback" and it's displayed only in normal non-Vorple interpreters.
 
@@ -558,7 +557,7 @@ We check what language the reader's browser is set to and offer a translated ver
 	There is a room.
 	
 	When play hasn't begun yet (this is the query browser language rule):
-		queue silent command "'__lang '+window.navigator.language".
+		queue silent parser command "'__lang '+window.navigator.language".
 		
 	Checking browser language is an action out of world applying to one topic.
 	Understand "__lang [text]" as checking browser language.
@@ -569,7 +568,7 @@ We check what language the reader's browser is set to and offer a translated ver
 
 Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a third party service
 
-Here we set up an encyclopedia that can be used to query articles from Wikipedia. The actual querying code is a bit longer so it's placed in the vorple.custom.js file, which can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/vorple.custom.js . 
+Here we set up an encyclopedia that can be used to query articles from Wikipedia. The actual querying code is a bit longer so it's placed in an external encyclopedia.js file, which can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources/javascript/encyclopedia.js .
 
 	*: "The Sum of Human Knowledge"
 	

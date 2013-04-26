@@ -82,6 +82,8 @@ Releases
  - Revised the build script
  - I7 now supports adding custom JavaScript and CSS files, so automatically
    loaded "vorple.custom.js" and "vorple.custom.css" files are now removed 
+ - CSS files used by Parchment are now compressed into a single
+   "vorple.min.css" file (and concatenated into "vorple.css" for debugging).
  
 
 

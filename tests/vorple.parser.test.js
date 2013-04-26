@@ -18,7 +18,7 @@ test( 'events', function() {
 	});
 
     parchment.options.lib_path = '../vendor/parchment/';
-    parchment.options.default_story = [ "Inform7.test Materials/Release/interpreter/Vorple for Inform 7 Unit Tests.zblorb.js" ];
+    parchment.options.default_story = [ "lib/unittest.z8" ];
     parchment.options.lock_story = 1;
 
 	parchment.init();
@@ -28,15 +28,18 @@ test( 'events', function() {
 });
 
 
-/**
- * CORE
- */
-
 test( 'engine detection', function() {
-	ok( vorple.core.engine( 'parchment' ), 'engine detected as Parchment' );
-	ok( !vorple.core.engine( 'undum' ), 'engine not detected as Undum' );
-	equal( vorple.core.engine(), 'parchment', 'engine test returns parchment' );
+    ok( vorple.core.engine( 'parchment' ), 'engine detected as Parchment' );
+    ok( !vorple.core.engine( 'undum' ), 'engine not detected as Undum' );
+    equal( vorple.core.engine(), 'parchment', 'engine test returns "parchment"' );
 });
+
+module( 'I7 extensions' );
+
+
+/**
+ *
+ */
 
 test( 'eval', function() {
 	window.evalTest = false;
