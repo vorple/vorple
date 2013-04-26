@@ -1,6 +1,6 @@
 "Vorple for Inform 7 Unit Tests" by The Vorple Project.
 
-Release along with the "Recording Vorple" interpreter.
+Release along with the "Vorple" interpreter.
 
 There is a room.
 
@@ -26,13 +26,14 @@ Carry out echoing:
 
 Volume Extensions
 
-Book Core
+Book Basics
 
-Include Vorple Core by The Vorple Project.
+Include Vorple Basics by Juhana Leinonen.
+Include Basic Screen Effects by Emily Short.
 
 Carry out testing "core eval":
-	eval "window.evalTest = true".
-	
+	execute JavaScript command "window.evalTest = true".
+
 Carry out testing "core escape":
 	let test-string be "'test' [line break]\[paragraph break] [']test[']";
 	say escaped test-string.
@@ -41,18 +42,15 @@ Carry out testing "core escape with line breaks":
 	let test-string be "'line[line break]break'";
 	say escaped test-string using "-" as line breaks.
 	
-
-Book Multimedia
-
-Include Multimedia by The Vorple Project.
-
-
-Part Images
+Carry out testing "core char input":
+	say "Pausing..";
+	pause the game;
+	say "Done."
 
 
 Book Notifications
 
-Include Notifications by The Vorple Project.
+Include Vorple Notifications by Juhana Leinonen.
 
 Carry out testing "notify basic":
 	show notification "test".
@@ -70,29 +68,12 @@ Carry out testing "notify change default":
 	set default notification position to top left;
 	show notification "test".
 
-[
-Book Persistent Storage
-
-Include Persistent Storage by The Vorple Project.
-
-Printing a cookie is an action applying to one topic.
-Understand "print cookie [text]" as printing a cookie.
-
-Carry out printing a cookie:
-	say persistent text topic understood.
-	
-Removing a cookie is an action applying to one topic.
-Understand "remove cookie [text]" as removing a cookie.
-
-Carry out removing a cookie:
-	remove persistent text topic understood.
-]
 
 Book Tooltips
 
-Include Tooltips by The Vorple Project.
+Include Vorple Tooltips by Juhana Leinonen.
 
 When play begins:
 	say "testing";
-	say "Hello" with tooltip "test".
+	place text "Hello" with tooltip reading "test".
 

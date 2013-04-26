@@ -14,14 +14,15 @@ from glob import glob
 
 # handle command line arguments
 
-available_tasks = [ 
-             'minify', 
-             'api', 
-             'themes', 
-             'undum_examples', 
-             'i7_examples', 
-             'i7_templates'
-         ];
+available_tasks = [
+    'api',
+    'i7_examples',
+    'i7_templates',
+    'minify',
+    'themes',
+    'undum_examples',
+    'unittests'
+];
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -404,6 +405,42 @@ if "coverage" in arguments.tasks:
           libdir,
           unittestdir+'coverage/'
       ])
+
+
+# I7 unit test story
+
+if "unittests" in arguments.tasks:
+    print "Compiling the I7 unit test story file..."
+    os.chdir( tmpdir )
+    os.mkdir( 'Build' )
+    os.mkdir( 'Source' )
+    os.mkdir( 'Index' )
+    shutil.copy( unittestdir+'lib/story.ni', 'Source/story.ni' )
+    try:
+        p = subprocess.check_output([
+            'ni',
+            "-package",
+            ".",
+            "-rules",
+            i7dir + "Inform7/Extensions",
+            "-extension=z8"
+        ], stderr=subprocess.STDOUT)
+    except subprocess.CalledProcessError, e:
+        print 'Unit test ni compile error'
+        print e.output
+    else:
+        try:
+            p = subprocess.check_output([
+                'inform-6.32-biplatform',
+                'Build/auto.inf',
+                '+"'+i7dir+'Library/6.11/"',
+                '-kE2SDwv8',
+                '-o',
+                unittestdir+'lib/unittest.z8'
+            ], stderr=subprocess.PIPE)
+        except subprocess.CalledProcessError, e:
+            print 'Unit test Inform 6 compile error'
+            print e.output
     
 # cleanup
 
