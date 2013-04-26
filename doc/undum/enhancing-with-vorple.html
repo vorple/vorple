@@ -15,12 +15,8 @@
 	<script type="text/javascript" src="../common/js/highlighter/shCore.js"></script>
 	<script type="text/javascript" src="../common/js/highlighter/shBrushJScript.js"></script>
 	<script type="text/javascript" src="../common/js/highlighter/shBrushXml.js"></script>
-	<script type="text/javascript" src="../../vendor/vorple.min.js"></script>
-	<script type="text/javascript" src="../../vendor/jquery.qtip.min.js"></script>
-	<script type="text/javascript" src="../../vendor/jquery.noty.js"></script>
-	<script type="text/javascript" src="../../vendor/noty/default.js"></script>
-	<script type="text/javascript" src="../../vendor/noty/layouts.js"></script>
-	
+	<script type="text/javascript" src="../../lib/vorple.vanilla.min.js"></script>
+
 	<link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.7.2/themes/smoothness/jquery-ui.css" type="text/css" media="screen, print" />
 	<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Redressed" type="text/css" />
 	<link rel="stylesheet" href="../common/css/highlighter/shCore.css" />
@@ -64,7 +60,8 @@ $( function() {
     });
 
     // Start Vorple
-    vorple.core.init(); 
+    vorple.media.defaults.swfPath = '../../vendor/soundmanager'
+    vorple.core.init();
 });
 </script>
 
