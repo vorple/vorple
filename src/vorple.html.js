@@ -1,10 +1,22 @@
 /*  vorple.html.js - HTML helper functions */
 
-( function( $ ) {
-    /** @namespace HTML helper functions */
-    vorple.html = {};
-    
-    vorple.html.defaults = {
+/** 
+ * @namespace html
+ * @name html
+ * @description HTML helper functions 
+ */
+vorple.html = (function() {
+    var self = {};
+
+    /**
+     * Default options
+     *
+     * @public
+     * @field
+     * @name html#defaults
+     * @type {{allowedTagAttributes: Array, endTag: string, quotemarks: string}}
+     */
+    self.defaults = {
         /** 
          * Values that are interpreted as HTML attributes
          */
@@ -75,11 +87,12 @@
      * content (the text inside the tag),
      * url (the url where the link points at) and
      * options (tag attributes).
-     * @return {string} The created link tag.
+     * @returns {string} The created link tag.
      * @private
+     * @method
+     * @name html#_createLink
      */
-    vorple.html._createLink = function( linkObject ) {
-        var self = this;
+    var _createLink = function( linkObject ) {
         var opt = $.extend( {}, { endTag: 'always' }, linkObject.options );
         opt.href = linkObject.url;
 
@@ -96,9 +109,13 @@
      * 
      * @param {jQuery} $element The target element. If multiple elements match,
      * the first one will be chosen.
-     * @return {String} The source code of the element
+     * @returns {String} The source code of the element
+     *
+     * @public
+     * @method
+     * @name html#$toHtml
      */
-    vorple.html.$toHtml = function( $element ) {
+    self.$toHtml = function( $element ) {
         if( typeof $element.jquery === 'undefined' ) {
             return false;
         }
@@ -122,17 +139,19 @@
      *   == ' id=&quot;foo&quot; class=&quot;bar&quot;'
      *  
      *   
-     * @param {Object} attributes
+     * @param {object} attributes
      * @param {boolean} [escape=false] If true, the result will be run through
-     *   {@link vorple.html.escapeHtmlChars} before returning. The attribute 
+     *   {@link html#escapeHtmlChars|vorple.html.escapeHtmlChars()} before returning. The attribute 
      *   values will be escaped always, so this will double-escape values.
-     * @return {string} 
+     * @returns {string}
+     *
+     * @public
+     * @method
+     * @name html#attributes
      */
-    vorple.html.attributes = function( attributes, escape ) {
-        var self = this;
-        var opt = $.extend( {}, self.defaults, attributes );
-        
-        var str = '';
+    self.attributes = function( attributes, escape ) {
+        var opt = $.extend( {}, self.defaults, attributes ),
+            str = '';
 
         // turn "classes" into "class"
         if( typeof opt.classes !== 'undefined' ) {
@@ -147,7 +166,7 @@
             }
         } );
         
-        if( opt.escape ) {
+        if( escape || opt.escape ) {
             str = self.escapeHtmlChars( str );
         }
         
@@ -162,10 +181,14 @@
      * vorple.html.escapeHtmlChars( '&lt;div id="foo"&gt;' ) 
      *     == '&amp;lt;div id=&amp;quot;foo&amp;quot;&amp;gt;'
      *     
-     * @param {String} text
-     * @return {String}
+     * @param {string} text
+     * @returns {string}
+     *
+     * @public
+     * @method
+     * @name html#escapeHtmlChars
      */
-    vorple.html.escapeHtmlChars = function( text ) {
+    self.escapeHtmlChars = function( text ) {
         return ( text + '' )
             .replace( /&/g, "&amp;" )
             .replace( /</g, "&lt;" )
@@ -200,17 +223,20 @@
      *     'popup'
      * );     
      *     
-     * @param {String|Object|Object[]} url The url of the link, 
+     * @param {string|object|object[]} url The url of the link,
      * or an object containing the required data,
      * or an array of links.
-     * @param {String} content The content text of the link. 
-     * @param {Object} [options] Additional attributes added to the tag.
+     * @param {string} content The content text of the link.
+     * @param {object} [options] Additional attributes added to the tag.
      * 
-     * @return {String} The HTML code for the link tag.
+     * @returns {string} The HTML code for the link tag.
+     *
+     * @public
+     * @method
+     * @name html#link
      */
-    vorple.html.link = function( url, content, options ) {
-        var self = this;
-        var opt = $.extend( 
+    self.link = function( url, content, options ) {
+        var opt = $.extend(
                 {},
                 { classes: '' },
                 self.defaults, 
@@ -225,7 +251,7 @@
             
             var linkId = vorple.core.generateId();
             
-            var $popup = $( vorple.html.tag( 
+            var $popup = $( self.tag( 
                     'ul',
                     null,
                     {
@@ -251,7 +277,7 @@
                     
                     // prevent the generic popup window hider event from
                     // hiding the popup we're just creating
-                    e.stopPropagation();	 
+                    e.stopPropagation();     
 
                     // hide existing popups
                     $( '.linkPopup' ).hide();
@@ -273,7 +299,9 @@
                     e.preventDefault();
 
                     // execute the command
-                    vorple.undum.doLink( $( this ).attr( 'href' ) );
+                    if( vorple.core.engine( 'undum' ) ) {
+                        vorple.undum.doLink( $( this ).attr( 'href' ) );
+                    }
 
                     // hide the popup
                     $( '.linkPopup' ).hide();
@@ -284,34 +312,38 @@
            
             opt.classes += 'popupLink popuplink_'+linkId;
             
-            return vorple.html.link( '#', content, opt ); // + vorple.html.$toHtml( $popup ), opt );
+            return self.link( '#', content, opt ); 
         }
         else if( typeof url === 'object' ) {
-            return self._createLink( url );
+            return _createLink( url );
         }
         else {
-            return self._createLink({ url: url, content: content, options: opt });
+            return _createLink({ url: url, content: content, options: opt });
         }
     };
     
     // have any click event hide the popup
-    $( document ).bind( 'init.vorple', function() {
-	    $( document ).on(
-	        'click',
-	        function() {
-	            $( '.linkPopup' ).hide();
-	        }
-	    );
+    $( document ).on( 'init.vorple', function() {
+        $( document ).on(
+            'click',
+            function() {
+                $( '.linkPopup' ).hide();
+            }
+        );
     });
     
     
     /**
      * Shorcut for vorple.html.tag( 'p', content, options ).
      * 
-     * @see vorple.html.tag
+     * @see html#tag
+     *
+     * @public
+     * @method
+     * @name html#p
      */
-    vorple.html.p = function( content, options ) {
-        return vorple.html.tag( 'p', content, options );
+    self.p = function( content, options ) {
+        return self.tag( 'p', content, options );
     };
 
     
@@ -327,10 +359,13 @@
      * Two strings can be given as an array. The first string will be used
      * as the opening quote and the second string as the closing quote.
      * Default is vorple.html.defaults.quotemarks ("). 
-     * @return {String} 
+     * @returns {String} 
+     * 
+     * @public
+     * @method
+     * @name html#quote
      */
-    vorple.html.quote = function( content, quotemarks ) {
-        var self = this;
+    self.quote = function( content, quotemarks ) {
         var startQuote, endQuote;
         
         if( typeof quotemarks == 'undefined' ) {
@@ -355,8 +390,12 @@
      * 
      * @param {jQuery} $element Element to change
      * @param {object} newAttributes New set of attributes
+     *
+     * @public
+     * @method
+     * @name html#replaceAttributes
      */
-    vorple.html.replaceAttributes = function( $element, newAttributes ) {
+    self.replaceAttributes = function( $element, newAttributes ) {
         var self = this;
         var oldAttributes = $element.get( 0 ).attributes;
 
@@ -401,9 +440,13 @@
      *    If "auto", the end tag is added only if there is content, 
      *    otherwise the tag is closed with '/ >'.
      *    If "always", the end tag is always added.
-     *    If "never", only the start tag is given.   
+     *    If "never", only the start tag is given.
+     *
+     * @public
+     * @method
+     * @name html#tag
      */
-    vorple.html.tag = function( name, content, options ) {
+    self.tag = function( name, content, options ) {
         var self = this;
         var opt = $.extend( {}, self.defaults, options );
         
@@ -458,14 +501,18 @@
      * 
      * @param {string} [filename]
      * @param {string} [path] Default path to the file, no trailing slash
-     * @return {string}
+     * @returns {string}
+     *
+     * @public
+     * @method
+     * @name html#url
      */
-    vorple.html.url = function( filename, path ) {
+    self.url = function( filename, path ) {
         // if both filename and path are empty, return '#'
         if( ( typeof filename === 'undefined' || !filename ) ) {
-        	if( path ) {
-        		return path;
-        	}
+            if( path ) {
+                return path;
+            }
             return '#';
         }
         
@@ -474,13 +521,14 @@
                 || !path
                 || filename.match( /^[a-zA-Z]*:\/\// ) 
                 || filename.indexOf( "/" ) === 0  
-        		|| filename.indexOf( "." ) === 0 ) {
+                || filename.indexOf( "." ) === 0 ) {
             return filename;
         }
         else {
             return path+'/'+filename;
         }
     };
-    
+
+    return self;
 } )( jQuery );
 

@@ -104,7 +104,7 @@ test( 'onbeforeunload', function() {
 });
 
 test( 'requireRelease', function() {
-    var currentRel = vorple.core.release;
+    var currentRel = vorple.core.getRelease();
 
     ok( vorple.core.requireRelease( currentRel - 1 ), 'lower release' );
     ok( vorple.core.requireRelease( currentRel ), 'exact release' );
@@ -122,6 +122,8 @@ test( 'requireRelease', function() {
     raises( function() {
         vorple.core.requireRelease( [ currentRel - 2, currentRel - 1 ] )
     } );
+
+    var errorCallback = false;
 
     var callback = function() {
         errorCallback = true;

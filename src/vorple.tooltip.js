@@ -1,18 +1,23 @@
 /* vorple.tooltip.js - helpers for QTip2 tooltips */
 
-( function( $ ) {
-    /** @namespace Tooltip helpers.
-     * @description Requires the qTip2 library.
-     * @see <a href="http://craigsworks.com/projects/qtip2/">
-     * http://craigsworks.com/projects/qtip2/
-     * </a>
-     */
-    vorple.tooltip = {};
+/** 
+ * @module tooltip
+ * @name tooltip
+ * @description Tooltip helpers. Uses the
+ * {@link http://craigsworks.com/projects/qtip2/|qTip2 library}.
+ */
+vorple.tooltip = (function($) {
+    var self = this;
     
     /**
      * Default tooltip options
+     * 
+     * @public
+     * @field
+     * @type {object}
+     * @name tooltip#defaults
      */
-    vorple.tooltip.defaults = {
+    self.defaults = {
         show: { event: 'mouseenter', ready: false },
         content: { attr: 'title' },
         position: { my: 'bottom left', at: 'top center' },
@@ -22,7 +27,7 @@
     };
     
     /**
-     * Creates a tooltip for the selected element.
+     * @method Creates a tooltip for the selected element.
      * 
      * @param {string|jQuery} element A jQuery
      * @param {object} [options] 
@@ -44,10 +49,12 @@
      * </a> for details. qTip2's target option is supported. 
      * </td></tr>
      * </table>
+     * 
      * @private
+     * @method
+     * @name tooltip~_create
      */
-    vorple.tooltip._create = function( element, options ) {
-        var self = this;
+    var _create = function( element, options ) {
         var opt = $.extend( {}, self.defaults, options );
         var $element = $( element );
         
@@ -72,29 +79,34 @@
      * @param {string|jQuery} element The elements to activate as a jQuery
      * object or a jQuery selector.
      * @param {object} [options] The same as {@link vorple.tooltip.create}.
-     * @return A reference to the created $.delegate() object
+     * @returns A reference to the created $.delegate() object
+     *
+     * @public
+     * @method
+     * @name tooltip#enable
      */
-    vorple.tooltip.enable = function( element, options ) {
-        var self = this;
+    self.enable = function( element, options ) {
         var opt = $.extend( true, {}, self.defaults, { show: { ready: true, event: self.defaults.show.event } }, options );
 
-        return $( document ).on( opt.show.event, element, function( e ) {
-            self._create( this, opt );
+        return $( document ).on( opt.show.event, element, function() {
+            _create( this, opt );
         });
     };
     
     
     /**
-     * Creates and displays a tooltip on an element with the given text.
+     * @method Creates and displays a tooltip on an element with the given text.
      * 
      * @param {string|jQuery} element The target of the tooltip
-     * @param {string} [text=true] The message in the tooltip. If true, the
+     * @param {string|boolean} [text=true] The message in the tooltip. If true, the
      * title attribute of the element is used.
      * @param {object} [options]
+     *
+     * @public
+     * @method
+     * @name tooltip#show
      */
-    vorple.tooltip.show = function( element, text, options ) {
-        var self = this;
-        
+    self.show = function( element, text, options ) {
         if( typeof text === 'undefined' ) {
             text = true;
         }
@@ -120,7 +132,7 @@
             options 
         );
         
-        var $element = self._create( element, opt );
+        var $element = _create( element, opt );
         
         return setTimeout( function() {
             if( $element.length > 0 ) {
@@ -133,4 +145,6 @@
             }
         }, opt.delay );
     };
+
+    return self;
 })( jQuery );

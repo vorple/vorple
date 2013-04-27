@@ -53,6 +53,14 @@ Libraries
 Modules
 -------
 
+ - Changed the source code into a more modular system with actual private
+   variables. Functions and variables previously prefixed with underscore
+   can't be accessed outside the modules anymore.
+ - Core: release and version are now private variables, their values can be
+   retrieved with vorple.core.getRelease() and vorple.core.getVersion()
+ - Core: Added vorple.core.getEngine() to give the current engine object
+ - HTML: Fixed a bug where the second parameter to vorple.html.attributes()
+   would have no effect
  - Media: Updated to work with SoundManager instead of jPlayer
  - Media: Added stopSound()
  - Media: Music now fades out when stopped or another song is played, and
@@ -65,6 +73,7 @@ Modules
  - Parser: Support for nested HTML tags
  - Parser: Support for commands issued from the story file before 
    play begins
+ - Undum: Changed vorple.undum.settings to vorple.undum.defaults
 
 
 Releases

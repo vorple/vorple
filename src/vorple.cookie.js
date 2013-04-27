@@ -1,23 +1,42 @@
-/** vorple.cookie.js - Creating, reading and deleting cookies. 
- *  
- *  Based on jquery.cookie.js (https://github.com/carhartl/jquery-cookie)
+/** @namespace cookie
+ * @name cookie
+ * @description Creating, reading and deleting cookies.
+ *
+ *  Based on {@link https://github.com/carhartl/jquery-cookie|jquery.cookie.js}
  */
+vorple.cookie = (function($) {
+    var self = {};
 
-( function( $ ) {
-    /** @namespace Cookies */
-    vorple.cookie = {};
-    
-    vorple.cookie.defaults = {
+    /**
+     * Default options
+     *
+     * @public
+     * @field
+     * @name cookie#defaults
+     * @type object
+     */
+    self.defaults = {
+        /**
+         * The expiration of set cookies, in days
+         *
+         * @public
+         * @field
+         * @type integer
+         */
         expires: 365
     };
     
     
     /**
-     * List all available cookies.
+     * List all currently set cookies.
      * 
-     * @return {String[]} An array of the names of the cookies
+     * @returns {string[]} An array of the names of the cookies
+     *
+     * @public
+     * @method
+     * @name cookie#list
      */
-    vorple.cookie.list = function() {
+    self.list = function() {
         var list = [];
         var cookies = document.cookie.split( ';' );
         
@@ -26,19 +45,23 @@
         }
         
         return list;
-    }
+    };
     
     
     /**
      * Read the contents of a cookie.
      * 
-     * @param {String} name Name of the cookie to read
-     * @param {Object} [options] 
+     * @param {string} name Name of the cookie to read
+     * @param {object} [options]
      * 
-     * @return {String|null} The contents of the cookie or null if the
+     * @returns {string|null} The contents of the cookie or null if the
      * cookie was not found.
+     *
+     * @public
+     * @method
+     * @name cookie#read
      */
-    vorple.cookie.read = function( name, options ) {
+    self.read = function( name, options ) {
         var opt = $.extend( {}, self.defaults, options );
         var result;
         var decode = opt.raw ? function (s) { return s; } : decodeURIComponent;
@@ -49,25 +72,33 @@
     /**
      * Remove a cookie.
      * 
-     * @param {String} name Name of the cookie to remove.
+     * @param {string} name Name of the cookie to remove.
+     *
+     * @public
+     * @method
+     * @name cookie#remove
      */
-    vorple.cookie.remove = function( name ) {
-        this.write( name, null );
+    self.remove = function( name ) {
+        self.write( name, null );
     };
     
     
     /**
      * Set a cookie with given content.
      * 
-     * @param {String} name Name of the cookie to set
-     * @param {String} content Content of the cookie
-     * @param {Object} [options]
+     * @param {string} name Name of the cookie to set
+     * @param {string} content Content of the cookie
+     * @param {object} [options] Set the option "expires" to the number of days
+     *  the cookie should be valid
+     *
+     * @public
+     * @method
+     * @name cookie#write
      */
-    vorple.cookie.write = function( name, content, options ) {
-        var self = this;
+    self.write = function( name, content, options ) {
         var opt = $.extend( {}, self.defaults, options );
 
-        if( content === null || content === undefined ) {
+        if( typeof content === 'undefined' || content === null ) {
             opt.expires = -1;
         }
 
@@ -88,5 +119,6 @@
             opt.secure ? '; secure' : ''
         ].join( '' ) );
     };
-    
+
+    return self;
 })( jQuery );

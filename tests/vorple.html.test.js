@@ -38,6 +38,9 @@ test( 'attributes', function() {
         classes: 'foo',
         escape: true
     } ), ' class=&quot;foo&quot;', 'Escape quotes' );
+    equal( vorple.html.attributes( {
+        classes: 'foo'
+    }, true ), ' class=&quot;foo&quot;', 'Escape quotes, given as second parameter' );
 } );
 
 test( 'escapeHtmlChars', function() {

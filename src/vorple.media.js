@@ -1,21 +1,50 @@
 /*  vorple.media.js - Videos and sounds */
 
-( function( $ ) {
-    /** @namespace Audio and video functions. */
-    vorple.media = {
-        _muted: { 
-            music: false,
-            sound: false
-        },
-        _nextSong: null,
-        _fadingSounds: 0
+/** @namespace media
+ * @name media
+ * @description Audio and video functions. */
+vorple.media = (function($) {
+    var self = {};
+
+    /**
+     * The mute status of music and sound
+     *
+     * @private
+     * @field
+     * @name media~_muted
+     */
+    var _muted = {
+        music: false,
+        sound: false
     };
-    
+
+    /**
+     * The next song in the queue
+     *
+     * @private
+     * @field
+     * @name media~_nextSong
+     */
+    var _nextSong = null;
+
+    /**
+     * Counter for sounds currently fading out
+     *
+     * @private
+     * @field
+     * @name media~_fadingSounds
+     */
+    var _fadingSounds = 0;
+
     
     /**
      * Default options for the media player
+     *
+     * @public
+     * @field
+     * @name media#defaults
      */
-    vorple.media.defaults = {
+    self.defaults = {
         // default media locations
         audioPath: 'media/audio',
         imagePath: 'media/image',
@@ -28,15 +57,19 @@
         volume: 80
     };
 
+
     /**
      * Fade out a sound.
      * 
      * @param {Object} sound SoundManager object
      * @param {int} speed Fade out speed
      * @param {function} [callback] Callback function to execute when done
+     *
      * @private
+     * @method
+     * @name media~_fadeOut
      */    
-    vorple.media._fadeOut = function( sound, speed, callback ) {
+    _fadeOut = function( sound, speed, callback ) {
         if( typeof sound === 'undefined' ) {
             // sound already stopped or invalid sound
             if( typeof callback === 'function' ) {
@@ -51,7 +84,7 @@
         
         if( newVolume > 0 ) {
             setTimeout( function() {
-                vorple.media._fadeOut( sound, speed, callback );
+                _fadeOut( sound, speed, callback );
             }, 50 );
         }
         else {
@@ -67,9 +100,11 @@
      * Play an audio file.
      * 
      * @param {object} options
-     * @private 
+     * @private
+     * @method
+     * @name media~_playAudio
      */
-    vorple.media._playAudio = function( options ) {
+    _playAudio = function( options ) {
         // If we're loading a saved story, no sound effects shouldn't play
         // to avoid all of them playing at the same time.
         if( vorple.core.engine( 'undum' ) && !undum.isInteractive() ) {
@@ -80,7 +115,7 @@
         // try again when it has.
         if( !soundManager.ok() ) {
             soundManager.onready( function() {
-                vorple.media._playAudio( file, options ); 
+                _playAudio( file, options );
             });
             
             return;
@@ -103,7 +138,7 @@
         
         soundManager.createSound( options );
         
-        if( vorple.media.isMuted( 'sound' ) ) {
+        if( self.isMuted( 'sound' ) ) {
             soundManager.getSoundById( options.id ).mute();
         }
     };
@@ -120,10 +155,13 @@
      * If no path is specified, vorple.media.defaults.imagePath will be used.
      * @param {Object} [options] Additional attributes added to the image.
      * 
-     * @return {String} The HTML code for the img tag.
+     * @returns {String} The HTML code for the img tag.
+     *
+     * @public
+     * @method
+     * @name media#image
      */
-    vorple.media.image = function( file, options ) {
-        var self = this;
+    self.image = function( file, options ) {
         var imagePath = self.defaults.imagePath;
 
         if( typeof options === 'object' && typeof options.imagePath !== 'undefined' ) {
@@ -146,34 +184,36 @@
      * @param {string|string[]} types The audio type (music, sound, or all)
      * as a single string or an array.
      * 
-     * @return {boolean|boolean[]} true if media type is muted, false otherwise.
+     * @returns {boolean|boolean[]} true if media type is muted, false otherwise.
      * An array of truth values is returned if the parameter was given 
-     * as an array. 
+     * as an array.
+     *
+     * @public
+     * @method
+     * @name media#isMuted
      */
-    vorple.media.isMuted = function( types ) {
-        var self = this;
-        var input = types;
-        var result = [];
+    self.isMuted = function( types ) {
+        var input = types,
+            result = [];
         
-        if( typeof types == 'string' ) {
+        if( typeof types === 'string' ) {
             input = [ types ];
         }
         
-        var toggle = {};
         $.each( input, function( key, type ) {
-        	if( type === 'all' ) {
-        		result.push( self._muted.sound && self._muted.music );
-        	}
-        	else {
-            	result.push( self._muted[ type ] );
-        	}
+             if( type === 'all' ) {
+                  result.push( _muted.sound && _muted.music );
+             }
+             else {
+                 result.push( _muted[ type ] );
+             }
         });
 
-        if( typeof types == 'string' ) {
+        if( typeof types === 'string' ) {
             return result[ 0 ];
         }
         
-        return result;     	
+        return result;          
     };
     
     
@@ -189,13 +229,16 @@
      * @param {Object} types The types of media to affect and the mute status
      * of those objects as boolean (true: mute, false: unmute).
      * @param {Object} options Options if default containers must be overridden.
+     * 
+     * @public
+     * @method
+     * @name media#mute
      */
-    vorple.media.mute = function( types, options ) {
-        var self = this;
+    self.mute = function( types, options ) {
         var opt = $.extend( {}, self.defaults, options );
 
         if( typeof types.music !== 'undefined' ) {
-            self._muted.music = types.music;
+            _muted.music = types.music;
 
             var musicplayer = soundManager.getSoundById( 'vorpleBgMusic' );
             
@@ -215,7 +258,7 @@
         }
         
         if( typeof types.sound !== 'undefined' ) {
-            self._muted.sound = types.sound;
+            _muted.sound = types.sound;
                    
             $.each( soundManager.soundIDs, function( index, id ) {
                 if( id === 'vorpleBgMusic' ) {
@@ -232,13 +275,13 @@
         }
         
         // check the status of the global mute
-        $( 'input.mute[value="all"]' ).attr( 'checked', self._muted.sound && self._muted.music );
-        $( 'input.unmute[value="all"]' ).attr( 'checked', !self._muted.sound && !self._muted.music );
+        $( 'input.mute[value="all"]' ).attr( 'checked', _muted.sound && _muted.music );
+        $( 'input.unmute[value="all"]' ).attr( 'checked', !_muted.sound && !_muted.music );
         
         // remember the mute status in a cookie
         vorple.cookie.write(
             'vorpleMute', 
-            ( self._muted.sound ? '1' : '0' )+','+( self._muted.music ? '1' : '0' ) 
+            ( _muted.sound ? '1' : '0' )+','+( _muted.music ? '1' : '0' ) 
         );
     };
     
@@ -247,12 +290,14 @@
      * Mutes or unmutes all media types.
      * 
      * @param {Boolean} [state=true] True to mute or false to unmute all.
-     * @return {Boolean} The new state of global mute (true: all muted,
+     * @returns {Boolean} The new state of global mute (true: all muted,
      * false: all unmuted).
+     *
+     * @public
+     * @method
+     * @name media#muteAll
      */
-    vorple.media.muteAll = function( state ) {
-        var self = this;
-        
+    self.muteAll = function( state ) {
         if( typeof state === 'undefined' ) {
             state = true;
         }
@@ -269,7 +314,7 @@
     /**
      * Play a music file.
      * 
-     * This is otherwise identical to vorple.media.playSound(), 
+     * This is otherwise functionally identical to vorple.media.playSound(),
      * with two key differences:
      * 
      * - Any previously playing music (if any) fades out before the new starts
@@ -278,15 +323,19 @@
      *  
      * @see vorple.media.playSound
      * @param {string} file Music file to be played
-     * @param {object} [options] Any SoundManager's createSound() options, plus these:  
+     * @param {object} [options] Any SoundManager's createSound() options,
+     * plus these:
      * - loop: set to false to not have the music loop again after playing
      * - fadeSpeed: how fast the old music should fade out before starting
-     *   the new one. Set to 100 for no fade. See stopMusic() for details. 
-     * @return The audio player's id.
+     *   the new one. Set to 100 for no fade. See media#stopMusic for details.
+     * @returns {string} The audio player's id.
+     *
+     * @public
+     * @method
+     * @name media#playMusic
      */
-    vorple.media.playMusic = function( file, options ) {
-        var self = this;
-        var opt = $.extend( 
+    self.playMusic = function( file, options ) {
+        var opt = $.extend(
             {}, 
             self.defaults,
             { 
@@ -302,13 +351,13 @@
         var oldMusic = soundManager.getSoundById( 'vorpleBgMusic' );
         
         if( oldMusic ) {
-            vorple.media._fadeOut( oldMusic, opt.fadeSpeed, function() {
+            _fadeOut( oldMusic, opt.fadeSpeed, function() {
                 oldMusic.destruct();
-                vorple.media._playAudio( opt );
+                _playAudio( opt );
             });
         }
         else {
-            vorple.media._playAudio( opt );
+            _playAudio( opt );
         }
 
         return opt.id;
@@ -327,19 +376,22 @@
      * 
      * The volume will be set to 0 if sounds have been muted.
      * 
-     * @see <a href="http://www.schillmania.com/projects/soundmanager2/doc/">http://www.schillmania.com/projects/soundmanager2/doc/</a>
+     * @see http://www.schillmania.com/projects/soundmanager2/doc/
      * 
-     * @param {String} file The sound file to be played.  
-     * @param {Object} [options]
+     * @param {string} file The sound file to be played.
+     * @param {object} [options]
      * Any SoundManager's createSound() options, plus these:  
      * - loop: set to true to have the sound repeat (indefinitely) after playing.  
      * - destructAfter: set to false to have SoundManager not destroy the player
      *     instance after the sound has finished playing.
-     * @return The audio player's id.
+     * @returns {string} The audio player's id.
+     * 
+     * @public
+     * @method
+     * @name media#playSound
      */
-    vorple.media.playSound = function( file, options ) {
-        var self = this;
-        var opt = $.extend( 
+    self.playSound = function( file, options ) {
+        var opt = $.extend(
             {}, 
             self.defaults,
             { 
@@ -351,7 +403,7 @@
         
         opt.url = vorple.html.url( file, opt.audioPath );                
 
-        vorple.media._playAudio( opt );
+        _playAudio( opt );
 
         return opt.id;
     };
@@ -360,18 +412,21 @@
     /**
      * Preload image files.
      * 
-     * @param {String|Array} files Filename of the image to load, or an array
+     * @param {string|string[]} files Filename of the image to load, or an array
      * of files to load.
      * @param {Object} [options] 
      * <table><tr><th>name</th><th>type</th><th>default</th><th>description</th></tr>
      * <tr><td>imagePath</td><td>string</td><td></td><td>'media/image'</td>
      * <td>The default path for the images.</td>
      * </tr></table>
-     * @return {Image|Image[]} The Image object of the preloaded images,
-     *  or an array of Image objects if multiple image files were given.   
+     * @returns {Image|Image[]} The Image object of the preloaded images,
+     *  or an array of Image objects if multiple image files were given.
+     *  
+     * @public
+     * @method
+     * @name media#preloadImage
      */
-    vorple.media.preloadImage = function( files, options ) {
-        var self = this;
+    self.preloadImage = function( files, options ) {
         var opt = $.extend( {}, self.defaults, options );
         
         if( typeof files == 'string' ) {
@@ -389,35 +444,40 @@
             return images;
         }
         else {
-            throw new Error( "Illegal file type given to the image preloader (only String and Array allowed)" );
+            throw new Error( "Illegal file type given to the image preloader (only string and Array allowed)" );
         }
     };
     
 
     /**
      * Stop all music and sound effects. This is shorthand for calling both
-     * stopMusic() and stopSounds().
+     * {@see media#stopMusic} and {@see media#stopSounds}.
      * 
      * There is no callback for when all sound has stopped. If one is needed
+     * it's easiest to call {@see media#stopMusic} and {@see media#stopSounds} separately
+     * with the callback attached to either one of them.
      * 
-     * 
-     * @param {int} [fadeSpeed=5] The speed in which sounds fade out,
+     * @param {number} [fadeSpeed=5] The speed in which sounds fade out,
      * larger is faster. Use 100 to stop sounds immediately.
+     * 
+     * @public
+     * @method
+     * @name media#stopAll
      */
-    vorple.media.stopAll = function( fadeSpeed ) {
+    self.stopAll = function( fadeSpeed ) {
         if( typeof fadeSpeed !== 'number' || fadeSpeed <= 0 ) {
             fadeSpeed = 5;
         }
         
-        vorple.media.stopMusic( fadeSpeed );
-        vorple.media.stopSounds( fadeSpeed );
+        self.stopMusic( fadeSpeed );
+        self.stopSounds( fadeSpeed );
     };
 
     
     /**
      * Stop the currently playing music.
      * 
-     * @param {int} [fadeSpeed=5] The speed in which the music fades out,
+     * @param {integer} [fadeSpeed=5] The speed in which the music fades out,
      * larger is faster. Use 100 to stop the sound immediately.
      * The number tells how much the volume is decreased every 50 milliseconds.
      * For example using the default volume 80 and the default fade out speed
@@ -425,13 +485,17 @@
      * to fade out.
      * @param {function} [callback] A callback function to execute when
      * the music has actually stopped (i.e. has faded out completely). 
+     * 
+     * @public
+     * @method
+     * @name media#stopMusic
      */
-    vorple.media.stopMusic = function( fadeSpeed, callback ) {
+    self.stopMusic = function( fadeSpeed, callback ) {
         if( typeof fadeSpeed !== 'number' || fadeSpeed <= 0 ) {
             fadeSpeed = 5;
         }
         
-        vorple.media._fadeOut( soundManager.getSoundById( 'vorpleBgMusic' ), fadeSpeed, callback );
+        _fadeOut( soundManager.getSoundById( 'vorpleBgMusic' ), fadeSpeed, callback );
    };
     
     
@@ -439,28 +503,36 @@
      * Stop a single audio file.
      * 
      * @param {string} id The id of the audio to stop
-     * @param {int} [fadeSpeed=100] Fade out speed. See stopMusic().
+     * @param {integer} [fadeSpeed=100] Fade out speed. See stopMusic().
      * @param {function} [callback] A callback function to execute when
      * the sound has actually stopped (i.e. has faded out completely). 
+     * 
+     * @public
+     * @method
+     * @name media#stopSound
      */
-    vorple.media.stopSound = function( id, fadeSpeed, callback ) {
+    self.stopSound = function( id, fadeSpeed, callback ) {
         if( typeof fadeSpeed !== 'number' || fadeSpeed <= 0 ) {
             fadeSpeed = 100;
         }
         
-        vorple.media._fadeOut( soundManager.getSoundById( id ), fadeSpeed, callback );
+        _fadeOut( soundManager.getSoundById( id ), fadeSpeed, callback );
     };
     
     
     /**
      * Stop all currently playing sound effects.
      * 
-     * @param {int} [fadeSpeed=100] Fade out speed. See stopMusic().
+     * @param {integer} [fadeSpeed=100] Fade out speed. See stopMusic().
      * @param {function} [callback] A callback function to execute when
      * all sounds have actually stopped (i.e. faded out completely).
-     * Callback is called immediately if there are no sounds active. 
+     * Callback is called immediately if there are no sounds active.
+     * 
+     * @public
+     * @method
+     * @name media#stopSounds
      */
-    vorple.media.stopSounds = function( fadeSpeed, callback ) {
+    self.stopSounds = function( fadeSpeed, callback ) {
         if( typeof fadeSpeed !== 'number' || fadeSpeed <= 0 ) {
             fadeSpeed = 100;
         }
@@ -470,7 +542,7 @@
             fadingSounds--;
         }
 
-        vorple.media._fadingSounds = fadingSounds;
+        _fadingSounds = fadingSounds;
         
         $.each( soundManager.soundIDs, function( index, id ) {
             if( id === 'vorpleBgMusic' ) {
@@ -481,13 +553,13 @@
                 callback = $.noop;
             }
             
-            vorple.media._fadeOut( 
+            _fadeOut(
                 soundManager.getSoundById( id ), 
                 fadeSpeed,
                 function() {
-                    vorple.media._fadingSounds--;
+                    _fadingSounds--;
                     
-                    if( vorple.media._fadingSounds === 0 ) {
+                    if( _fadingSounds === 0 ) {
                         callback();
                     }
                 }  
@@ -503,14 +575,17 @@
     /**
      * Toggle mute status of given media types.
      * 
-     * @param {String|Array} types The media type to toggle, or an array
+     * @param {string|Array} types The media type to toggle, or an array
      * of media types to toggle.
-     * @return If a string was given as the parameter, the new mute status
+     * @returns {boolean|boolean[]} If a string was given as the parameter, the new mute status
      * is returned as a boolean (true: muted, false: unmuted). If an array
-     * is given, an array is returned with the corresponding mute statuses. 
+     * is given, an array is returned with the corresponding mute statuses.
+     * 
+     * @public
+     * @method
+     * @name media#toggleMute
      */
-    vorple.media.toggleMute = function( types ) {
-        var self = this;
+    self.toggleMute = function( types ) {
         var input = types;
         var result = [];
         
@@ -520,8 +595,8 @@
         
         var toggle = {};
         $.each( input, function( key, type ) {
-            toggle[ type ] = !self._muted[ type ];
-            result.push( !self._muted[ type ] );
+            toggle[ type ] = !_muted[ type ];
+            result.push( !_muted[ type ] );
         });
 
         self.mute( toggle );
@@ -537,9 +612,7 @@
     /**
      * YouTube video embedding.
      * 
-     * @see <a href="http://code.google.com/apis/youtube/player_parameters.html">
-     * http://code.google.com/apis/youtube/player_parameters.html</a> for
-     * available parameters. 
+     * @see http://code.google.com/apis/youtube/player_parameters.html
      * 
      * @param {string} id The id of the video to embed (the xxx part of
      * youtube.com/watch?v=xxx)
@@ -548,16 +621,18 @@
      * <tr><td>height</td><td>Height of the player</td></tr>
      * <tr><td>width</td><td>Width of the player</td></tr>
      * <tr><td>parameters</td><td>YouTube player parameters (see
-     * <a href="http://code.google.com/apis/youtube/player_parameters.html">
-     * http://code.google.com/apis/youtube/player_parameters.html</a>)</td></tr>
+     * http://code.google.com/apis/youtube/player_parameters.html)</td></tr>
      * </table>
      * Any HTML attributes are allowed and they're applied to the generated
      * &lt;object&gt; tag.
      * 
-     * @return {String} Embedding HTML code
+     * @returns {string} Embedding HTML code
+     *
+     * @public
+     * @method
+     * @name media#youtube
      */
-    vorple.media.youtube = function( id, options ) {
-        var self = this;
+    self.youtube = function( id, options ) {
         var opt = $.extend( {}, self.defaults.youtube, options );
         var url = 'http://www.youtube.com/v/'+id+'?version=3';
         var parameters = $.param( opt.parameters );
@@ -575,7 +650,7 @@
             +'</object>';
     };
 
-    vorple.media.defaults.youtube = {
+    self.defaults.youtube = {
         width: 600,
         height: 365,
         parameters: {
@@ -586,13 +661,16 @@
                 rel: '0'                // don't load related videos
         }
     };
-    
-    
+
+
+    /**
+     * Initializing
+     */
     $( document ).on( 'init.vorple', function() {
         // init SoundManager
         if( typeof soundManager !== 'undefined' ) {
             soundManager.setup({ 
-                url: vorple.media.defaults.swfPath,
+                url: self.defaults.swfPath,
                 debugMode: false
             });        
         }
@@ -608,7 +686,7 @@
         if( previousStatus ) {
             previousStatus = previousStatus.split( ',' );
 
-            vorple.media.mute({
+            self.mute({
                 sound: ( previousStatus[ 0 ] == '1' ),
                 music: ( previousStatus[ 1 ] == '1' )
             });
@@ -618,12 +696,12 @@
             var $this = $( this );
             
             if( $this.val() == 'all' ) {
-                vorple.media.muteAll( $this.is( ":checked" ) );
+                self.muteAll( $this.is( ":checked" ) );
             }
             else {
                 var type = {};
                 type[ $this.val() ] = $this.is( ":checked" );
-                vorple.media.mute( type );
+                self.mute( type );
             }
         });
 
@@ -631,15 +709,15 @@
             var $this = $( this );
             
             if( $this.val() == 'all' ) {
-                vorple.media.muteAll( !$this.is( ":checked" ) );
+                self.muteAll( !$this.is( ":checked" ) );
             }
             else {
                 var type = {};
                 type[ $this.val() ] = !$this.is( ":checked" );
-                vorple.media.mute( type );
+                self.mute( type );
             }
         });
     });
 
-
+    return self;
 })( jQuery );

@@ -2,43 +2,62 @@
  *  (http://needim.github.com/noty/)  
  */
 
-(function( $ ) {
-    /** @namespace Notifications. */
-    vorple.notify = {};
-    
-    
+/** @namespace notify
+ * @name notify
+ * @description Notifications.
+ * Based on the {@see http://needim.github.com/noty/|noty library}.
+ */
+vorple.notify = (function($) {
+    var self = this;
+
     /**
      * Default options
+     *
+     * @public
+     * @field
+     * @type object
+     * @name notify#defaults
      */
-    vorple.notify.defaults = {
+    self.defaults = {
         layout: 'bottomRight',
         timeout: 7000
     };
-    
-    vorple.notify._currentNoty = null;
+
+    /**
+     * The latest notification
+     *
+     * @private
+     * @field
+     * @name notify~_currentNoty
+     */
+    var _currentNoty = null;
     
     
     /**
      * Show a modal dialog with a button that closes it.
      * 
      * @param {string} text The text to show in the dialog
-     * @param {object} options Notification options. 
+     * @param {object} options Notification options.
+     *
+     * @public
+     * @method
+     * @name notify#alert
      */
-    vorple.notify.alert = function( text, options ) {
-    	var defaults = {
-    		 buttons: [{
-    			 text: 'OK', 
-    			 onClick: function($noty) {
-    				 $noty.close();
-    			 }
-    		 }],
+    self.alert = function( text, options ) {
+        var defaults = {
+             buttons: [{
+                 text: 'OK', 
+                 onClick: function($noty) {
+                     $noty.close();
+                 }
+             }],
              layout: 'center', 
              modal: true,
-    		 timeout: false
-    	};
-    	
+             timeout: false
+        };
+        
         var opt = $.extend( {}, defaults, options );
-    	vorple.notify.show( text, opt);
+        self.show( text, opt);
     };
     
     
@@ -46,8 +65,12 @@
      * Clear the notification queue.
      * 
      * Shortcut for $.noty.clearQueue().
+     *
+     * @public
+     * @method
+     * @name notify#clearQueue
      */
-    vorple.notify.clearQueue = function() {
+    self.clearQueue = function() {
         $.noty.clearQueue();
     };
     
@@ -56,8 +79,12 @@
      * Close the current notification.
      * 
      * Shortcut for $.noty.close().
+     *
+     * @public
+     * @method
+     * @name notify#close
      */
-    vorple.notify.close = function() {
+    self.close = function() {
         $.noty.close( this._currentNoty );
     };
 
@@ -66,8 +93,12 @@
      * Close all notifications.
      * 
      * Shortcut for $.noty.closeAll().
+     *
+     * @public
+     * @method
+     * @name notify#closeAll
      */
-    vorple.notify.closeAll = function() {
+    self.closeAll = function() {
         $.noty.closeAll();
     };
     
@@ -79,13 +110,17 @@
      * 
      * @param {string} text The text to show in the notification
      * @param {object} options Notification options. 
-     * See http://needim.github.com/noty/#options for details.
+     * @See http://needim.github.com/noty/#options
+     *
+     * @public
+     * @method
+     * @name notify#show
      */
-    vorple.notify.show = function( text, options ) {
-        var self = this;
+    self.show = function( text, options ) {
         var opt = $.extend( {}, self.defaults, options, { text: text } );
         
-        self._currentNoty = noty( opt );
+        _currentNoty = noty( opt );
     };
 
+    return self;
 })( jQuery );

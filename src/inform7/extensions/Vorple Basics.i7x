@@ -86,7 +86,10 @@ To set Vorple support status:
 	(- Vp_vorpleSupported = ( Vp_IsJs() && Vp_IsHTML() ); -);
 
 First startup rule (this is the set a flag for whether Vorple is supported rule):
-	set Vorple support status.
+    [first tell the story file that we're Vorple-capable...]
+	set Vorple support status;
+	[...then tell the same to the interpreter.]
+	execute JavaScript command "vorple.parser.setVorpleStory()".
 
 To decide whether Vorple/JavaScript is supported/available: (- (Vp_vorpleSupported) -).
 
@@ -215,23 +218,24 @@ To queue silent parser command (cmd - text):
 	execute JavaScript command "vorple.parser.sendSilentCommand([cmd])".
 
 
-Section 2 - When play hasn't begun yet rulebook
+Section 2 - Vorple startup rulebook
 
 [Code for basic mechanism provided by Graham Nelson]
 
-When play hasn't begun yet is a rulebook.
+Vorple startup is a rulebook.
 
-The when play hasn't begun yet stage rule is listed before the when play begins stage rule in the startup rulebook.
+The Vorple startup stage rule is listed before the when play begins stage rule in the startup rulebook.
 
-This is the when play hasn't begun yet stage rule:
-	follow the when play hasn't begun yet rules.
+This is the Vorple startup stage rule:
+    if Vorple is supported:
+    	follow the Vorple startup rules.
 
 To permit out-of-sequence commands:
 	(- EarlyInTurnSequence = true; -).
 
 Vorple pre-story communication finished is a truth state that varies. Vorple pre-story communication finished is false.
 
-Last when play hasn't begun yet (this is the loop pre-start prompt rule):
+Last Vorple startup (this is the loop pre-start prompt rule):
 	permit out-of-sequence commands;
 	follow parse command rule;
 	follow generate action rule;
@@ -428,10 +432,12 @@ To suppress the response as well, use "queue silent parser command".
 
 	queue silent parser command "'__do_whatever'"
 
-Sometimes we need to communicate with the interpreter before the story has properly started. Using the "when play begins" rulebook is too late -- the command would be executed only after the rulebook has run and printed the intro, the banner, and the starting room description. For this purpose we can use the "when play hasn't begun yet" rulebook:
+Sometimes we need to communicate with the interpreter before the story has properly started. Using the "when play begins" rulebook is too late -- the command would be executed only after the rulebook has run and printed the intro, the banner, and the starting room description. For this purpose we can use the "Vorple startup" rulebook:
 
-	When play hasn't begun yet:
+	Vorple startup:
 		queue silent parser command "'__local_time '+(new Date()).toString()".
+
+The Vorple startup rulebook is run only in the Vorple interpreter. Only Vorple-specific commands should go there, and only those that can't be placed in the When play begins rulebook.
 
 Passing commands to the story file can be a powerful tool, but it should be used only when absolutely necessary. One reason is performance: the story file has to process the command as a separate turn, even when it isn't displayed to the user. It's much faster to use for example I7's 'try' phrases to initiate actions. The other reason is that the method won't work in offline interpreters.
 
@@ -556,7 +562,7 @@ We check what language the reader's browser is set to and offer a translated ver
 	
 	There is a room.
 	
-	When play hasn't begun yet (this is the query browser language rule):
+	Vorple startup (this is the query browser language rule):
 		queue silent parser command "'__lang '+window.navigator.language".
 		
 	Checking browser language is an action out of world applying to one topic.
