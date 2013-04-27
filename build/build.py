@@ -67,7 +67,6 @@ libdir = os.path.abspath( "../lib" ) + "/"
 vendordir = os.path.abspath( "../vendor" ) + "/"
 themedir = os.path.abspath( "../themes" ) + "/"
 apidir = os.path.abspath( "../doc/API" ) + "/"
-apigeneratordir = os.path.abspath( "../../jsdoc-toolkit" ) + "/"
 minifierdir = os.path.abspath( "compiler/closure-compiler" ) + "/"
 exampledir = os.path.abspath( "../stories/undum" ) + "/"
 unittestdir = os.path.abspath( "../tests" ) + "/"
@@ -86,7 +85,7 @@ srcfiles.remove( corelib )
 templatefiles = [ 
     libdir+"vorple.parchment.min.js",
     libdir+"vorple.min.css",
-    libdir+"soundmanager/soundmanager2.swf"
+    vendordir+"soundmanager/soundmanager2.swf"
 ]
 
 if os.path.exists( destination ):
@@ -227,15 +226,10 @@ if "minify" in arguments.tasks:
 if "api" in arguments.tasks:
     print "Generating the API..."
     
-    subprocess.call([ "/usr/bin/java",
-           "-jar", apigeneratordir+"jsrun.jar", apigeneratordir+"app/run.js",
-           "-a",
-           "-t="+apigeneratordir+"templates/codeview",
-           srcdir,
-           "-d="+apidir,
-           '-D="noGlobal:true"',
-           '-D="title:Vorple"'
-        ])
+    subprocess.call([ "jsdoc",  # see https://github.com/jsdoc3/jsdoc
+        srcdir,
+        "-d", apidir
+    ])
     
 
 # create theme packages
@@ -438,6 +432,9 @@ if "coverage" in arguments.tasks:
 
 if "unittests" in arguments.tasks:
     print "Compiling the I7 unit test story file..."
+    if os.path.exists( tmpdir ):
+        shutil.rmtree( tmpdir )
+    os.makedirs( tmpdir )
     os.chdir( tmpdir )
     os.mkdir( 'Build' )
     os.mkdir( 'Source' )
