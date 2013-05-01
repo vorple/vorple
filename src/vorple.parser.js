@@ -417,6 +417,16 @@ vorple.parser = (function($) {
         _container.stream = '#'+id;
     };
 
+
+    /**
+     * Adds a new expression to the eval queue.
+     *
+     * @param expr {function} The function to add to the queue
+     */
+    self.queueExpression = function( expr ) {
+        _evalqueue.push( expr );
+    };
+
     
     /**
      * Registers a new output or input filter. 
@@ -822,7 +832,7 @@ vorple.parser = (function($) {
                     .addClass( filteredContents.turnClasses );
 
                 // Wrap it all into a div
-                $newTurnContainer = $( '<div></div>' )
+                var $newTurnContainer = $( '<div></div>' )
                     .addClass( 'turn' )
                     .addClass( filteredContents.classes )
                     .append( $newTurn );

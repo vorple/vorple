@@ -73,6 +73,8 @@ Modules
  - Parser: Support for nested HTML tags
  - Parser: Support for commands issued from the story file before 
    play begins
+ - Parser: A proper method for adding expressions to the JavaScript queue
+   (vorple.parser.queueExpression())
  - Undum: Changed vorple.undum.settings to vorple.undum.defaults
 
 

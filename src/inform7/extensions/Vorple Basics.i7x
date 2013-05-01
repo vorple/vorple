@@ -64,7 +64,7 @@ To open HTML tag (name - text) called (classes - text):
 	execute JavaScript command "vorple.parser.openTag('[name]','[classes]')".
 	
 To open HTML tag (name - text):
-	open HTMl tag name called "".
+	open HTML tag name called "".
 	
 To close HTML tag:
 	execute JavaScript command "vorple.parser.closeTag()".
@@ -77,7 +77,7 @@ To execute JavaScript code/command (JavaScript code - text):
 		
 To queue JavaScript code/command (javascript code - text):
 	if Vorple is supported:
-		execute JavaScript command "vorple.parser._evalqueue.push(function(){[javascript code]})".
+		execute JavaScript command "vorple.parser.queueExpression(function(){[javascript code]})".
 
 
 Section 2 - Vorple support detection
@@ -86,7 +86,7 @@ To set Vorple support status:
 	(- Vp_vorpleSupported = ( Vp_IsJs() && Vp_IsHTML() ); -);
 
 First startup rule (this is the set a flag for whether Vorple is supported rule):
-    [first tell the story file that we're Vorple-capable...]
+	[first tell the story file that we're Vorple-capable...]
 	set Vorple support status;
 	[...then tell the same to the interpreter.]
 	execute JavaScript command "vorple.parser.setVorpleStory()".
@@ -227,8 +227,8 @@ Vorple startup is a rulebook.
 The Vorple startup stage rule is listed before the when play begins stage rule in the startup rulebook.
 
 This is the Vorple startup stage rule:
-    if Vorple is supported:
-    	follow the Vorple startup rules.
+	if Vorple is supported:
+		follow the Vorple startup rules.
 
 To permit out-of-sequence commands:
 	(- EarlyInTurnSequence = true; -).
@@ -242,13 +242,11 @@ Last Vorple startup (this is the loop pre-start prompt rule):
 	if Vorple pre-story communication finished is false:
 		follow the loop pre-start prompt rule.
 
-
 Starting the story is an action out of world.
 Understand "__start_story" as starting the story.
 
 Carry out starting the story (this is the end pre-story communication rule):
 	now Vorple pre-story communication finished is true.
-
 
 This is the undo marking intro as meta rule:
 	mark the current action "normal".
@@ -268,7 +266,7 @@ First after printing the banner text (this is the display Vorple credits rule):
 	if Vorple is supported:
 		say "Vorple version ";
 		place inline element called "vorple-version";
-		execute JavaScript command "$('.vorple-version').html(vorple.core.version+'.'+vorple.core.release)";
+		execute JavaScript command "$('.vorple-version').html(vorple.core.getVersion()+'.'+vorple.core.getRelease())";
 		say paragraph break.
 	
 	
