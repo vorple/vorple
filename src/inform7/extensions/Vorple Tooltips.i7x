@@ -2,7 +2,7 @@ Vorple Tooltips (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Tooltips that can be activated on request or when the mouse cursor is moved over an element."
 
-Include Vorple Basics by Juhana Leinonen.
+Include Vorple Core by Juhana Leinonen.
 
 Use authorial modesty.
 
@@ -67,7 +67,7 @@ Text with a tooltip can be created with:
 	
 The tooltip is shown when the reader puts the mouse cursor over it.
 
-A tooltip can be added to existing elements (see the Vorple Basics extension for more on how to create elements):
+A tooltip can be added to existing elements (see the Vorple Core extension for more on how to create elements):
 
 	place an element called "secret" reading "a mysterious box";
 	display tooltip "You found me!" on the element "secret" on mouseover; 

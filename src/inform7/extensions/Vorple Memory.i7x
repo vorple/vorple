@@ -2,7 +2,7 @@ Vorple Memory (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Saving short strings of texts across Vorple play sessions."
 
-Include Vorple Basics by Juhana Leinonen.
+Include Vorple Core by Juhana Leinonen.
 Use authorial modesty.
 
 Table of Browser Cookies

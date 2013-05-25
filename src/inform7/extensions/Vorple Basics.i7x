@@ -1,4 +1,4 @@
-Vorple Basics (for Z-Machine only) by Juhana Leinonen begins here.
+Vorple Core (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Core functionality of Vorple, including JavaScript evaluation, HTML elements and turn type marking."
 
@@ -270,12 +270,12 @@ First after printing the banner text (this is the display Vorple credits rule):
 		say paragraph break.
 	
 	
-Vorple Basics ends here.
+Vorple Core ends here.
 
 
 ---- DOCUMENTATION ----
 
-The Vorple Basics extension defines some of the basic structure that's needed for Vorple to communicate with the story file. 
+The Vorple Core extension defines some of the basic structure that's needed for Vorple to communicate with the story file.
 
 Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage.
 
@@ -284,10 +284,10 @@ Chapter: Vorple setup
 
 Every Vorple story must include at least one Vorple extension and the custom web interpreter.
 
-	*: Include Vorple Basics by Juhana Leinonen.
+	*: Include Vorple Core by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
-All standard Vorple extensions already have the "Include Vorple Basics" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
+All standard Vorple extensions already have the "Include Vorple Core" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
 
 At the moment Vorple supports Z-machine only.
 
@@ -448,7 +448,7 @@ We'll display the inventory listing using HTML unordered lists ("ul"). It might 
 		
 	*: "Convenience Store"
 	
-	Include Vorple Basics by Juhana Leinonen.
+	Include Vorple Core by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
 	Carry out taking inventory (this is the print inventory using HTML lists rule):
@@ -480,7 +480,7 @@ The system works by wrapping scrambled hints in named elements. Their contents c
 	
 	*: "Scrambled Eggs"
 	
-	Include Vorple Basics by Juhana Leinonen.
+	Include Vorple Core by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	
@@ -555,7 +555,7 @@ We check what language the reader's browser is set to and offer a translated ver
 
 	*: "Sprechen Sie Deutsch"
 
-	Include Vorple Basics by Juhana Leinonen.
+	Include Vorple Core by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	There is a room.
@@ -576,7 +576,7 @@ Here we set up an encyclopedia that can be used to query articles from Wikipedia
 
 	*: "The Sum of Human Knowledge"
 	
-	Include Vorple Basics by Juhana Leinonen.
+	Include Vorple Core by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	Release along with JavaScript "encyclopedia.js".
 	

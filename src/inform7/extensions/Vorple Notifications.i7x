@@ -2,7 +2,7 @@ Vorple Notifications (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Notifications and dialogs."
 
-Include Vorple Basics by Juhana Leinonen.
+Include Vorple Core by Juhana Leinonen.
 
 Use authorial modesty.
 

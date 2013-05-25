@@ -4,7 +4,7 @@ Vorple Screen Effects by Juhana Leinonen begins here.
 
 Use authorial modesty.
 
-Include Vorple Basics by Juhana Leinonen.
+Include Vorple Core by Juhana Leinonen.
 
 
 Section 1 - Spacing and Pausing

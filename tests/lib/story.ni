@@ -26,9 +26,9 @@ Carry out echoing:
 
 Volume Extensions
 
-Book Basics
+Book Core
 
-Include Vorple Basics by Juhana Leinonen.
+Include Vorple Core by Juhana Leinonen.
 Include Basic Screen Effects by Emily Short.
 
 Carry out testing "core eval":

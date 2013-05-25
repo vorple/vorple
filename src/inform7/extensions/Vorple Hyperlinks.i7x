@@ -2,7 +2,7 @@ Vorple Hyperlinks (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Hyperlinks that either open a web site or execute a parser command."
 
-Include Vorple Basics by Juhana Leinonen.
+Include Vorple Core by Juhana Leinonen.
 
 Use authorial modesty.
 
