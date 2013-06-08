@@ -1,12 +1,14 @@
 VORPLE USER INTERFACE LIBRARY FOR INTERACTIVE FICTION
 =====================================================
 
+Vorple is dual licensed under MIT License or
+Creative Commons Attribution Unported 3.0 (CC-BY-3.0) license.
+
 
 MIT License
 -----------
 
-
-Copyright (c) 2011-2012 by Juhana Leinonen
+Copyright (c) 2011-2013 by Juhana Leinonen
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -25,3 +27,10 @@ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 THE SOFTWARE.
+
+
+Creative Commons Attribution Unported 3.0 License
+-------------------------------------------------
+
+This work is licensed under the Creative Commons Attribution Unported 3.0 License.
+To view a copy of this license, visit http://creativecommons.org/licenses/by/3.0/.
