@@ -276,9 +276,9 @@ vorple.parser = (function($) {
         
         // loop through all filters, executing them in priority order 
         for( var i = 0; i < numberOfFilters; ++i ) {
-            var highestPriority;
+            var highestPriority = null;
             $.each( filters, function( name, filter ) {
-                if( filter.type === type && ( typeof highestPriority === 'undefined' || highestPriority.priority < filter.priority ) ) {
+                if( filter.type === type && ( highestPriority === null || highestPriority.priority < filter.priority ) ) {
                     highestPriority = filter;
                 }
             } );
