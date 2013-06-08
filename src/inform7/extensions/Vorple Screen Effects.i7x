@@ -164,18 +164,18 @@ To right align the/-- cursor to (depth - a number):
 Include (- 
 
 [ DeepStatus depth i screen_width;
-    VM_StatusLineHeight(depth);
-    screen_width = VM_ScreenWidth();
-    #ifdef TARGET_GLULX;
-        VM_ClearScreen(1);
-    #ifnot;
-        style reverse;
-        for (i=1:i<depth+1:i++)
-        {
-             @set_cursor i 1;
-             spaces(screen_width);
-        } 
-    #endif;
+	VM_StatusLineHeight(depth);
+	screen_width = VM_ScreenWidth();
+	#ifdef TARGET_GLULX;
+		VM_ClearScreen(1);
+	#ifnot;
+		style reverse;
+		for (i=1:i<depth+1:i++)
+		{
+			 @set_cursor i 1;
+			 spaces(screen_width);
+		} 
+	#endif;
 ]; 
 
 [ I7VM_MoveCursorInStatusLine depth;
@@ -220,7 +220,7 @@ Chapter 2 - Styles
 Vorple style is a kind of value.
 
 cursive,
-emphasized,
+emphasis,
 fantasy,
 monospace,
 nowrap,
@@ -583,7 +583,7 @@ Chapter: Text styles
 The following styles are provided with the extension:
 
 	cursive
-	emphasized
+	emphasis
 	fantasy
 	monospace
 	nowrap
@@ -594,17 +594,17 @@ The following styles are provided with the extension:
 	
 The "cursive" style displays text in a font resembling cursive writing, "fantasy" uses a decorative font resembling handwriting and "monospace" is a fixed width font (corresponding to Inform's [fixed letter spacing]). The actual font used depends on the web browser, operating system, and user preferences. 
 
-"Emphasized" and "strong" are usually (but not guaranteed to be) italic and bold text respectively.
+"Emphasis" and "strong" are usually (but not guaranteed to be) italic and bold text respectively.
 
 The "nowrap" style does not allow line breaks inside the style. It's mostly used when displaying numbers that use space as a separator. For example, we don't want the text "The suitcase contains a statue worth 100 000 dollars" to be split between "100" and "000":
 
-    The suitcase contains a statue worth 100
-    000 dollars.
-    
+	The suitcase contains a statue worth 100
+	000 dollars.
+	
 If we add the "nowrap" style ("The suitcase contains a statue worth [nowrap style]100 000[end style] dollars.") the number is guaranteed to stay on the same line:
 
-    The suitcase contains a statue worth 
-    100 000 dollars. 
+	The suitcase contains a statue worth 
+	100 000 dollars. 
 
 We should take care not to apply the nowrap style to very long pieces of text. If the text is longer than the normal line width it overflows beyond the normal text area. 
 
@@ -635,7 +635,7 @@ The "emotions.css" file:
 		font-weight: bold;
 	}
 	
-The style's name is applied to the text as a class, so it should always be one word only. Pay attention to the capitalization of the style's name when defining it: Inform 7 is case-insensitive, but CSS styles are not, so if you define the style as "Angry is a Vorple style", the corresponding CSS rule must also be for ".Angry".
+The style's name is applied to the text as a class, so it should always be one word only. Pay attention to the capitalization of the style's name when defining it: Inform 7 is case-insensitive, but CSS styles are not. If you define the style as "Angry is a Vorple style" the corresponding CSS rule must also be for ".Angry".
 
 
 
@@ -677,3 +677,110 @@ We can also show text aligned right:
 This will only work online. In offline interpreters the text will be left-aligned.
 
 Vorple Screen Effects ends here.
+
+
+
+Example: * Letters from a Madman - Example of all different styles available in the extension.
+
+The letter in this example story has all the styles defined in the extension, plus a couple of combinations and colors.
+
+	*: "Letters from a Madman"
+
+	Include Vorple Screen Effects by Juhana Leinonen.
+	Release along with the "Vorple" interpreter.
+
+	The Front lawn is a room. The mailbox is an openable, closed, fixed in place container in the Front lawn. A letter is in the mailbox.
+
+	The description of the letter is "[cursive style][xx-large style]Dear [red letters]recipient[default letters],[end style][end style]
+
+	[strikethrough style]Why[end style] I [emphasis style]know[end style].
+	[strong style]I have not forgotten.[end style]
+	[monospace style]He is not [underline style]the one[end style].[end style]
+	There are [nowrap style]10 000 000 000[end style] beetles in my head.
+
+	[end is nigh]
+
+	[fantasy style][x-large style]We are [yellow background]alone[default letters][end style][end style]
+
+	He comes. [small style]He comes.[end style] [x-small style]He comes.[end style] [xx-small style]He comes.[end style]
+	[transient style]
+
+	This is a [x-large style]secret.[end style][end style]".
+
+	To say end is nigh:
+		right-align "The end is nigh."
+
+	Test me with "open mailbox/read letter/z".
+
+
+Example: **** Monty Hall - A game show where the result is displayed with flashy animated text.
+
+Imagine a game show where you are presented with three doors. Behind one of them is a brand new car, and behind the rest are goats. You get to choose one of the doors. Then the game host opens one of the other doors revealing a goat, and you are given a chance to either switch to the one remaining door or open the one you picked originally. The Monty Hall paradox is a counterintuitive statistical fact that switching the door gives a much higher chance at finding a car behind it.
+
+We'll display the game's result using a custom-made CSS style file that makes the text spin and zoom in. It also styles the text and uses a font downloaded from Google Fonts (http://www.google.com/fonts/). The CSS file can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources/css/montyhall.css.
+
+	*: "Monty Hall"
+	
+	Let's Make a Deal is a room.
+	
+	Include Vorple Screen Effects by Juhana Leinonen.
+
+	Release along with the "Vorple" interpreter.
+	Release along with style sheet "montyhall.css".
+
+
+	Chapter 1 - Game rules
+
+	A gamedoor is a kind of container.
+	
+	door A, door B and door C are fixed in place closed gamedoors in Let's Make a Deal.
+	
+	A goat is a kind of thing. There are 2 goats. A car is a thing.
+	
+	Definition: a gamedoor is unused if nothing is in it.
+	Definition: a gamedoor is wrong if a goat is in it.
+	Definition: a gamedoor is correct if the car is in it.
+	
+	To decide which gamedoor is the remaining gamedoor which is not (first - a gamedoor) or (second - a gamedoor):
+		repeat with X running through gamedoors:
+			if X is not the first and X is not the second:
+				decide on X.
+	
+	When play begins:
+		now the car is in a random gamedoor;
+		repeat with G running through goats:
+			now G is in a random unused gamedoor.
+			
+	Instead of opening a gamedoor when every gamedoor is closed:
+		let host-chosen door be a random wrong gamedoor which is not the noun;
+		let optional door be the remaining gamedoor which is not the host-chosen door or the noun;
+		say "'But wait!' the host says. 'You still have a chance to change your mind. Let's open [host-chosen door] which reveals a goat.
+		
+	You can still open [noun], or you can switch and open [optional door] instead. Which will you choose?";
+		now the host-chosen door is open.
+		
+	Instead of opening a closed gamedoor:
+		say "'Congratulations!'";
+		end the story saying "You win [a random thing in the noun]!".
+
+
+	Chapter 2 - Room header style
+
+	room-header is a Vorple style.
+
+	Rule for printing the name of a room (called the place) while looking:
+		say "[room-header style][printed name of place][end style]".
+
+
+	Chapter 3 - Epitaph style
+
+	prize is a Vorple style.
+	
+	Before printing the player's obituary:
+		say prize style;
+		open HTML tag "div".
+		
+	After printing the player's obituary:
+		close HTML tag;
+		say end style;
+		queue JavaScript code "setTimeout( function() {$('.prize div').addClass('animate')}, 1000 )".
