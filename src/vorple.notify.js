@@ -8,7 +8,7 @@
  * Based on the {@see http://needim.github.com/noty/|noty library}.
  */
 vorple.notify = (function($) {
-    var self = this;
+    var self = {};
 
     /**
      * Default options

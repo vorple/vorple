@@ -323,7 +323,7 @@ vorple.core = (function($){
      * A second parameter can be given that contains the error message, or 
      * a function that will be called instead of throwing the error.
      * 
-     * @param {number|array} requiredRelease The lowest allowed release or an array
+     * @param {number|array} requiredRelease The exact allowed release or an array
      *   of [lowest, highest] required release
      * @param {string|function} [message] The error message's text
      *   or a function to call on error
@@ -336,7 +336,7 @@ vorple.core = (function($){
      */
     self.requireRelease = function( requiredRelease, message ) {
         var minRelease,
-            maxRelease = false,
+            maxRelease,
             requiredReleaseString;
 
         if( $.isArray( requiredRelease ) ) {
@@ -346,6 +346,7 @@ vorple.core = (function($){
         }
         else {
             minRelease = requiredRelease;
+            maxRelease = requiredRelease;
             requiredReleaseString = requiredRelease;
         }
 

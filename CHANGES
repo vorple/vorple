@@ -58,6 +58,8 @@ Modules
  - Core: release and version are now private variables, their values can be
    retrieved with vorple.core.getRelease() and vorple.core.getVersion()
  - Core: Added vorple.core.getEngine() to give the current engine object
+ - Core: requireRelease() now expects the release number to match exactly when
+   given a single integer parameter
  - HTML: Fixed a bug where the second parameter to vorple.html.attributes()
    would have no effect
  - Media: Updated to work with SoundManager instead of jPlayer
@@ -75,6 +77,8 @@ Modules
    (vorple.parser.queueExpression())
  - Parser: Fixed a bug that prevented custom filters from running 
    in some cases
+ - Parser: scrollTo() accepts a callback function that runs after scrolling
+   has finished
  - Undum: Changed vorple.undum.settings to vorple.undum.defaults
 
 

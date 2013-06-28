@@ -7,7 +7,7 @@
  * @since 2.4
  */
 vorple.parser = (function($) {
-    var self = this;
+    var self = {};
     
     var _commandqueue = [],
         _container = {
@@ -473,12 +473,14 @@ vorple.parser = (function($) {
      * position in pixels
      * @param {integer} [duration=150] The duration of the scroll animation
      * in milliseconds. Set to 0 for no animation.
+     * @param {function} [callback] Callback function executed after scrolling
+     * has finished.
      *
      * @public
      * @method
      * @name parser#scrollTo
      */
-    self.scrollTo = function( target, duration ) {
+    self.scrollTo = function( target, duration, callback ) {
         var scrollTo,
             bottom = $( document ).height() - $( window ).height();
 
@@ -507,8 +509,13 @@ vorple.parser = (function($) {
         if( scrollTo > bottom ) {
             scrollTo = bottom;
         }
-
-        $('html, body').animate({ scrollTop: scrollTo }, duration );
+	var callbackCalled = false;
+        $('html, body').animate({ scrollTop: scrollTo }, duration, function() {
+            if( !callbackCalled && typeof callback === 'function' ) { 
+                callback();
+                callbackCalled = true;
+            } 
+        });
     }; 
     
     
@@ -659,14 +666,14 @@ vorple.parser = (function($) {
                 if ( e.target.nodeName !== 'INPUT' && e.target.nodeName !== 'A' && ( window.getSelection() ||
                         ( document.selection ? document.selection.createRange().text : '' ) === '' ) )
                 {
-                    // If the input box is close to the viewport then focus it
-                    if ( $( window ).scrollTop() + $( window ).height() - input.offset().top > -60 )
-                    {
-                        self.scrollTo( 'bottom' );
+                    e.target = input[0];
+                    // If the input field is not on screen, scroll to it
+                    if ( $( '#vorpleContainer' ).attr( 'display' ) !== 'none' && ( $( window ).scrollTop() - input.offset().top > 0 || $( window ).scrollTop() + $( window ).height() - input.offset().top < 60 ) ) {
                         // Manually reset the target incase focus/trigger don't - we don't want the trigger to recurse
-                        e.target = input[0];
-                        input.focus()
-                            .trigger( e );
+
+                        self.scrollTo( input, 100, function() { input.focus().trigger( e ); 
+ } );
+
                         // Stop propagating after re-triggering it, so that the trigger will work for all keys
                         e.stopPropagation();
                     }
@@ -675,6 +682,9 @@ vorple.parser = (function($) {
                     {
                         return false;
                     }
+else {
+input.focus().trigger(e);
+}
                     
                     if( _turn.mode === 'char' ) {
                         $( 'input.TextInput' ).trigger( $.Event( 'keypress', { which: e.which } ) );
@@ -710,7 +720,7 @@ vorple.parser = (function($) {
                 // the command is sent only if the story file has requested
                 // it beforehand.
                 if( _is_vorple_story ) {
-                    self.sendCommand( '__start_story', { hideCommand: true } );
+                    self.sendCommand( '__start_story', { hideCommand: true, skipFilters: true } );
                 }
             });
 

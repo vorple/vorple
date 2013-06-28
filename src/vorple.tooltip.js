@@ -7,7 +7,7 @@
  * {@link http://craigsworks.com/projects/qtip2/|qTip2 library}.
  */
 vorple.tooltip = (function($) {
-    var self = this;
+    var self = {};
     
     /**
      * Default tooltip options

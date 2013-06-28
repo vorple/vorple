@@ -6,7 +6,7 @@
  * @description Undum-specific features
  */
 vorple.undum = (function($) {
-    var self = this;
+    var self = {};
     var _disposedLinks = [];
 
     /**
@@ -34,7 +34,7 @@ vorple.undum = (function($) {
         // If the allDisposable setting is set, check if the link is in
         // the exception list. If not, dispose of the link.
         // Otherwise check the disposable list and dispose if found there.
-        if( self.settings.allDisposable ) {
+        if( self.defaults.allDisposable ) {
             if( $.inArray( newSituationId, self.defaults.disposableExceptions ) == -1 ) {
                 self.dispose( newSituationId );
             }
@@ -92,7 +92,7 @@ vorple.undum = (function($) {
      * @method
      * @name undum~_removeDisposed
      */
-    _removeDisposed = function( href ) {
+    var _removeDisposed = function( href ) {
         // taken from Undum's System.prototype.clearLinks()
         $("a[href$='" + href + "'], a[href='" + href + "']" ).each(function(index, element) {
             var a = $(element);
