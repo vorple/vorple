@@ -20,7 +20,9 @@ vorple.parser = (function($) {
         _evalqueue = [],
         _filters = {},
         _interactive = false, // true: waiting for reader action
+        _mainTurnCopy = null,
         _skipFilters = false,
+        _primarycommandqueue = [],
         _turn = {
             commandVisible: true,
             mode: 'line',
@@ -198,17 +200,33 @@ vorple.parser = (function($) {
      * @name parser~_runCommandQueue
      */
     var _runCommandQueue = function() {
-        if( _commandqueue.length === 0 ) {
+        if( _commandqueue.length === 0 && _primarycommandqueue.length === 0 ) {
             return false;
         }
-        
-        var cmd = _commandqueue[ 0 ];
+
+        var queue;
+
+        if( _primarycommandqueue.length > 0 ) {
+            queue = _primarycommandqueue;
+            if( _mainTurnCopy === null ) {
+                _mainTurnCopy = $.extend( {}, _turn );
+            }
+        }
+        else {
+            queue = _commandqueue;
+            if( _mainTurnCopy !== null ) {
+                _turn = $.extend( {}, _mainTurnCopy );
+                _mainTurnCopy = null;
+            }
+        }
+
+        var cmd = queue[ 0 ];
         var opt = $.extend( { hideCommand: false, hideOutput: false, skipFilters: false }, cmd.options );
         var $input = $( 'input.TextInput' );
         var oldCommand = $input.val();
 
         // remove the first command (which will be executed now)
-        _commandqueue.shift();
+        queue.shift();
         
         // raise a flag that makes the output from the command not show
         if( opt.hideOutput ) {
@@ -537,8 +555,9 @@ vorple.parser = (function($) {
      * @name parser#sendCommand
      */
     self.sendCommand = function( command, options ) {
+        var queue = ( ( options && options.primaryCommand ) ? _primarycommandqueue : _commandqueue );
         // put the command to the queue
-        _commandqueue.push({ 
+        queue.push({
             command: command,
             options: options
         });
@@ -548,8 +567,26 @@ vorple.parser = (function($) {
             _runCommandQueue();
         }
     };
-   
-    
+
+
+    /**
+     * Sends a primary command to the parser.
+     * Primary commands are put into a different queue and handled before the
+     * main command queue. This guarantees that command-specific communication
+     * with the story file is handled right after the main command has finished.
+     *
+     * @param {string} command The command to send
+     * @param {object} options Options as an object, see sendCommand()
+     *
+     * @public
+     * @method
+     * @name parser#sendPrimaryCommand
+     */
+    self.sendPrimaryCommand = function( command, options ) {
+        self.sendCommand( command, $.extend( {}, options, { primaryCommand: true } ) );
+    };
+
+
     /**
      * Sends a command to the parser behind the scenes without showing
      * either the command or the result to the reader. A shortcut for 
@@ -562,10 +599,23 @@ vorple.parser = (function($) {
      * @name parser#sendSilentCommand
      */
     self.sendSilentCommand = function( command ) {
-        self.sendCommand( command, { hideCommand: true, hideOutput: true, skipFilters: true } );
+        self.sendCommand( command, { hideCommand: true, hideOutput: true, skipFilters: true, primaryCommand: false } );
     };
-    
-    
+
+
+    /**
+     * sendSilentCommand(), but the command is placed in the primary command
+     * queue. See also sendPrimaryCommand().
+     *
+     * @public
+     * @method
+     * @name parser#sendSilentPrimaryCommand
+     */
+    self.sendSilentPrimaryCommand = function( command ) {
+        self.sendCommand( command, { hideCommand: true, hideOutput: true, skipFilters: true, primaryCommand: true } );
+    };
+
+
     /**
      * Sets the current turn's type. Supported types are "normal", "meta",
      * "undo" and "dialog".
@@ -615,6 +665,30 @@ vorple.parser = (function($) {
      */
     $( document ).on( 'init.vorple', function() {
         if( vorple.core.engine( 'parchment' ) ) {
+
+            // make sure the correct containers exist, create them if not
+            if( $( '#vorpleContainer' ).length === 0 ) {
+                $( '<div id="vorpleContainer"></div>' ).appendTo( 'body' );
+            }
+
+            var $vorpleContainer = $( '#vorpleContainer' );
+
+            if( $( '#vorple' ).length === 0 ) {
+                $vorpleContainer.append( '<div id="vorple"></div>' );
+            }
+
+            if( $( '#vorpleInput' ).length === 0 ) {
+                $vorpleContainer.append( '<div id="vorpleInput"></div>' );
+            }
+
+            if( $( '#vorple-media' ).length === 0 ) {
+                $vorpleContainer.append( '<div id="vorple-media"></div>' );
+            }
+
+            if( $( '#parchment' ).length === 0 ) {
+                $( 'body' ).append( '<div id="parchment"></div>' );
+            }
+
             _container.parchment = vorple.core.getEngine().options.container;
 
             self.registerFilter( _metaTurnFilters, { type: 'output', name: 'meta-turn filters' } );
@@ -663,7 +737,7 @@ vorple.parser = (function($) {
                 var input = $( '.vorplePrompt input' );
                 
                 // Only intercept on things that aren't inputs and if the user isn't selecting text
-                if ( e.target.nodeName !== 'INPUT' && e.target.nodeName !== 'A' && ( window.getSelection() ||
+                if( input.length && e.target.nodeName !== 'INPUT' && e.target.nodeName !== 'A' && ( window.getSelection() ||
                         ( document.selection ? document.selection.createRange().text : '' ) === '' ) )
                 {
                     e.target = input[0];

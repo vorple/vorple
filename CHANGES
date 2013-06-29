@@ -68,7 +68,8 @@ Modules
    all functions that stop sounds can fade out instead
  - Parser: Character input support
  - Parser: Commands triggered while a turn is running are put into a queue
-   and ran when the prompt is ready
+   and ran when the prompt is ready. There's a separate queue for "primary"
+   commands, which is always resolved before the main command queue.
  - Parser: Meta and dialog commands that have no output will not pop up
    a notification/dialog
  - Parser: Support for nested HTML tags

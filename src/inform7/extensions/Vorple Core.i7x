@@ -208,34 +208,43 @@ Chapter 6 - Interpreter communication
 
 Section 1 - Queueing parser commands
 
-To queue parser command (cmd - text), showing the command:
+To queue a/the/-- parser command (cmd - text), showing the command:
 	let hideCommand be "true";
 	if showing the command:
 		now hideCommand is "false";
 	execute JavaScript command "vorple.parser.sendCommand([cmd],{hideCommand:[hideCommand]})".
 
-To queue silent parser command (cmd - text):
+To queue a/the/-- silent parser command (cmd - text):
 	execute JavaScript command "vorple.parser.sendSilentCommand([cmd])".
+
+To queue a/the/-- primary parser command (cmd - text), showing the command:
+	let hideCommand be "true";
+	if showing the command:
+		now hideCommand is "false";
+	execute JavaScript command "vorple.parser.sendPrimaryCommand([cmd],{hideCommand:[hideCommand]})".
+
+To queue a/the/-- silent primary parser command (cmd - text):
+	execute JavaScript command "vorple.parser.sendSilentPrimaryCommand([cmd])".
 
 
 Section 2 - Vorple startup rulebook
 
 [Code for basic mechanism provided by Graham Nelson]
 
-Vorple startup is a rulebook.
+During Vorple startup is a rulebook.
 
 The Vorple startup stage rule is listed before the when play begins stage rule in the startup rulebook.
 
 This is the Vorple startup stage rule:
 	if Vorple is supported:
-		follow the Vorple startup rules.
+		follow the during Vorple startup rules.
 
 To permit out-of-sequence commands:
 	(- EarlyInTurnSequence = true; -).
 
 Vorple pre-story communication finished is a truth state that varies. Vorple pre-story communication finished is false.
 
-Last Vorple startup (this is the loop pre-start prompt rule):
+Last during Vorple startup (this is the loop pre-start prompt rule):
 	permit out-of-sequence commands;
 	follow parse command rule;
 	follow generate action rule;
@@ -410,9 +419,9 @@ There are some limitations to this method. The most important one is that you ha
 
 (The above example assumes there's a global JavaScript variable "username" set at some point.)
 
-Notice that the parameter is a JavaScript expression, so commands that are given as such must be enclosed in quotes.
+Notice that the parameter is a JavaScript expression, so plain commands must be enclosed in quotes.
 
-On Inform's side the counterpart is a command that handles the sent the information.
+On Inform's side the counterpart is an action that handles the sent information.
 
 	Setting the username is an action out of world applying to one topic.
 	Understand "__set_name [text]" as setting the username.
@@ -428,7 +437,14 @@ The response is displayed as it would if the player gave the command normally, e
 
 To suppress the response as well, use "queue silent parser command".
 
-	queue silent parser command "'__do_whatever'"
+	queue silent parser command "'__do_whatever'";
+
+There's also a "primary" queue that is handled before the "normal" queue. In other regards it acts exactly like described above.
+
+    queue primary parser command "'x me'";
+    queue silent primary parser command "'__do_whatever'";
+
+The purpose of the primary queue is to make sure commands that are related to the current action are handled immediately after this turn. If they're put into the normal queue there's no guarantee how many other commands there might already be in the queue.
 
 Sometimes we need to communicate with the interpreter before the story has properly started. Using the "when play begins" rulebook is too late -- the command would be executed only after the rulebook has run and printed the intro, the banner, and the starting room description. For this purpose we can use the "Vorple startup" rulebook:
 
@@ -549,25 +565,32 @@ The system works by wrapping scrambled hints in named elements. Their contents c
 	Test me with "hints/reveal 1/reveal 2/reveal 3".
 
 
-Example: *** Sprechen Sie Deutsch - Passing data from the browser to the story file
+Example: *** Spy Games - Setting the story time to match the real-world time.
 
-We check what language the reader's browser is set to and offer a translated version of the story if one is available. The "window.navigator.language" JavaScript variable holds a language code, e.g. "de" or "en-GB". Except in Internet Explorer, but we'll keep the example simple this time. 
+The story file doesn't have access to the system time, but we can use Vorple to send the time from the web browser to the story file.
 
-	*: "Sprechen Sie Deutsch"
+The (new Date).getHours() and (new Date).getMinutes() methods we use to pull the real-world time are not Vorple-specific, but built-in to browsers as part of the standard JavaScript implementation.
+
+Once set, the story time will soon drop out of sync and will advance one minute per turn by default. Maintaining the synchronization would mean sending the current time every turn to the story file.
+
+	*: "Spy Games"
 
 	Include Vorple Core by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
+
+	Secret base is a room.
 	
-	There is a room.
+	During Vorple startup (this is the synchronize watches rule):
+		queue silent parser command "'__set_time '+(new Date).getHours()+':'+(new Date).getMinutes()".
 	
-	Vorple startup (this is the query browser language rule):
-		queue silent parser command "'__lang '+window.navigator.language".
-		
-	Checking browser language is an action out of world applying to one topic.
-	Understand "__lang [text]" as checking browser language.
+	Setting the time to is an action out of world applying to time.
+	Understand "__set_time [time]" as setting the time.
 	
-	Report checking browser language when the topic understood matches the text "de":
-			say "If you would prefer the German version, you can find it from ..."
+	Carry out setting the time to:
+		now the time of day is the time understood.
+	
+	When play begins:
+		say "It is [time of day] and you're about to infiltrate the villain's lair."
 		
 
 Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a third party service

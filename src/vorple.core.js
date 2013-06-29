@@ -1,38 +1,5 @@
 /* vorple.core.js - Vorple core functions */
 
-/** Function inheritance, by Crockford 
- * will be excluded from the test coverage 
- **/
-
-//#JSCOVERAGE_IF 0
-Function.prototype.inherits = function(Parent) {
-    var d = {}, p = (this.prototype = new Parent());
-    this.prototype.uber = function(name) {
-        if (!(name in d)) {
-            d[name] = 0;
-        }
-        var f, r, t = d[name], v = Parent.prototype;
-        if (t) {
-            while (t) {
-                v = v.constructor.prototype;
-                t -= 1;
-            }
-            f = v[name];
-        } else {
-            f = p[name];
-            if (f === this[name]) {
-                f = v[name];
-            }
-        }
-        d[name] += 1;
-        r = f.apply(this, Array.prototype.slice.apply(arguments, [1]));
-        d[name] -= 1;
-        return r;
-    };
-    return this;
-};
-//#JSCOVERAGE_ENDIF
-
 var vorple = window.vorple = {};
 
 /**
@@ -129,12 +96,10 @@ vorple.core = (function($){
                     msg = self.settings.confirmWindowClose;
                 }
 
-//#JSCOVERAGE_IF 0
                 // For IE and Firefox prior to version 4, according to MDN
                 if( e ) {
                     e.returnValue = msg;
                 }
-//#JSCOVERAGE_ENDIF
 
                 return msg;
             }
@@ -143,9 +108,7 @@ vorple.core = (function($){
         // make sure console.log() exists so that possible debugging commands
         // left in the published story don't halt the execution
         if( typeof window.console === 'undefined' ) {
-//#JSCOVERAGE_IF !window.console
             window.console = { log: function() {} };
-//#JSCOVERAGE_ENDIF
         }
     };
 
@@ -170,9 +133,9 @@ vorple.core = (function($){
     self.engine = function( name ) {
         // If the system object contains "setQuality",
         // the engine is most likely Undum.
-        var isUndum = !!( engine && typeof engine.setQuality === 'function' );
+        var isUndum = !!( engine && typeof engine.Situation === 'function' );
 
-        // Similar test for Parchment 
+        // Similar test for Parchment
         var isParchment = !!( engine && typeof engine.vms === 'object' );
 
         if( typeof name === 'string' ) {
@@ -263,7 +226,7 @@ vorple.core = (function($){
     /**
      * Returns the current release number.
      *
-     * @returns {integer}
+     * @returns {number}
      *
      * @public
      * @method
@@ -278,7 +241,7 @@ vorple.core = (function($){
     /**
      * Returns the current version number.
      *
-     * @returns {integer}
+     * @returns {number}
      *
      * @public
      * @method

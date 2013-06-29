@@ -69,7 +69,7 @@ vorple.media = (function($) {
      * @method
      * @name media~_fadeOut
      */    
-    _fadeOut = function( sound, speed, callback ) {
+    var _fadeOut = function( sound, speed, callback ) {
         if( typeof sound === 'undefined' ) {
             // sound already stopped or invalid sound
             if( typeof callback === 'function' ) {
@@ -104,7 +104,7 @@ vorple.media = (function($) {
      * @method
      * @name media~_playAudio
      */
-    _playAudio = function( options ) {
+    var _playAudio = function( options ) {
         // If we're loading a saved story, no sound effects shouldn't play
         // to avoid all of them playing at the same time.
         if( vorple.core.engine( 'undum' ) && !undum.isInteractive() ) {
@@ -687,8 +687,8 @@ vorple.media = (function($) {
             previousStatus = previousStatus.split( ',' );
 
             self.mute({
-                sound: ( previousStatus[ 0 ] == '1' ),
-                music: ( previousStatus[ 1 ] == '1' )
+                sound: ( previousStatus[ 0 ] === '1' ),
+                music: ( previousStatus.length > 1 && previousStatus[ 1 ] === '1' )
             });
         }
         
@@ -708,7 +708,7 @@ vorple.media = (function($) {
         $( document ).on( 'change', 'input.unmute', function() {
             var $this = $( this );
             
-            if( $this.val() == 'all' ) {
+            if( $this.val() === 'all' ) {
                 self.muteAll( !$this.is( ":checked" ) );
             }
             else {

@@ -46,7 +46,7 @@ vorple.undum = (function($) {
         }
         
         // disable all disposed links
-        $.each( undum.game._disposedLinks, function( index, href ) {
+        $.each( _disposedLinks, function( index, href ) {
             _removeDisposed( href );
         });
         

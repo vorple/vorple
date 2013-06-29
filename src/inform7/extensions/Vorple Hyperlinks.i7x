@@ -80,7 +80,7 @@ Suppressing both the command and the response is useful if the command triggers 
 If the story is run in a normal interpreter, the link description text is displayed but not the web site address (and of course the links won't work).
 
 
-Example: * Click to Learn More - Hyperlinks to external web pages, email links and action links, with fallback if Vorple is not available.
+Example: * Click to Learn More - Hyperlinks to external web pages, email links and action links, with a fallback if Vorple is not available.
 
 Email links ("mailto:") open an external mail program with the address pre-filled.
 
