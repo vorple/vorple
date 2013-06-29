@@ -16,16 +16,16 @@ vorple.core = (function($){
          * @private
          * @field
          * @name core~release
-         * @type integer
+         * @type number
          */
-        release = 4,
+        release = 5,
         /**
          * Version number
          *
          * @private
          * @field
          * @name core~version
-         * @type integer
+         * @type number
          */
         version = 2,
         engine;

@@ -1,4 +1,4 @@
-Vorple Multimedia (for Z-Machine only) by Juhana Leinonen begins here.
+Version 5 of Vorple Multimedia (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Displaying images, playing sounds and music, and showing videos from YouTube."
 

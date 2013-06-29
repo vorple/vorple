@@ -1,4 +1,4 @@
-Vorple Core (for Z-Machine only) by Juhana Leinonen begins here.
+Version 5 of Vorple Core (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Core functionality of Vorple, including JavaScript evaluation, HTML elements and turn type marking."
 

@@ -1,4 +1,4 @@
-Vorple Hyperlinks (for Z-Machine only) by Juhana Leinonen begins here.
+Version 5 of Vorple Hyperlinks (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Hyperlinks that either open a web site or execute a parser command."
 

@@ -1,4 +1,4 @@
-Vorple Memory (for Z-Machine only) by Juhana Leinonen begins here.
+Version 5 of Vorple Memory (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Saving short strings of texts across Vorple play sessions."
 

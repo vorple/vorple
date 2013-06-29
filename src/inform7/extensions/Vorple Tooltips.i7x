@@ -1,4 +1,4 @@
-Vorple Tooltips (for Z-Machine only) by Juhana Leinonen begins here.
+Version 5 of Vorple Tooltips (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Tooltips that can be activated on request or when the mouse cursor is moved over an element."
 
