@@ -1,6 +1,8 @@
+/*
 module( 'notify' );
 
 test( 'Notifications', function() {
+
     expect( 2 );
     
     vorple.notify.defaults.callback = {
@@ -31,3 +33,4 @@ test( 'Notifications', function() {
     // cleanup
     vorple.notify.closeAll();
 } );
+*/

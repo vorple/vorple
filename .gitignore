@@ -10,12 +10,8 @@
 /doc/inform7/examples/stories
 /doc/inform7/examples/list.html
 /lib
-/tests/inform7.test.inform/Build
-/tests/inform7.test.inform/Settings.plist
-/tests/inform7.test.inform/Skein.skein
-/tests/inform7.test.inform/notes.rtf
-/tests/inform7.test.inform/Index
 /tests/coverage
+/tests/lib/*.z8
 /stories/inform7/preview.inform/Build
 /stories/inform7/preview.inform/Settings.plist
 /stories/inform7/preview.inform/Skein.skein

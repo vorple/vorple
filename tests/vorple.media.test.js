@@ -1,8 +1,5 @@
 module( 'media' );
 
-$(function() {
-});
-
 test( 'playSound', function() {
     expect( 18 );
     
@@ -103,8 +100,8 @@ function audioTests() {
 }
 
 test( 'image', function() {
-    equal( vorple.media.image( 'dodo.jpg' ), '<img src="../stories/undum/everything/media/image/dodo.jpg" />' );
-    equal( vorple.media.image( '/dodo.jpg' ), '<img src="/dodo.jpg" />' );
+    equal( $( vorple.media.image( 'dodo.jpg' ) ).attr( 'src' ), vorple.media.defaults.imagePath + "/dodo.jpg", 'image relative path' );
+    equal( $( vorple.media.image( '/dodo.jpg' ) ).attr( 'src' ), '/dodo.jpg', 'image absolute path' );
 
     var $img = $( vorple.media.image( 'dodo.jpg', {
         classes : 'baz',

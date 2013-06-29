@@ -1,12 +1,12 @@
 module( 'core' );
 
 test( 'engine', function( ) {
-    equal( vorple.core.engine( ), 'undum', 'Undum loaded' );
-
+    vorple.core.init( undum );
+    equal( vorple.core.engine(), 'undum', 'Undum loaded' );
     equal( vorple.core.engine( 'undum' ), true, 'testing for Undum after it is loaded' );
-
-    equal( vorple.core.engine( 'foobar' ), false, 'testing for anything else after Undum has loaded' );
+    equal( vorple.core.engine( 'parchment' ), false, 'testing for anything else after Undum has loaded' );
 } );
+
 
 module( 'undum' );
 
@@ -23,8 +23,6 @@ test( 'dispose', function( ) {
     vorple.undum.dispose( [ 'testlink6', 'testlink7' ] );
     vorple.undum.dispose( [ 'testlink8', 'testlink9' ], 'testlink10' );
 
-    ok( $.inArray( 'testlink1', undum.game._disposedLinks ) > -1, 'disposed link in undum.game' );
-
     equal( $( '#disposeTest1' ).length, 0, 'link actually disposed' );
 
     ok( vorple.undum.isDisposed( 'testlink2' ), 'action link disposed' );
@@ -38,6 +36,7 @@ test( 'dispose', function( ) {
     ok( vorple.undum.isDisposed( 'testlink8' ) && vorple.undum.isDisposed( 'testlink9' ) && vorple.undum.isDisposed( 'testlink10' ), 'three links disposed as an array and a string' );
 
 } );
+
 
 test( 'isDisposed', function( ) {
     vorple.undum.dispose( 'isDisposed' );

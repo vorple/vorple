@@ -11,7 +11,7 @@ test( '$toHtml', function() {
         vorple.html.$toHtml( '<div></div>' ),
         false,
         'invalid parameter'
-    )
+    );
 });
 
 test( 'attributes', function() {
@@ -63,14 +63,14 @@ test( 'link', function() {
         id: 'buzz'
     } ) );
 
-    ok( $link.hasClass( 'baz' ) && $link.attr( 'id' ) == 'buzz', 'link options' );
+    ok( $link.hasClass( 'baz' ) && $link.attr( 'id' ) === 'buzz', 'link options' );
 
     equal( vorple.html.link( {
         url: 'foo',
         content: 'bar'
     } ), '<a href="foo">bar</a>', 'link object' );
 
-    var $link = $( vorple.html.link( {
+    $link = $( vorple.html.link( {
         url: 'foo',
         content: 'bar',
         options: {
@@ -79,7 +79,7 @@ test( 'link', function() {
         }
     } ) );
 
-    ok( $link.hasClass( 'baz' ) && $link.attr( 'id' ) == 'buzz', 'link object options' );
+    ok( $link.hasClass( 'baz' ) && $link.attr( 'id' ) === 'buzz', 'link object options' );
 
     // link popups
 
@@ -99,11 +99,13 @@ test( 'link', function() {
     equal( $( '#multipleLinkTest' ).length, 1, 'popup link created' );
 
     $( '#multipleLinkTest' ).click();
-    $popup = $( '.linkPopup' );
+    var $popup = $( '.linkPopup' );
 
     equal( $popup.length, 1, 'link popup created' );
-
     equal( $popup.find( 'a' ).length, 3, 'contains all the links' );
+
+    $( 'body' ).click();
+    ok( !$popup.is( ':visible' ), 'clicking outside popup hides it' );
 } );
 
 test( 'p', function() {

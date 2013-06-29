@@ -38,8 +38,9 @@ test( 'generateId', function() {
         var id = vorple.core.generateId();
 
         for( var j = 0; j < ids.length; ++j ) {
-            if( ids[ j ] == id ) {
+            if( ids[ j ] === id ) {
                 allUnique = false;
+                break;
             }
         }
 
@@ -51,12 +52,12 @@ test( 'generateId', function() {
         ids.push( id );
     }
 
-    ok( allUnique, 'All generated ids unique after ' + i + ' iterations' );
-    ok( noneStartsWithNumber, 'No id starts with a number' );
+    ok( allUnique, 'all generated ids unique after ' + i + ' iterations' );
+    ok( noneStartsWithNumber, 'no id starts with a number' );
 
-    equal( vorple.core.generateId().length, 32, 'Default length 32' );
+    equal( vorple.core.generateId().length, 32, 'default length 32' );
 
-    equal( vorple.core.generateId( 10 ).length, 10, 'Custom length' );
+    equal( vorple.core.generateId( 10 ).length, 10, 'custom length' );
 });
 
 test( 'onbeforeunload', function() {
@@ -99,18 +100,17 @@ test( 'onbeforeunload', function() {
     );
     
     // reset old settings
-    vorple.core.settings.confirmWindowClose = false;
-    vorple.core.settings.debug = false;
+    vorple.core.settings = oldSettings;
 });
 
 test( 'requireRelease', function() {
     var currentRel = vorple.core.getRelease();
 
-    ok( vorple.core.requireRelease( currentRel - 1 ), 'lower release' );
     ok( vorple.core.requireRelease( currentRel ), 'exact release' );
+    raises( function() { vorple.core.requireRelease( currentRel - 1 ); }, 'previous release' );
     raises( function() {
-        vorple.core.requireRelease( currentRel + 1 )
-    } );
+        vorple.core.requireRelease( currentRel + 1 );
+    }, 'next release' );
 
     raises( function() {
         vorple.core.requireRelease( currentRel + 1, 'Wrong release' );
@@ -120,7 +120,7 @@ test( 'requireRelease', function() {
 
     ok( vorple.core.requireRelease( [ currentRel, currentRel + 1 ] ), 'with max release' );
     raises( function() {
-        vorple.core.requireRelease( [ currentRel - 2, currentRel - 1 ] )
+        vorple.core.requireRelease( [ currentRel - 2, currentRel - 1 ] );
     } );
 
     var errorCallback = false;

@@ -6,6 +6,7 @@ module( 'parser' );
  * begins. Conveniently we can use this to unit test the
  * TurnComplete event at the same time.
  */
+
 test( 'events', function() {
 	// set a cookie for testing later
 	vorple.cookie.write( 'old', 'ok' );
@@ -17,13 +18,13 @@ test( 'events', function() {
 		start();
 	});
 
-    parchment.options.lib_path = '../vendor/parchment/';
-    parchment.options.default_story = [ "lib/unittest.z8" ];
+    parchment.options.lib_path = '/base/vendor/parchment/';
+    parchment.options.default_story = [ "/base/tests/lib/unittest.z8" ];
     parchment.options.lock_story = 1;
 
 	parchment.init();
-			
 	stop();
+
 	ok( true, 'TurnComplete event fired' );	
 });
 
@@ -36,9 +37,8 @@ test( 'engine detection', function() {
 
 module( 'I7 extensions' );
 
-
 /**
- *
+ * CORE
  */
 
 test( 'eval', function() {
@@ -62,11 +62,18 @@ test( 'escaping', function() {
 	equal( $.trim( $( '.previousTurn .turnContent' ).text() ),  '\\\"line-break\\\"', 'escaping quotes with custom line breaks' );
 });
 
+test( 'command queues', function() {
+    window.queueResult = '';
+    vorple.parser.sendCommand( 'try core queue' );
+    equal( window.queueResult, '1ab2cd3ef', 'command and subcommand queues interleaved correctly' );
+});
+
 
 /**
  * COOKIES
  */
 
+/*
 test( 'persistent storage', function() {
     vorple.parser.sendCommand( 'print cookie old' );
     equal( 
@@ -101,11 +108,13 @@ test( 'persistent storage', function() {
     vorple.cookie.remove( 'old' );
 });
 
+*/
 
 /**
  * NOTIFY
  */
 
+/*
 test( 'notifications', function() {
 	expect( 9 );
     $( '.noty_message' ).remove();
@@ -137,3 +146,4 @@ test( 'notifications', function() {
 	vorple.parser.sendCommand( 'try notify clear' );
 	
 });
+*/
