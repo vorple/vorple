@@ -248,7 +248,7 @@ vorple.parser = (function($) {
         }
 
         _interactive = false;
-        
+
         // send the command to the engine by triggering an enter keypress
         $input
             .val( cmd.command )
@@ -299,7 +299,7 @@ vorple.parser = (function($) {
                 if( filter.type === type && ( highestPriority === null || highestPriority.priority < filter.priority ) ) {
                     highestPriority = filter;
                 }
-            } );
+            });
             
             if( highestPriority ) {
                 result = highestPriority.filter( result, metadata );
@@ -881,6 +881,8 @@ input.focus().trigger(e);
                     return;
                 }
 
+                var $newTurn;
+
                 if( _turn.outputVisible ) {
                     // Replace the contents with filtered text
                     structure.$turn
@@ -890,7 +892,7 @@ input.focus().trigger(e);
                     // Now we can display the results.
     
                     // Put the turn contents into a container
-                    var $newTurn = $( '<div></div>' ).append( structure.$turn );
+                    $newTurn = $( '<div></div>' ).append( structure.$turn );
 
                 }
                 
@@ -911,9 +913,11 @@ input.focus().trigger(e);
                 }
 
                 // Set the new turn's classes
-                $newTurn
-                    .addClass( 'turnContent' )
-                    .addClass( filteredContents.turnClasses );
+                if( $newTurn ) {
+                    $newTurn
+                        .addClass( 'turnContent' )
+                        .addClass( filteredContents.turnClasses );
+                }
 
                 // Wrap it all into a div
                 var $newTurnContainer = $( '<div></div>' )

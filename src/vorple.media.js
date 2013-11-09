@@ -243,7 +243,12 @@ vorple.media = (function($) {
             var musicplayer = soundManager.getSoundById( 'vorpleBgMusic' );
             
             if( musicplayer ) {
-                types.music ? musicplayer.mute() : musicplayer.unmute();
+                if( types.music ) {
+                    musicplayer.mute();
+                }
+                else {
+                    musicplayer.unmute();
+                }
             }            
             
             // toggle muteboxes
@@ -266,7 +271,13 @@ vorple.media = (function($) {
                 }
                 
                 var soundplayer = soundManager.getSoundById( id );
-                types.sound ? soundplayer.mute() : soundplayer.unmute();
+
+                if( types.sound ) {
+                    soundplayer.mute();
+                }
+                else {
+                    soundplayer.unmute();
+                }
             });
 
             // toggle muteboxes

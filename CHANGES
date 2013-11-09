@@ -7,37 +7,38 @@ I7 Extensions
  - Updated to work with the new I7 release
  - Changed the author's name from "The Vorple Project" to "Juhana Leinonen"
    to conform with Inform 7 extension guidelines, added "Vorple" in front
-   of extension names, renamed "Hypertext" to "Hyperlinks"
+   of extension names, renamed "Hypertext" to "Hyperlinks" and
+   "Core" to "Common"
  - Added the "Vorple Screen Effects" extension
  - Added and fixed examples across the board
- - Core: Separate checks for new Z-machine 1.2 streams
-   and caching Vorple availability (closes #1) 
- - Core: Removed the Undo Output Control which is now unneeded
- - Core: Reworked the creation and placing content to HTML tags completely.
-   The only allowed phrases are now "place an ["element"] element 
+ - Common: Separate checks for new Z-machine 1.2 streams
+   and caching Vorple availability (closes #1)
+ - Common: Removed the Undo Output Control which is now unneeded
+ - Common: Reworked the creation and placing content to HTML tags completely.
+   The only allowed phrases are now "place an ["element"] element
    [called "name"] [reading "text"]", "display "text" in the element "name""
    and "display "text" in all "name" elements". The "display "text" in the
-   element "name"" phrase affects only the last available element.  
- - Core: Changed "eval" to "execute JavaScript command/code" and "queue code"
-   to "queue JavaScript command/code" 
- - Core: Moved transient text to the Screen Effects extension
- - Core: Added phrases to issue commands directly to the parser
+   element "name"" phrase affects only the last available element.
+ - Common: Changed "eval" to "execute JavaScript command/code" and "queue code"
+   to "queue JavaScript command/code"
+ - Common: Moved transient text to the Screen Effects extension
+ - Common: Added phrases to issue commands directly to the parser
  - Hyperlinks: Added a missing full stop at the end of first line which
    prevented the extension from installing correctly
  - Hyperlinks: Added an option for external links to open in the same
    window
- - Hyperlinks: Renamed the phrases to match the new phrasing in Core
+ - Hyperlinks: Renamed the phrases to match the new phrasing in Common
  - Hyperlinks: Leaving out the links' text content will default to the link
    target.
- - Multimedia: Replaced documentation about including resources with 
+ - Multimedia: Replaced documentation about including resources with
    the current version
- - Tooltips: Added the missing "Z-machine only" directive 
- - Tooltips: Renamed the say phrase to match the Core's new phrases
- - Tooltips: By default tooltips are shown only on the last matching element 
+ - Tooltips: Added the missing "Z-machine only" directive
+ - Tooltips: Renamed the say phrase to match the Common's new phrases
+ - Tooltips: By default tooltips are shown only on the last matching element
  - Tooltips: Phrases to create tooltips that are activated on mouseover
  - Tooltips: The delay for showing the tooltip can be supplied, and the default
    delay is dropped from 3 seconds to nothing.
-   
+
 
 Libraries
 ---------
@@ -48,17 +49,17 @@ Libraries
  - Updated jQuery to 1.8.3
  - Updated Noty
 
-   
+
 Modules
 -------
 
  - Changed the source code into a more modular system with actual private
    variables. Functions and variables previously prefixed with underscore
    can't be accessed outside the modules anymore.
- - Core: release and version are now private variables, their values can be
+ - Common: release and version are now private variables, their values can be
    retrieved with vorple.core.getRelease() and vorple.core.getVersion()
- - Core: Added vorple.core.getEngine() to give the current engine object
- - Core: requireRelease() now expects the release number to match exactly when
+ - Common: Added vorple.core.getEngine() to give the current engine object
+ - Common: requireRelease() now expects the release number to match exactly when
    given a single integer parameter
  - HTML: Fixed a bug where the second parameter to vorple.html.attributes()
    would have no effect
@@ -76,7 +77,7 @@ Modules
  - Parser: Support for commands issued from the story file before  play begins
  - Parser: A proper method for adding expressions to the JavaScript queue
    (vorple.parser.queueExpression())
- - Parser: Fixed a bug that prevented custom filters from running 
+ - Parser: Fixed a bug that prevented custom filters from running
    in some cases
  - Parser: scrollTo() accepts a callback function that runs after scrolling
    has finished
@@ -86,23 +87,24 @@ Modules
 Releases
 --------
 
+ - Replaced the old convoluted build script with Grunt
+ - The project is now self-contained, except for the Inform compilers
  - The library is now packaged to three complete minified library files that
    includes everything needed by the system, one for each engine and one
    "vanilla" with no engine. There's also a single JavaScript file that
    contains all third party libraries.
  - Using a single library file also fixes the problem where jQuery was not
-   loaded correctly in the Inform 7 interpreter template when there was no 
+   loaded correctly in the Inform 7 interpreter template when there was no
    Internet connection
  - Added a configurable loader message for Parchment
  - Fixed a rejected command's CSS rule so that it's styled correctly
- - Revised the build script
  - I7 now supports adding custom JavaScript and CSS files, so automatically
-   loaded "vorple.custom.js" and "vorple.custom.css" files are now removed 
+   loaded "vorple.custom.js" and "vorple.custom.css" files are now removed
  - CSS files used by Parchment are now compressed into a single
-   "vorple.min.css" file (and concatenated into "vorple.css" for debugging)
+   "vorple.css" file
  - Vorple is now dual licensed under MIT or CC-BY to avoid any issues with
    the I7 extension repository which implicitly assumes CC-BY license
- 
+
 
 
 Release 2.4 (2012-09-29)
@@ -118,7 +120,7 @@ Modules
    in preparation of namespaced parser events
  - Core: Made vorple.core.engine() return the engine that's used to initialize
    Vorple, not the engine that is otherwise available
- - Core: Removed the clickLink() method, replaced by vorple.undum.doClick() 
+ - Core: Removed the clickLink() method, replaced by vorple.undum.doClick()
    and vorple.undum.doLink()
  - Html: Fixed a bug where vorple.html.url() would not return correct values
    when no filename was given
@@ -133,8 +135,8 @@ Libraries
 ---------
 
  - Updated the Noty library
-    
-   
+
+
 Tests
 -----
 
@@ -157,7 +159,7 @@ Documentation
  - Added a section about link popups to the documentation and the API
  - Removed the vertical scroll bars from the code examples
  - Added a note about Mobile Safari audio limitations
- 
+
 
 Examples
 --------
@@ -174,19 +176,19 @@ Libraries
 
  - Added the noty library
  - Updated to latest qTip2
- 
+
 
 Modules
 -------
 
  - Added the notify module
-    
-    
+
+
 Releases
 --------
 
  - Added the missing qTip CSS file to the Undum theme
- 
+
 
 
 Release 1.2 (2012-02-04)
@@ -197,7 +199,7 @@ Documentation
 
  - Fixed the documentation for preloading multiple images.
  - Added a note about playing sounds in iOS devices.
- 
+
 
 Examples
 --------
@@ -209,14 +211,14 @@ Libraries
 ---------
 
  - Updated jQuery to 1.7.1.
- 
+
 
 Modules
 -------
 
  - Buttons: rewrote the button system.
  - Core: added Crockford's inheritance method.
- - Core: passing the Undum engine to the initializer is now mandatory. 
+ - Core: passing the Undum engine to the initializer is now mandatory.
  - Core: added a function for "clicking" links.
  - HTML: link() accepts the link building parameters as a single object.
  - HTML: link() can create multiple choice popups.

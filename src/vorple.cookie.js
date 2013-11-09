@@ -110,14 +110,16 @@ vorple.cookie = (function($) {
 
         content = String( content );
 
-        return( document.cookie = [
+        document.cookie = [
             encodeURIComponent( name ), '=',
             opt.raw ? content : encodeURIComponent( content ),
             opt.expires ? '; expires=' + opt.expires.toUTCString() : '', // use expires attribute, max-age is not supported by IE
             opt.path ? '; path=' + opt.path : '',
             opt.domain ? '; domain=' + opt.domain : '',
             opt.secure ? '; secure' : ''
-        ].join( '' ) );
+        ].join( '' );
+
+        return document.cookie;
     };
 
     return self;

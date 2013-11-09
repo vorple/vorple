@@ -172,7 +172,7 @@ vorple.undum = (function($) {
      * @name undum#doClick
      */
     self.doClick = function( url ) {
-    	vorple.core.getEngine().doClick( url );
+        vorple.core.getEngine().doClick( url );
     };
 
 
@@ -187,7 +187,7 @@ vorple.undum = (function($) {
      * @name undum#doLink
      */
     self.doLink = function( url ) {
-    	vorple.core.getEngine().doLink( url );
+        vorple.core.getEngine().doLink( url );
     };
 
 
