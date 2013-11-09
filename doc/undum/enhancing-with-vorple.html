@@ -30,29 +30,21 @@
     <![endif]-->
 </head>
 
-<body id="vorple">
+<body id="vorple" class="standalone">
 
 <div id="remote-header"></div>
 
-<script type="text/javascript">
+<script type="text/javascript" class="setup">
 $( function() {
-    // Import the vorple-if.com header.
-    // If viewed offline or on some other site this will fail gracefully.
-    $.get(
-        '/header.php?nohead=1',
-        function( data ) {        
-            $( '#remote-header' ).html( data );
-        }
-    );
-
-    vorple.tooltip.enable( 
+/*
+    vorple.tooltip.enable(
         '#headerCClogo',
         {
             position: { my: 'middle right', at: 'middle left' },
             content: { text: $( '#footer' ).html() }
         }
     );
-    
+  */  
     // Have the version numbers match the current one
     $( document ).on( 'init.vorple', function() {
         $( '.vorple-ver' ).html( vorple.core.version );
@@ -60,14 +52,23 @@ $( function() {
     });
 
     // Start Vorple
-    vorple.media.defaults.swfPath = '../../vendor/soundmanager'
+    vorple.media.defaults.swfPath = '../../vendor/soundmanager';
     vorple.core.init();
+
+    // Generate table of contents
+    $( '#toc' ).tableOfContents( "#undum_article", {
+        startLevel: 2,
+        depth: 5
+    }).before( '<h2>Table of Contents</h2>' );
+
+    // Syntax highlight code
+    SyntaxHighlighter.all()
 });
 </script>
 
-<article id="content">
+<article class="content" id="undum_article">
 
-<div id="coverpage">
+<div class="coverpage">
 
 <h1>Enhancing Undum Hypertext Fiction with Vorple</h1>
 
@@ -75,21 +76,15 @@ $( function() {
 
 </div>
 
-<div id="toc"></div>
+<div class="toc"></div>
 
-<script type="text/javascript">
-$( function() {
-    $( '#toc' ).tableOfContents( null, {
-        startLevel: 2,
-        depth: 5
-    }).before( '<h2>Table of Contents</h2>' );
+<script type="text/javascript" class="setup">
 
-    SyntaxHighlighter.all()
-});
 </script> 
 
 
 <h2>About</h2>
+
 
 <h3>Introduction to Vorple</h3>
 
@@ -573,7 +568,7 @@ undum.game.init = function( character, system ) {
 <p>
 Vorple adds enhancements to Undum's basic functionality 
 (with the <a href="#core">core module</a>) and extends its
-capabilities (with the <a href="#undum">Undum module</a>).
+capabilities (with the <a href="#undum-module">Undum module</a>).
 The setup and usage of these features are covered in the 
 respective module chapters.
 </p>
@@ -1855,7 +1850,7 @@ The defaults for the delay and duration are
 </p>
 
 
-<h3>Undum</h3>
+<h3 id="undum-module">Undum</h3>
 
 <h4>Disposable links</h4>
 

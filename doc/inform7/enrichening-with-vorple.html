@@ -24,40 +24,35 @@
     <![endif]-->
 </head>
 
-<body id="vorple">
+<body id="vorple" class="standalone">
 
-<div id="remote-header"></div>
+<script type="text/javascript" class="setup">
+    $( function() {
+        /*
+         vorple.tooltip.enable(
+         '#headerCClogo',
+         {
+         position: { my: 'middle right', at: 'middle left' },
+         content: { text: $( '#footer' ).html() }
+         }
+         );
+         */
+        // Start Vorple
+console.log( 'ok' );
+        vorple.media.defaults.swfPath = '../../vendor/soundmanager'
+        vorple.core.init();
+        $( '#toc' ).tableOfContents( "#inform7_article", {
+            startLevel: 2,
+            depth: 5
+        }).before( '<h2>Table of Contents</h2>' );
 
-
-<script type="text/javascript">
-$( function() {
-    // Import the vorple-if.com header.
-    // If viewed offline or on some other site this will fail gracefully.
-    $.get(
-        '/header.php?nohead=1',
-        function( data ) {        
-            $( '#remote-header' ).html( data );
-        }
-    );
-
-    vorple.tooltip.enable( 
-        '#headerCClogo',
-        {
-            position: { my: 'middle right', at: 'middle left' },
-            content: { text: $( '#footer' ).html() }
-        }
-    );
-    
-    // Start Vorple
-    vorple.media.defaults.swfPath = '../../vendor/soundmanager'
-    vorple.core.init(); 
-});
+        SyntaxHighlighter.all()
+    });
 </script>
 
+<article class="content" id="inform7_article">
 
-<article id="content">
-
-<div id="coverpage">
+<div class="coverpage">
 
 <h1>Enrichening Inform 7 Interactive Fiction with Vorple</h1>
 
@@ -65,25 +60,40 @@ $( function() {
 
 </div>
 
-<div id="toc"></div>
+<div class="toc"></div>
 
-<script type="text/javascript">
-$( function() {
-    $( '#toc' ).tableOfContents( null, {
-        startLevel: 2,
-        depth: 5
-    }).before( '<h2>Table of Contents</h2>' );
+<h2 id="about">About</h2>
 
-    SyntaxHighlighter.all()
-});
-</script> 
+<h3 id="howtoread">How to read this manual</h3>
+
+<p>
+    The manual is divided into three main parts:
+</p>
+
+<ul>
+    <li>
+        <strong>About</strong>: General information and introduction.
+    </li>
+    <li>
+        <strong>Basic usage</strong>:
+        Using the built-in features of Vorple.
+    </li>
+    <li>
+        <strong>Advanced usage</strong>:
+        Adding custom JavaScript and CSS files to a project.
+    </li>
+</ul>
+
+<p>
+    For most people it's enough to read the chapters in Basic usage. They tell
+    how to use the extensions that
+</p>
 
 
-<h2>About</h2>
 
-<h3>Introduction to Vorple</h3>
+<h3 id="intro_to_vorple">Introduction to Vorple</h3>
 
-<h4>The short version</h4>
+<h4 id="shortintro">The short version</h4>
 
 <p>
 Vorple is a library and a custom web interpreter for 
@@ -94,7 +104,7 @@ Take a look at the <a href="http://vorple-if.com/demo/#inform7">demo page</a> fo
 some examples. 
 </p>
 
-<h4>The long version</h4>
+<h4 id="longintro">The long version</h4>
 
 <p>
 Back in the days when home computers first entered consumer markets there were
@@ -212,7 +222,7 @@ Fiction with Vorple</a></em>.
 </p>
 
 
-<h3>Known limitations</h3>
+<h3 id="limitations">Known limitations</h3>
 
 <p>
 Vorple is experimental software and in early stages of development.
@@ -233,9 +243,9 @@ This is to avoid creating a competing non-standard specification.
 </p>
 
 
-<h2>Installation and usage</h2>
+<h2 id="installation_usage">Installation and usage</h2>
 
-<h3>Getting started</h3>
+<h3 id="gettingstarted">Getting started</h3>
 
 <p>
 
@@ -249,7 +259,7 @@ in a web browser instead.
 </p>
 
 
-<h2>Support</h2>
+<h2 id="support">Support</h2>
 
 <p>
 The best place to look for assistance is the community forum at

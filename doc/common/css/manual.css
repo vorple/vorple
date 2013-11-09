@@ -10,71 +10,71 @@ h1 {
 	font-size:14px !important;
 }
 
-#content {
+.standalone .content {
 	width:700px;
 	margin:0 auto;
 }
 	
-#content p, li {
+.content p, li {
 	line-height:1.4em;
 }
 
-#content a, #content a:visited, .fakeLink {
+.content a, .content a:visited, .fakeLink {
 	text-decoration:none;
 	color:#66a;
 }
 
-#content h2 {
+.content h2 {
 	font-family:'Redressed', cursive;
 	margin-top:2.5em;
 	font-size:200%;
 }
 
-#content h3 {
+.content h3 {
 	font-family:'Redressed', cursive;
 	margin-top:1.8em;
 	font-size:150%;
 	border-bottom:1px solid gray;
 }
 
-#content h4 {
+.content h4 {
 	font-family:'Redressed', cursive;
 	margin-top:1.8em;
 	font-size:120%;
 }
 
-#content h5, .resources {
+.content h5, .resources {
 	font-family:'Redressed', cursive;
 	font-size:100%;
 	font-weight:bold;
 }
 
-#toc a {
+.toc a {
 	display:block;
 	text-decoration:none;
 	margin-bottom:0.3em;
 	font-size:16px;
 }
 
-#toc .toc-depth-1 {
+.toc .toc-depth-1 {
 	font-weight:bold;
 	font-size:16px;
 	margin-top:1.2em;
 	text-decoration:underline;
 }
 
-#toc .toc-depth-2 {
+.toc .toc-depth-2 {
 	font-style:italic;
 	font-size:15px;
 	padding-left:1em;
 }
 
-#toc .toc-depth-3 {
+.toc .toc-depth-3 {
 	padding-left:2em;
 	font-size:14px;
 }
 
-#toc .toc-depth-4 {
+.toc .toc-depth-4 {
 	padding-left:3em;
 	font-size:13px;
 }
@@ -109,11 +109,11 @@ table.definitions code {
 	padding:0;
 }
 
-#coverpage {
+.coverpage {
 	margin:100px 0 150px 0;
 }
 
-#coverpage h1 {
+.coverpage h1 {
 	text-align:center;
 }
 
@@ -217,7 +217,7 @@ table.definitions code {
 		page-break-after:avoid;
 	}
 	
-	#toc {
+	.toc {
 		-moz-column-count:2;
 		-webkit-column-count:2;
 		column-count:2;
