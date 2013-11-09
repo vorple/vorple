@@ -2,8 +2,7 @@ Version 5 of Vorple Multimedia (for Z-Machine only) by Juhana Leinonen begins he
 
 "Displaying images, playing sounds and music, and showing videos from YouTube."
 
-Include Vorple Core by Juhana Leinonen.
-
+Include Vorple Common by Juhana Leinonen.
 Use authorial modesty.
 
 
@@ -209,7 +208,7 @@ With small modifications the code could be used with individual rooms or scenes.
 
 The first part is identical with Port Royal 3. Vorple-specific code starts from "Chapter Background music" at the end.
 
-	*:"1691"
+	*: "1691"
 		
 	Chapter 1 - World
 	

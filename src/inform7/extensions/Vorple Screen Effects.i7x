@@ -2,9 +2,8 @@ Version 5 of Vorple Screen Effects by Juhana Leinonen begins here.
 
 "Vorple equivalent of Basic Screen Effects by Emily Short. Waiting for a keypress, clearing the screen, aligning, styling and coloring text."
 
+Include Vorple Common by Juhana Leinonen.
 Use authorial modesty.
-
-Include Vorple Core by Juhana Leinonen.
 
 
 Section 1 - Spacing and Pausing
@@ -717,7 +716,9 @@ Example: **** Monty Hall - A game show where the result is displayed with flashy
 
 Imagine a game show where you are presented with three doors. Behind one of them is a brand new car, and behind the rest are goats. You get to choose one of the doors. Then the game host opens one of the other doors revealing a goat, and you are given a chance to either switch to the one remaining door or open the one you picked originally. The Monty Hall paradox is a counterintuitive statistical fact that switching the door gives a much higher chance at finding a car behind it.
 
-We'll display the game's result using a custom-made CSS style file that makes the text spin and zoom in. It also styles the text and uses a font downloaded from Google Fonts (http://www.google.com/fonts/). The CSS file can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources/css/montyhall.css.
+We'll display the game's result using a custom-made CSS style file that makes the text spin and zoom in. It also styles the text and uses a font downloaded from Google Fonts (http://www.google.com/fonts/). The last line of the example triggers the animation.
+
+The CSS file can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources/css/montyhall.css.
 
 	*: "Monty Hall"
 	

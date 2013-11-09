@@ -2,8 +2,7 @@ Version 5 of Vorple Hyperlinks (for Z-Machine only) by Juhana Leinonen begins he
 
 "Hyperlinks that either open a web site or execute a parser command."
 
-Include Vorple Core by Juhana Leinonen.
-
+Include Vorple Common by Juhana Leinonen.
 Use authorial modesty.
 
 To place a/-- link to a/the/-- web site (url - text) reading (txt - text), in the same window:

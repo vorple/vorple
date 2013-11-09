@@ -582,7 +582,7 @@ Once set, the story time will soon drop out of sync and will advance one minute 
 	
 	During Vorple startup (this is the synchronize watches rule):
 		queue silent parser command "'__set_time '+(new Date).getHours()+':'+(new Date).getMinutes()".
-	
+
 	Setting the time to is an action out of world applying to time.
 	Understand "__set_time [time]" as setting the time.
 	
@@ -591,7 +591,7 @@ Once set, the story time will soon drop out of sync and will advance one minute 
 	
 	When play begins:
 		say "It is [time of day] and you're about to infiltrate the villain's lair."
-		
+
 
 Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a third party service
 

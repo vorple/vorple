@@ -2,7 +2,7 @@ Version 5 of Vorple Memory (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Saving short strings of texts across Vorple play sessions."
 
-Include Vorple Core by Juhana Leinonen.
+Include Vorple Common by Juhana Leinonen.
 Use authorial modesty.
 
 Table of Browser Cookies
