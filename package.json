@@ -1,0 +1,39 @@
+{
+  "name": "Vorple",
+  "version": "2.5.0",
+  "description": "User interface library for interactive fiction",
+  "author": "Juhana Leinonen <vorple@nitku.net>",
+  "license": "MIT/CC-BY",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/juhana/vorple.git"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-closure-compiler": "0.0.21",
+    "grunt-exec": "~0.4.2",
+    "grunt-jsdoc": "~0.4.1",
+    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-jshint": "~0.7.1",
+    "grunt-contrib-compress": "~0.5.2",
+    "grunt-contrib-copy": "~0.4.1",
+    "grunt-zip": "~0.10.0",
+    "grunt-template": "~0.2.1",
+    "execSync": "~1.0.1-pre",
+    "karma-script-launcher": "~0.1.0",
+    "karma-firefox-launcher": "~0.1.0",
+    "karma-chrome-launcher": "~0.1.0",
+    "karma-html2js-preprocessor": "~0.1.0",
+    "karma-jasmine": "~0.1.3",
+    "karma-requirejs": "~0.1.0",
+    "karma-coffee-preprocessor": "~0.1.0",
+    "karma-phantomjs-launcher": "~0.1.0",
+    "karma": "~0.10.4",
+    "grunt-karma": "~0.6.2",
+    "karma-coverage": "~0.1.2",
+    "karma-safari-launcher": "~0.1.1",
+    "karma-opera-launcher": "~0.1.0",
+    "qunitjs": "~1.12.0",
+    "karma-qunit": "~0.1.1"
+  }
+}

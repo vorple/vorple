@@ -1,54 +1,53 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset="utf-8">
-		<title>Vorple library unit tests</title>
-		<link rel="stylesheet" href="lib/qunit-git.css">
-		
-		<script src="../lib/3rdparty-bundle.min.js"></script>
-		<script src="../src/vorple.core.js"></script>
-		<script src="../src/vorple.cookie.js"></script>
-		<script src="../src/vorple.html.js"></script>
-		<script src="../src/vorple.media.js"></script>
-		<script src="../src/vorple.notify.js"></script>
-	        <script src="../src/vorple.parser.js"></script>
-		<script src="../src/vorple.tooltip.js"></script>
+    <head>
+        <meta charset="utf-8">
+        <title>Vorple unit tests</title>
+        <link rel="stylesheet" href="lib/qunit-git.css">
+        
+        <script src="../release/lib/vorple.3rdparty-bundle.min.js"></script>
+        <script src="../vendor/parchment.min.js"></script>
+        <script src="../vendor/undum.js"></script>
+        <script src="../src/vorple.core.js"></script>
+        <script src="../src/vorple.cookie.js"></script>
+        <script src="../src/vorple.html.js"></script>
+        <script src="../src/vorple.media.js"></script>
+        <script src="../src/vorple.notify.js"></script>
+        <script src="../src/vorple.parser.js"></script>
+        <script src="../src/vorple.tooltip.js"></script>
 
-		<script src="../vendor/parchment.min.js"></script>
-		<!--
-		<script src="../../if-recorder/vendor/jquery.browser.min.js"></script>
-		<script src="../../if-recorder/vendor/if-recorder.min.js"></script>
-		<script src="../../recorder-vorple/parchment.transcript.settings.js"></script>
-		-->
         <link rel="stylesheet" href="../lib/vorple.css">
-	</head>
-	<body>
-		<div id="qunit"></div>
-		<div id="qunit-fixture"></div>
-		
-		<script src="lib/qunit-git.js"></script>
+    </head>
+    <body>
+        <div id="qunit"></div>
+        <div id="qunit-fixture"></div>
+        
+        <script src="lib/qunit-git.js"></script>
 
-		<script>
-		  // We can't let QUnit reorder tests since it might screw up
-		  // Parchment's asynchronous script loading. We must wait for
-		  // Parchment to fully load before we can run any tests with it.
-		  QUnit.config.reorder = false;
+        <script>
+          // We can't let QUnit reorder tests since it might screw up
+          // Parchment's asynchronous script loading. We must wait for
+          // Parchment to fully load before we can run any tests with it.
+          QUnit.config.reorder = false;
 
-		  // Initialize Vorple
-		  $(function() {
-			vorple.media.defaults.swfPath = '../vendor/soundmanager';
+          // Initialize Vorple
+          $(function() {
+            vorple.media.defaults.swfPath = '../vendor/soundmanager';
             vorple.media.defaults.audioPath = '../stories/undum/everything/media/audio';
             vorple.media.defaults.imagePath = '../stories/undum/everything/media/image';
             vorple.media.defaults.musicPath = '../stories/undum/everything/media/music';
-		    vorple.core.init();
-		  });
-		</script>
+            vorple.core.init();
+          });
+        </script>
 
-		<script src="vorple.core.test.js"></script>
-		<script src="vorple.html.test.js"></script>
-		<script src="vorple.media.test.js"></script>
-		<script src="vorple.notify.test.js"></script>
-		<script src="vorple.parser.test.js"></script>
-		<script src="vorple.tooltip.test.js"></script>
-	</body>
+        <script src="lib/dummy-undum.js"></script>
+        <script src="vorple.core.test.js"></script>
+        <script src="vorple.cookie.test.js"></script>
+        <script src="vorple.html.test.js"></script>
+        <script src="vorple.media.test.js"></script>
+        <script src="vorple.notify.test.js"></script>
+        <script src="vorple.parser.test.js"></script>
+        <script src="vorple.tooltip.test.js"></script>
+        <script src="vorple.undum.test.js"></script>
+    </body>
 </html>

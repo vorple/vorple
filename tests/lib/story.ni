@@ -28,8 +28,7 @@ Volume Extensions
 
 Book Core
 
-Include Vorple Core by Juhana Leinonen.
-Include Basic Screen Effects by Emily Short.
+Include Vorple Common by Juhana Leinonen.
 
 Carry out testing "core eval":
 	execute JavaScript command "window.evalTest = true".
@@ -93,6 +92,11 @@ Carry out testing "notify bottom left":
 Carry out testing "notify change default":
 	set default notification position to top left;
 	show notification "test".
+
+
+Book Screen Effects
+
+Include Vorple Screen Effects by Juhana Leinonen.
 
 
 Book Tooltips
