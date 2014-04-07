@@ -44,21 +44,12 @@ Constant HDR_SPECREVISION  $32;
 	rtrue;
 ];
 
-[ Vp_IsHTML val ;
-	! Checking for HTML stream support
-	if ( Vp_IsZ12() == false || Gestalt($31, 0, 0) == 0 ) rfalse;
-	rtrue;
-];
-
 Global Vp_vorpleSupported; 
 
 -) after "Definitions.i6t".
 
 To open JavaScript channel: (- @output_stream 5 streambuf; -).
 To close JavaScript channel: (- @output_stream( -5 ); -).
-
-To open HTML channel: (- @output_stream 6 streambuf; -).
-To close HTML channel: (- @output_stream( -6 ); -).
 
 To open HTML tag (name - text) called (classes - text):
 	execute JavaScript command "vorple.parser.openTag('[name]','[classes]')".
@@ -83,7 +74,7 @@ To queue JavaScript code/command (javascript code - text):
 Section 2 - Vorple support detection
 
 To set Vorple support status:
-	(- Vp_vorpleSupported = ( Vp_IsJs() && Vp_IsHTML() ); -);
+	(- Vp_vorpleSupported = ( Vp_IsJs() ); -);
 
 First startup rule (this is the set a flag for whether Vorple is supported rule):
 	[first tell the story file that we're Vorple-capable...]
@@ -91,7 +82,8 @@ First startup rule (this is the set a flag for whether Vorple is supported rule)
 	[...then tell the same to the interpreter.]
 	execute JavaScript command "vorple.parser.setVorpleStory()".
 
-To decide whether Vorple/JavaScript is supported/available: (- (Vp_vorpleSupported) -).
+To decide whether Vorple/JavaScript is supported/available: 
+    (- (Vp_vorpleSupported) -).
 
 To decide whether Vorple/JavaScript is not supported/available:
 	if Vorple is supported, decide no;
@@ -286,7 +278,7 @@ Vorple Common ends here.
 
 The Vorple Common extension defines some of the basic structure that's needed for Vorple to communicate with the story file.
 
-Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage.
+Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage. For more practical usage of Vorple, see other Vorple extensions that implement features like multimedia support and hyperlinks.
 
 
 Chapter: Vorple setup
@@ -303,9 +295,9 @@ At the moment Vorple supports Z-machine only.
 
 Chapter: Compatibility with offline interpreters
 
-Even though Vorple can accomplish many things that are just impossible to do with traditional interpreters, it's always a good idea to make the story playable text-only as well if at all possible. There are a lot of players to whom a web interpreter or Vorple's features aren't accessible, and it's the Right Thing To Do to not exclude people if it's possible to include them.
+Even though Vorple can accomplish many things that are plain impossible to do with traditional interpreters, it's always a good idea to make the story playable text-only as well if at all possible. There are many players to whom a web interpreter or Vorple's features aren't accessible, and it's the Right Thing To Do to not exclude people if it's possible to include them.
 
-A story file can detect if it's being run on an interpreter that supports Vorple (or more specifically, on an interpreter that supports the Z-machine v. 1.2 draft). The same story file can therefore be run on both the Vorple web interpreter and other interpreters that have text-only features and display substitute content if necessary. We can test for Vorple's presence with "if Vorple is supported":
+A story file can detect if it's being run on an interpreter that supports Vorple. The same story file can therefore be run on both the Vorple web interpreter and other interpreters that have text-only features and display substitute content if necessary. We can test for Vorple's presence with "if Vorple is supported":
 
 	Instead of going north:
 		if Vorple is supported:
@@ -317,15 +309,20 @@ A story file can detect if it's being run on an interpreter that supports Vorple
 
 The say phrase in the above example is called a "fallback" and it's displayed only in normal non-Vorple interpreters.
 
+All Vorple features do nothing by default if they're not supported by the interpreter. If substitute content is not necessary, we don't need to specifically check for Vorple compatibility:
+
+    Instead of going north:
+        play sound file "marching_band.mp3".
+
 
 Chapter: Embedding HTML elements
 
 We can embed simple HTML elements into story text with some helper phrases.
 
-	place "article" element;
-	place "h1" element called "title";
-	place block level element called "inventory";
-	place inline element called "name";
+	place an "article" element;
+	place a "h1" element called "title";
+	place a block level element called "inventory";
+	place an inline element called "name";
 
 The previous example generates this markup:
 
@@ -336,30 +333,31 @@ The previous example generates this markup:
 	
 The element's name should be one word only and a valid CSS class name. It's safest to only use letters, numbers, underscores and dashes. The name "transient" is special: all elements called "transient" will fade out at the start of the next turn.
 
-The elements are always created empty and with a closing tag. Contents can be added on creation:   
+Contents can be added on creation:
 
-	place "h1" element called "title" reading "An exciting story";
-	place "h2" element reading "Story so far:";
+	place a "h1" element called "title" reading "An exciting story";
+	place a "h2" element reading "Story so far:";
 
-...or after they've been created:
+...or after the elements have been created:
 	
 	say "You shall be known as ";
-	place inline element called "name";
+	place an inline element called "name";
 	display "Anonymous Adventurer" in the element called "name";
 	
 This technique can be used to modify the story output later (see example "Scrambled Eggs").
 
 In the above examples the element contents should be plain text only. Trying to add nested tags or text styles will lead to erratic behavior. For longer and more complex contents the tags can be opened and closed manually:
 
-	open HTML tag "div" called "letter";
-	place "h2" element reading "Dear Esther,";
-	say "I'm writing to tell you...";
-	close HTML tag.
+    Report reading the letter:
+	    open HTML tag "div" called "letter";
+	    place "h2" element reading "Dear Esther,";
+	    say "I'm writing to tell you...";
+	    close HTML tag.
 
 
 Chapter: Turn types
 
-Vorple shows different turn types differently: parser errors fade out the next turn, out of world actions are shown in a separate notification and so on.
+The Vorple interpreter has multiple ways to display content, based on its type. Parser errors fade out the next turn, out of world actions are shown in a separate notification and so on.
 
 Sometimes we want to change that behavior. The turn type can be overridden manually:
 
@@ -393,7 +391,7 @@ When evaluating JavaScript expressions, quotation marks must often be exactly ri
 	When play begins:
 		greet "William 'Bill' O'Malley".
 
-The string being evaluated will be "Hello William "Bill" O'Malley!" which will cause an error because of unescaped double quotes. Changing the string delimiters to single quotes wouldn't help since there's an unescaped single quote as well inside the string.
+This leads to a JavaScript error because all single quotes (except the one in "O'Malley") are converted to double quotes, which in turn leads to a JavaScript syntax error. Changing the string delimiters to single quotes wouldn't help because there's an unescaped single quote as well inside the string.
 
 To escape text we can preface it with "escaped":
 
@@ -409,7 +407,7 @@ By default newlines are removed. If we want to preserve them, or turn them into 
 		execute JavaScript command "alert( 'Hello [safe name]!' )".
 
 
-Chapter: Communication with the interpreter
+Chapter: Hidden parser commands
 
 Instructing the interpreter from the story file is easy with "execute JavaScript command" phrases, but passing information to the other direction (from interpreter to story file) is not as simple. The interpreter/story file model wasn't designed for it and the only tool we have in our use is to have the interpreter 'type' commands to the prompt hidden from the user.
 
@@ -457,6 +455,8 @@ Passing commands to the story file can be a powerful tool, but it should be used
 
 Another drawback of this method is that the length of the command is limited. Any command that has more than 119 characters will be silently truncated.
 
+A more practical way of communication between the story file and the interpreter will be introduced in later versions of Vorple.
+
 		
 Example: ** Convenience Store - Displaying the inventory styled as a HTML list
 
@@ -491,7 +491,7 @@ We'll display the inventory listing using HTML unordered lists ("ul"). It might 
 
 Example: ** Scrambled Eggs - Hints that are initially shown obscured and revealed on request
 
-The system works by wrapping scrambled hints in named elements. Their contents can then be later replaced with unscrambled text.
+The hint system works by wrapping scrambled hints in named elements. Their contents can then be later replaced with unscrambled text.
 
 	
 	*: "Scrambled Eggs"
@@ -612,7 +612,7 @@ Here we set up an encyclopedia that can be used to query articles from Wikipedia
 		place a block level element called "dictionary-entry";
 		execute JavaScript command "wikipedia_query('[escaped topic understood]')".
 		
-	Carry out looking up when Vorple is not supported:
+	Report looking up when Vorple is not supported:
 		say "You find the correct volume and learn about [topic understood].".
 	 	
 	Test me with "look up ducks/look up mars/look up interactive fiction".

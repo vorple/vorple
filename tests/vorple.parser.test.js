@@ -18,8 +18,8 @@ test( 'events', function() {
 		start();
 	});
 
-    parchment.options.lib_path = '/base/vendor/parchment/';
-    parchment.options.default_story = [ "/base/tests/lib/unittest.z8" ];
+    parchment.options.lib_path = '../vendor/parchment/';
+    parchment.options.default_story = [ "lib/unittest.z8" ];
     parchment.options.lock_story = 1;
 
 	parchment.init();

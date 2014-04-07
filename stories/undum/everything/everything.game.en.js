@@ -769,7 +769,7 @@ undum.game.init = function( character, system ) {
     vorple.core.settings.confirmWindowClose = true;
     vorple.core.settings.debug = true;
     
-    vorple.undum.settings.disposableLinks = [ 'dispose-now' ];
+    vorple.undum.defaults.disposableLinks = [ 'dispose-now' ];
  
     vorple.media.defaults.swfPath = '../../../vendor/soundmanager';
     

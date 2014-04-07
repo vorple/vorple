@@ -16,9 +16,9 @@ $(function() {
     );
 
     // Initialize Vorple
-    vorple.media.defaults.swfPath = '/base/vendor/soundmanager';
-    vorple.media.defaults.audioPath = '/base/stories/undum/everything/media/audio';
-    vorple.media.defaults.imagePath = '/base/stories/undum/everything/media/image';
-    vorple.media.defaults.musicPath = '/base/stories/undum/everything/media/music';
+    vorple.media.defaults.swfPath = '../vendor/soundmanager';
+    vorple.media.defaults.audioPath = '../stories/undum/everything/media/audio';
+    vorple.media.defaults.imagePath = '../stories/undum/everything/media/image';
+    vorple.media.defaults.musicPath = '../stories/undum/everything/media/music';
     vorple.core.init();
 });

@@ -7,3 +7,4 @@ node_modules
 tests/coverage
 tests/lib/*.z8
 release
+build

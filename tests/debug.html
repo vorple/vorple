@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>Vorple debugging</title>
+
+    <script src="../release/lib/vorple.3rdparty-bundle.min.js"></script>
+    <script src="../vendor/parchment.min.js"></script>
+    <script src="../src/vorple.core.js"></script>
+    <script src="../src/vorple.cookie.js"></script>
+    <script src="../src/vorple.html.js"></script>
+    <script src="../src/vorple.media.js"></script>
+    <script src="../src/vorple.notify.js"></script>
+    <script src="../src/vorple.parser.js"></script>
+    <script src="../src/vorple.tooltip.js"></script>
+
+    <link rel="stylesheet" href="../vendor/parchment/parchment.css">
+    <link rel="stylesheet" href="../src/inform7/templates/Vorple/vorple.css">
+    <script>
+        $( function() {
+            $( '#vorpleLoader' ).text( 'Loading...' );
+        });
+
+    // Initialize Vorple
+        $(function() {
+            parchment.options.lib_path = '../vendor/parchment/';
+            parchment.options.lock_story = 0;
+            vorple.media.defaults.swfPath = '../vendor/soundmanager';
+            vorple.media.defaults.audioPath = '../stories/undum/everything/media/audio';
+            vorple.media.defaults.imagePath = '../stories/undum/everything/media/image';
+            vorple.media.defaults.musicPath = '../stories/undum/everything/media/music';
+            vorple.core.init( parchment );
+            parchment.init();
+        });
+    </script>
+</head>
+
+<body class="play">
+<div id="vorpleContainer">
+    <div id="vorple"><div id="vorpleLoader"></div></div>
+    <div id="vorpleInput"></div>
+    <div id="parchment"></div>
+    <div class="clearAll"></div>
+</div>
+
+</body>
+</body>
+</html>

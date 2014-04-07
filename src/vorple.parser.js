@@ -665,7 +665,6 @@ vorple.parser = (function($) {
      */
     $( document ).on( 'init.vorple', function() {
         if( vorple.core.engine( 'parchment' ) ) {
-
             // make sure the correct containers exist, create them if not
             if( $( '#vorpleContainer' ).length === 0 ) {
                 $( '<div id="vorpleContainer"></div>' ).appendTo( 'body' );
@@ -756,9 +755,9 @@ vorple.parser = (function($) {
                     {
                         return false;
                     }
-else {
-input.focus().trigger(e);
-}
+                    else {
+                       input.focus().trigger(e);
+                    }
                     
                     if( _turn.mode === 'char' ) {
                         $( 'input.TextInput' ).trigger( $.Event( 'keypress', { which: e.which } ) );
