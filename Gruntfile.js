@@ -3,7 +3,8 @@ module.exports = function( grunt ) {
     var exec = require('execSync');
 
     var thirdpartyLibraries = [
-        'vendor/jquery-1.8.3.min.js',
+        'vendor/jquery-1.11.0.min.js',
+        'vendor/jquery-migrate-1.2.1.min.js',
         'vendor/jquery.noty.js',
         'vendor/noty/default.js',
         'vendor/noty/layouts.js',
@@ -111,8 +112,8 @@ module.exports = function( grunt ) {
 
                     listHTML += '<h4>' + examplename + '</h4>'
                         + '<div class="blurb">' + header[ 4 ] + '</div>'
-                        + '<div class="dl_links"><a href="/vorple/doc/inform7/examples/interpreter.html?story=stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.z8">play</a>'
-                        + '&mdash; <a href="/vorple/doc/inform7/examples/stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.ni">view source</a></div>\n';
+                        + '<div class="dl_links"><a href="interpreter.html?story=stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.z8">play</a>'
+                        + '&mdash; <a href="stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.ni">view source</a></div>\n';
                 }
                 else if( examplename && ( lines[ j ].indexOf( '\t' ) === 0 || lines[ j ].replace( /\s/, '' ) === '' ) ) {
                     nifiles[ examplename ] += lines[ j ].substring( 1 ).replace( /^\*: /, '' ) + '\n';
