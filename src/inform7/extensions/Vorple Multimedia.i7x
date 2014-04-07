@@ -142,7 +142,7 @@ The string of numbers and letters is the id of the video we want to show. The id
 Example: * Serinette - Basic example of playing music and sound effects.
 
 The serinette (a type of music box) plays music when it opens and a sound effect when it's wound. We'll also show its picture when it's examined.
-	
+
 	*: "Serinette"
 	
 	Include Vorple Multimedia by Juhana Leinonen.
@@ -150,11 +150,21 @@ The serinette (a type of music box) plays music when it opens and a sound effect
 	
 	Release along with the file "winding.mp3".
 	Release along with the file "musicbox.mp3".
-	
+	Release along with the file "serinette.jpg".
+
+	To start playing the tune:
+		play music file "musicbox.mp3".
+
 	Drawing room is a room. "The drawing room is tastefully decorated."
 	
 	The serinette is an openable closed container in the drawing room. "A beautiful music box sits on a table." The description is "There's a winding key behind the box."
 	Understand "music" and "box" as the serinette.
+
+	Before examining the serinette:
+		display image "serinette.jpg", centered.
+
+	When play begins:
+		preload image "serinette.jpg".
 	
 	A winding key is part of the serinette.
 	
@@ -182,10 +192,7 @@ The serinette (a type of music box) plays music when it opens and a sound effect
 	
 	Instead of inserting something into the serinette:
 		say "It's not the kind of box that can contain anything other than its own mechanism."
-			
-	To start playing the tune:
-		play music file "musicbox.mp3".
-		
+
 	Carry out opening the serinette when the serinette is wound:
 		start playing the tune.
 		
@@ -206,7 +213,9 @@ When the player moves around the map the music will change according to the regi
 
 With small modifications the code could be used with individual rooms or scenes.
 
-The first part is identical with Port Royal 3. Vorple-specific code starts from "Chapter Background music" at the end.
+The first part is identical with Port Royal 3. Vorple-specific code starts from chapter 2 at the end.
+
+Audio credits: RTB45 (inland.mp3, https://www.freesound.org/people/RTB45/), avakas (waterfront.mp3, https://www.freesound.org/people/avakas/), Benboncan (wind.mp3, https://www.freesound.org/people/Benboncan/), LondonSoundSurvey (tavern.mp3, https://www.freesound.org/people/LondonSoundSurvey/)
 
 	*: "1691"
 		
@@ -275,7 +284,7 @@ The first part is identical with Port Royal 3. Vorple-specific code starts from 
 	
 	The background audio of Inland is "inland.mp3".
 	The background audio of Waterfront is "waterfront.mp3".
-	The background audio of Military Holdings is "military.mp3".
+	The background audio of Military Holdings is "wind.mp3".
 	The background audio of Tavern is "tavern.mp3".
 	
 	Every turn when the map region of the location is not nothing and the background audio of the map region of the location is not the current audio and the background audio of the map region of the location is not "" (this is the play background audio rule):
@@ -283,8 +292,8 @@ The first part is identical with Port Royal 3. Vorple-specific code starts from 
 		now the current audio is the background audio of the map region of the location.
 		
 	[Every turn rules aren't run on the first turn so we'll run it manually.]
-	When play begins:
-		if  the map region of the location is not nothing and the background audio of the map region of the location is not "":
+	When play begins (this is the start initial background audio rule):
+		if the map region of the location is not nothing and the background audio of the map region of the location is not "":
 			follow the play background audio rule.		
 
 	Test me with "s/s/n/e/e/s/in".

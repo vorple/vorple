@@ -1,4 +1,4 @@
-Release 2.5 (2013-??-??)
+Release 2.5 (2014-??-??)
 ========================
 
 I7 Extensions
@@ -46,7 +46,8 @@ Libraries
  - Updated Parchment, should work with IE8 now. Also fixes the bug where
    escaping a single quote would crash Parchment.
  - Replaced jPlayer with SoundManager 2
- - Updated jQuery to 1.8.3
+ - Updated jQuery to 1.11.0 (with jQuery Migrate to provide compatibility
+   with Parchment and Undum)
  - Updated Noty
 
 

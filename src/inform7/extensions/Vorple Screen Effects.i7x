@@ -712,7 +712,7 @@ The letter in this example story has all the styles defined in the extension, pl
 	Test me with "open mailbox/read letter/z".
 
 
-Example: **** Monty Hall - A game show where the result is displayed with flashy animated text.
+Example: *** Monty Hall - A game show where the result is displayed with flashy animated text.
 
 Imagine a game show where you are presented with three doors. Behind one of them is a brand new car, and behind the rest are goats. You get to choose one of the doors. Then the game host opens one of the other doors revealing a goat, and you are given a chance to either switch to the one remaining door or open the one you picked originally. The Monty Hall paradox is a counterintuitive statistical fact that switching the door gives a much higher chance at finding a car behind it.
 
@@ -779,9 +779,6 @@ The CSS file can be downloaded from http://vorple-if.com/vorple/doc/inform7/exam
 	
 	Before printing the player's obituary:
 		say prize style;
-		open HTML tag "div".
-		
+
 	After printing the player's obituary:
-		close HTML tag;
-		say end style;
-		queue JavaScript code "setTimeout( function() {$('.prize div').addClass('animate')}, 1000 )".
+		say end style.
