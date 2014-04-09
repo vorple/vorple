@@ -2,7 +2,7 @@ Version 5 of Vorple Multimedia (for Z-Machine only) by Juhana Leinonen begins he
 
 "Displaying images, playing sounds and music, and showing videos from YouTube."
 
-Include Vorple Common by Juhana Leinonen.
+Include Vorple by Juhana Leinonen.
 Use authorial modesty.
 
 

@@ -54,6 +54,10 @@ a {
 	clear:both;
 }
 
+.dialog.load {
+    display:none;
+}
+
 .status {
 	display:none;
 }
@@ -146,11 +150,21 @@ a {
 	color:#162;
 	font-weight:bold;
 	width:550px;
+    outline:none;
+    border:0;
+    font-size:14px;
 }
 
-.vorplePrompt input:focus {
-	outline:none;
-	border:0;
+.vorplePrompt input.hilightNoFocus {
+    outline: 1px dashed gray;
+    border:0;
+    margin-left:0.5em;
+}
+
+.vorplePrompt input.hilightNoFocus:focus {
+    outline:none;
+    border:0;
+    margin-left:0;
 }
 
 #vorpleLoader {

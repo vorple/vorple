@@ -2,7 +2,7 @@ Version 5 of Vorple Notifications (for Z-Machine only) by Juhana Leinonen begins
 
 "Notifications and dialogs."
 
-Include Vorple Common by Juhana Leinonen.
+Include Vorple by Juhana Leinonen.
 Use authorial modesty.
 
 Chapter 1 - Locations

@@ -1,4 +1,4 @@
-Version 5 of Vorple Common (for Z-Machine only) by Juhana Leinonen begins here.
+Version 5 of Vorple (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Core functionality of Vorple, including JavaScript evaluation, HTML elements and turn type marking."
 
@@ -271,12 +271,12 @@ First after printing the banner text (this is the display Vorple credits rule):
 		say paragraph break.
 	
 	
-Vorple Common ends here.
+Vorple ends here.
 
 
 ---- DOCUMENTATION ----
 
-The Vorple Common extension defines some of the basic structure that's needed for Vorple to communicate with the story file.
+The Vorple core extension defines some of the basic structure that's needed for Vorple to communicate with the story file.
 
 Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage. For more practical usage of Vorple, see other Vorple extensions that implement features like multimedia support and hyperlinks.
 
@@ -285,10 +285,10 @@ Chapter: Vorple setup
 
 Every Vorple story must include at least one Vorple extension and the custom web interpreter.
 
-	*: Include Vorple Common by Juhana Leinonen.
+	*: Include Vorple by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
-All standard Vorple extensions already have the "Include Vorple Common" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
+All standard Vorple extensions already have the "Include Vorple" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
 
 At the moment Vorple supports Z-machine only.
 
@@ -464,7 +464,7 @@ We'll display the inventory listing using HTML unordered lists ("ul"). It might 
 		
 	*: "Convenience Store"
 	
-	Include Vorple Common by Juhana Leinonen.
+	Include Vorple by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
 	Carry out taking inventory (this is the print inventory using HTML lists rule):
@@ -496,7 +496,7 @@ The hint system works by wrapping scrambled hints in named elements. Their conte
 	
 	*: "Scrambled Eggs"
 	
-	Include Vorple Common by Juhana Leinonen.
+	Include Vorple by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	
 	
@@ -575,7 +575,7 @@ Once set, the story time will soon drop out of sync and will advance one minute 
 
 	*: "Spy Games"
 
-	Include Vorple Common by Juhana Leinonen.
+	Include Vorple by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 
 	Secret base is a room.
@@ -599,7 +599,7 @@ Here we set up an encyclopedia that can be used to query articles from Wikipedia
 
 	*: "The Sum of Human Knowledge"
 	
-	Include Vorple Common by Juhana Leinonen.
+	Include Vorple by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
 	Release along with JavaScript "encyclopedia.js".
 	

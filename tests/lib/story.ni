@@ -28,7 +28,7 @@ Volume Extensions
 
 Book Core
 
-Include Vorple Common by Juhana Leinonen.
+Include Vorple by Juhana Leinonen.
 
 Carry out testing "core eval":
 	execute JavaScript command "window.evalTest = true".

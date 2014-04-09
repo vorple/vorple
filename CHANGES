@@ -8,7 +8,7 @@ I7 Extensions
  - Changed the author's name from "The Vorple Project" to "Juhana Leinonen"
    to conform with Inform 7 extension guidelines, added "Vorple" in front
    of extension names, renamed "Hypertext" to "Hyperlinks" and
-   "Core" to "Common"
+   "Core" to just "Vorple"
  - Added the "Vorple Screen Effects" extension
  - Added and fixed examples across the board
  - Common: Separate checks for new Z-machine 1.2 streams

@@ -3,7 +3,7 @@
  */
 
 /*
- * Vorple Common: The Sum of Human Knowledge
+ * Vorple: The Sum of Human Knowledge
  */
 
 function wikipedia_query( topic ) {
