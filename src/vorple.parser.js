@@ -493,7 +493,7 @@ vorple.parser = (function($) {
      * @param {jQuery|string|number} target The element to which the page should
      * scroll to, either as a jQuery element or a jQuery selector, or the target
      * position in pixels
-     * @param {integer} [duration=150] The duration of the scroll animation
+     * @param {number} [duration=150] The duration of the scroll animation
      * in milliseconds. Set to 0 for no animation.
      * @param {function} [callback] Callback function executed after scrolling
      * has finished.
@@ -506,7 +506,7 @@ vorple.parser = (function($) {
         var scrollTo,
             bottom = $( document ).height() - $( window ).height();
 
-        duration = duration || 150;
+        duration = ( typeof duration === 'undefined' ) ? 150 : duration;
 
         switch( target ) {
             case 'bottom':
@@ -936,7 +936,7 @@ vorple.parser = (function($) {
                 }
                 
                 // Insert Vorple's own prompt input
-                $( _createPrompt( filteredContents.prompt.text ) )
+                var $vorplePrompt = $( _createPrompt( filteredContents.prompt.text ) )
                     .addClass( filteredContents.prompt.classes )
                     .appendTo( $newTurnContainer )
                     .find( 'input' )
@@ -969,10 +969,27 @@ vorple.parser = (function($) {
                 self.hideCommand( false );
                 self.hideOutput( false );
                 
-                
                 // Scroll to where the new turn begins
-                self.scrollTo( $newTurn );
-  
+                self.scrollTo( $newTurn, undefined, function() {
+                    // Focus to the input prompt if it's visible
+                    // (adapted from http://stackoverflow.com/a/488073)
+                    var docViewTop = $( window ).scrollTop();
+                    var docViewBottom = docViewTop + $( window ).height();
+
+                    var inputTop = $vorplePrompt.offset().top;
+                    var inputBottom = inputTop + $vorplePrompt.height();
+
+                    if( inputBottom <= docViewBottom && inputTop >= docViewTop ) {
+                        $vorplePrompt.focus();
+                    }
+
+                    $vorplePrompt.addClass( 'hilightNoFocus' );
+
+                    // Add a class that highlights the prompt when there's no focus
+                    // (can't add this before or it would flash briefly when
+                    // the transcript scrolls after a new turn)
+                });
+
                 _turn.mode = e.mode;
                 _interactive = true;
                 _runCommandQueue();
