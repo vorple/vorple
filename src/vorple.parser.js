@@ -354,6 +354,10 @@ vorple.parser = (function($) {
     /**
      * This is used by Parchment to determine which element to use for
      * stream output.
+     *
+     * @public
+     * @method
+     * @name parser#getStream
      */
     self.getStream = function() {
         return _container.stream;

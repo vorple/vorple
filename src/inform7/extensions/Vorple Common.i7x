@@ -267,7 +267,7 @@ First after printing the banner text (this is the display Vorple credits rule):
 	if Vorple is supported:
 		say "Vorple version ";
 		place inline element called "vorple-version";
-		execute JavaScript command "$('.vorple-version').html(vorple.core.getVersion()+'.'+vorple.core.getRelease())";
+		execute JavaScript command "$('.vorple-version').html(vorple.core.getVersion())";
 		say paragraph break.
 	
 	

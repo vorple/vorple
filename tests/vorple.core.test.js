@@ -103,25 +103,33 @@ test( 'onbeforeunload', function() {
     vorple.core.settings = oldSettings;
 });
 
-test( 'requireRelease', function() {
-    var currentRel = vorple.core.getRelease();
+test( 'getVersion', function() {
+    var version = vorple.core.getVersion();
 
-    ok( vorple.core.requireRelease( currentRel ), 'exact release' );
-    raises( function() { vorple.core.requireRelease( currentRel - 1 ); }, 'previous release' );
-    raises( function() {
-        vorple.core.requireRelease( currentRel + 1 );
-    }, 'next release' );
+    equal( typeof version, 'string', 'version number is returned as a string' );
+    ok( /^\d+\.\d+(\.\d+)?$/.test( version ), 'matches x.y[.z] format' );
+});
+
+test( 'requireVersion', function() {
+    var currentVersion = vorple.core.getVersion();
+
+    ok( vorple.core.requireVersion( currentVersion ), 'exact release' );
+    ok( vorple.core.requireVersion( parseInt( currentVersion, 10 ) ), 'major version, integer' );
+
+    raises( function() { vorple.core.requireVersion( '2.4' ); }, 'past release' );
+    raises( function() { vorple.core.requireVersion( '10.0' ); }, 'future release' );
+    raises( function() { vorple.core.requireVersion( 'foo' ); }, 'invalid version number' );
 
     raises( function() {
-        vorple.core.requireRelease( currentRel + 1, 'Wrong release' );
+        vorple.core.requireVersion( '10.0', 'Wrong release' );
     }, function( error ) {
         return (error.message === "Wrong release" );
     }, 'custom error message' );
 
-    ok( vorple.core.requireRelease( [ currentRel, currentRel + 1 ] ), 'with max release' );
+    ok( vorple.core.requireVersion( [ currentVersion, '10.0' ] ), 'with boundaries' );
     raises( function() {
-        vorple.core.requireRelease( [ currentRel - 2, currentRel - 1 ] );
-    } );
+        vorple.core.requireVersion( [ 1, '2.3' ] );
+    }, 'past release boundaries' );
 
     var errorCallback = false;
 
@@ -129,6 +137,6 @@ test( 'requireRelease', function() {
         errorCallback = true;
     };
 
-    vorple.core.requireRelease( currentRel + 1, callback );
-    ok( errorCallback, 'callback' );
-} ); 
+    vorple.core.requireVersion( '10.0', callback );
+    ok( errorCallback, 'error callback' );
+});

@@ -11,23 +11,14 @@ var vorple = window.vorple = {};
 vorple.core = (function($){
     var self = {},
         /**
-         * Release number
-         *
-         * @private
-         * @field
-         * @name core~release
-         * @type number
-         */
-        release = 5,
-        /**
          * Version number
          *
          * @private
          * @field
          * @name core~version
-         * @type number
+         * @type string
          */
-        version = 2,
+        version = '2.5',
         engine;
 
     /**
@@ -73,14 +64,14 @@ vorple.core = (function($){
      *
      * @private
      */
-    var _init = function( initSystem ) {
+    var init = function( initSystem ) {
         // save the engine
         if( typeof initSystem !== 'undefined' ) {
             engine = initSystem;
         }
 
         // insert the version number to the layout
-        $( '.vorple-version' ).html( version+'.'+release );
+        $( '.vorple-version' ).html( self.getVersion() );
 
         // dialog that warns the player they're leaving the page
         window.onbeforeunload = function( e ) {
@@ -209,6 +200,7 @@ vorple.core = (function($){
         return id;
     };
 
+
     /**
      * Returns the engine object.
      *
@@ -223,25 +215,11 @@ vorple.core = (function($){
         return engine;
     };
 
-    /**
-     * Returns the current release number.
-     *
-     * @returns {number}
-     *
-     * @public
-     * @method
-     * @name core#getRelease
-     * @since 2.5
-     */
-    self.getRelease = function() {
-        return release;
-    };
-
 
     /**
      * Returns the current version number.
      *
-     * @returns {number}
+     * @returns {string}
      *
      * @public
      * @method
@@ -271,65 +249,139 @@ vorple.core = (function($){
      * @name core#init
      */
     self.init = function( system ) {
-        _init( system );
+        init( system );
         $( document ).trigger( 'init.vorple' );
     };
 
     
     /**
-     * Require a certain release of the Vorple library. 
-     * 
-     * The release number can be given as an array of two integers.
-     * The release number is then required to be inside the given range (inclusive).
+     * Require a certain version of the Vorple library.
+     *
+     * The accuracy of the check depends on the given parameter. Exact version
+     * number is assumed, except for parts of the version number that are
+     * omitted. For example if the actual current version number is 2.4.1, then:
+     *
+     * vorple.core.requireVersion( "2" )      =>  true
+     * vorple.core.requireVersion( "2.4" )    =>  true
+     * vorple.core.requireVersion( "2.4.1" )  =>  true
+     * vorple.core.requireVersion( "1" )      =>  error
+     * vorple.core.requireVersion( "2.3" )    =>  error
+     * vorple.core.requireVersion( "2.4.0" )  =>  error
+     * vorple.core.requireVersion( "2.4.2" )  =>  error
+     *
+     * The version number can be given as an array of two version numbers.
+     * The version number is then required to be inside the given range (inclusive).
      * 
      * An error is thrown if the current version does not fit within the bounds.
      * A second parameter can be given that contains the error message, or 
      * a function that will be called instead of throwing the error.
      * 
-     * @param {number|array} requiredRelease The exact allowed release or an array
-     *   of [lowest, highest] required release
+     * @param {string|number|array} requiredVersion The exact allowed version or
+     *   an array of [lowest, highest] required version
      * @param {string|function} [message] The error message's text
      *   or a function to call on error
      *
-     * @returns {boolean} True if release number is within bounds
+     * @returns {boolean} True if version number is within bounds
      *
      * @public
      * @method
-     * @name core#requireRelease
+     * @name core#requireVersion
+     * @since 2.5
      */
-    self.requireRelease = function( requiredRelease, message ) {
-        var minRelease,
-            maxRelease,
-            requiredReleaseString;
+    self.requireVersion = function( requiredVersion, message ) {
+        // helper for changing all array values to integers
+        var parseArrayInt = function( arr ) {
+            return $.map( arr, function( element ) {
+                return parseInt( element, 10 );
+            });
+        };
 
-        if( $.isArray( requiredRelease ) ) {
-            minRelease = requiredRelease[0];
-            maxRelease = requiredRelease[1];
-            requiredReleaseString = minRelease+"-"+maxRelease;
-        }
-        else {
-            minRelease = requiredRelease;
-            maxRelease = requiredRelease;
-            requiredReleaseString = requiredRelease;
-        }
+        var minVersion,
+            maxVersion,
+            requiredVersionString,
+            currentVersion = parseArrayInt( self.getVersion().split( '.' ) ),
+            minBoundaryOk = false,
+            maxBoundaryOk = false;
 
-        if( minRelease > release || ( maxRelease !== false && maxRelease < release ) ) {
-            switch( typeof message ) {
-                case 'function':
-                    message();
-                    break;
-                case 'string':
-                    throw new Error( message );
-                default:
-                    throw new Error( "Version mismatch: release "
-                        + requiredReleaseString
-                        + " required, currently running release "
-                        + release
-                    );
-            }
+        switch( typeof requiredVersion ) {
+            case 'object':
+                if( $.isArray( requiredVersion ) ) {
+                    minVersion = requiredVersion[0];
+                    maxVersion = requiredVersion[1];
+                    requiredVersionString = minVersion+"-"+maxVersion;
+                }
+                break;
+
+            case 'number':
+                minVersion = requiredVersion.toString();
+                maxVersion = requiredVersion.toString();
+                requiredVersionString = requiredVersion.toString();
+                break;
+
+            case 'string':
+                minVersion = requiredVersion;
+                maxVersion = requiredVersion;
+                requiredVersionString = requiredVersion;
+                break;
+            
+            default:
+                throw new Error( "Invalid type " + ( typeof requiredVersion ) + " given as a parameter to vorple.core.requireVersion()" );
         }
         
-        return true;
+        minVersion = parseArrayInt( minVersion.split( '.' ) );
+        maxVersion = parseArrayInt( maxVersion.split( '.' ) );
+
+        switch( minVersion.length ) {
+            case 1:
+                minBoundaryOk = ( minVersion[ 0 ] <= currentVersion[ 0 ] );
+                break;
+            case 2:
+                minBoundaryOk =
+                    ( minVersion[ 0 ] < currentVersion[ 0 ] )
+                    || ( minVersion[ 0 ] === currentVersion[ 0 ] && minVersion[ 1 ] <= currentVersion[ 1 ] );
+                break;
+            case 3:
+                minBoundaryOk =
+                    ( minVersion[ 0 ] < currentVersion[ 0 ] )
+                    || ( minVersion[ 0 ] === currentVersion[ 0 ] && minVersion[ 1 ] < currentVersion[ 1 ] )
+                    || ( minVersion[ 0 ] === currentVersion[ 0 ] && minVersion[ 1 ] === currentVersion[ 1 ] && minVersion[ 2 ] <= currentVersion[ 2 ] );
+                break;
+        }
+
+        switch( maxVersion.length ) {
+            case 1:
+                maxBoundaryOk = ( maxVersion[ 0 ] >= currentVersion[ 0 ] );
+                break;
+            case 2:
+                maxBoundaryOk =
+                    ( maxVersion[ 0 ] > currentVersion[ 0 ] )
+                    || ( maxVersion[ 0 ] === currentVersion[ 0 ] && maxVersion[ 1 ] >= currentVersion[ 1 ] );
+                break;
+            case 3:
+                maxBoundaryOk =
+                    ( maxVersion[ 0 ] > currentVersion[ 0 ] )
+                    || ( maxVersion[ 0 ] === currentVersion[ 0 ] && maxVersion[ 1 ] > currentVersion[ 1 ] )
+                    || ( maxVersion[ 0 ] === currentVersion[ 0 ] && maxVersion[ 1 ] === currentVersion[ 1 ] && maxVersion[ 2 ] >= currentVersion[ 2 ] );
+                break;
+        }
+        
+        if( minBoundaryOk && maxBoundaryOk ) {
+            return true;
+        }
+
+        switch( typeof message ) {
+            case 'function':
+                message();
+                break;
+            case 'string':
+                throw new Error( message );
+            default:
+                throw new Error( "Version mismatch: version "
+                    + requiredVersionString
+                    + " required, currently running version "
+                    + self.getVersion()
+                );
+        }
     };
 
     return self;

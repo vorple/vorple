@@ -57,11 +57,10 @@ Modules
  - Changed the source code into a more modular system with actual private
    variables. Functions and variables previously prefixed with underscore
    can't be accessed outside the modules anymore.
- - Common: release and version are now private variables, their values can be
-   retrieved with vorple.core.getRelease() and vorple.core.getVersion()
- - Common: Added vorple.core.getEngine() to give the current engine object
- - Common: requireRelease() now expects the release number to match exactly when
-   given a single integer parameter
+ - Core: Added vorple.core.getEngine() to give the current engine object
+ - Core: Version and release numbers combined into one version number which
+   can be retrieved with vorple.core.getVersion(). Changed requireRelease()
+   into requireVersion() which handles version numbers more flexibly.
  - HTML: Fixed a bug where the second parameter to vorple.html.attributes()
    would have no effect
  - Media: Updated to work with SoundManager instead of jPlayer
