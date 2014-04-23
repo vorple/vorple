@@ -77,7 +77,7 @@ The files should be placed in the Materials directory, as per chapter 23.7. in W
 
 It doesn't matter what you call the resource ("Some picture" in the above example). Only the filename ("whatever.png") is significant.
 
-Note that we shouldn't use the "Figure of ..." or "Sound of ..." directives described in chapter 22 of Writing with Inform. Files declared this way won't be included as such in the release folder.
+Note that we shouldn't use the "Figure of ..." or "Sound of ..." directives described in chapter 22 of Writing with Inform. Files declared this way won't be included correctly in the release folder.
 
 
 Chapter: Images
@@ -86,13 +86,13 @@ Images can be displayed using the "display image" command:
 
 	display image "pic.jpg";
 
-By default the image is displayed aligned left. The position can be changed by giving it as a parameter:
+By default the image is displayed left-aligned. The position can be changed by giving it as a parameter:
 
 	display image "pic.jpg", centered;
 
-The possible values are centered, aligned left, aligned right, floating left or floating right. Text is wrapped around floating images.
+The possible values are centered, aligned left, aligned right, floating left or floating right. Floating means that the image is set to the left or to the right and the text is wrapped around them.
 
-Images should be in either jpg, png or gif formats.
+Images should be in jpg, png or gif format.
 
 
 Section: Preloading images
@@ -103,14 +103,14 @@ Images can be preloaded either individually or as a list:
 		preload image "pic.jpg";
 		preload images { "pic1.jpg", "pic2.png" }.
 
-Preloading images makes them appear immediately when they are needed. Otherwise the images are loaded only when they are first displayed which may take some time with slower connections.
+Preloading images makes them appear immediately when they are needed. Otherwise the images are loaded only when they are first displayed which may take some time with slower connections, resulting in a noticeable delay between when they should be shown and when they have loaded and actually appear.
 
-Images must be preloaded inside a rule, most commonly in a When play begins -rule. We can save bandwidth by preloading in later stages when the story is closer to the point when it should display the image, but note that preloading at the same time when the image is displayed is too late and preloading images that are shown right when the story begins is not useful.
+Images must be preloaded inside a rule, most commonly in a When play begins rule. We can save bandwidth by preloading in later stages when the story is closer to the point when it should display the image, but note that starting to preload at the same time when the image is displayed is too late and preloading images that are shown right when the story begins is not useful.
 
 
 Chapter: Audio
 
-There are two types of audio: sound effects and music. The main difference is that multiple sound effects can be played at the same time (and as background music is playing). Starting to play new music will stop the old music track. 
+There are two types of audio: sound effects and music. The main difference is that multiple sound effects can be played at the same time, and at the same time as background music is playing. With music only one track can be playing at the same time, and starting to play another music file the previous one will stop.
 
 Audio files should be in either mp3 or ogg format.
 
@@ -136,7 +136,7 @@ We can play YouTube videos with:
 
 	play YouTube video "9d4Fu90ubmA";
 
-The string of numbers and letters is the id of the video we want to show. The id can be seen in the browser's address bar when viewing the video in YouTube, for example "http://www.youtube.com/watch?v=9d4Fu90ubmA".
+The seemingly random string of numbers and letters is the id of the video we want to show. The id can be seen in the browser's address bar when viewing the video in YouTube, for example "http://www.youtube.com/watch?v=9d4Fu90ubmA".
 	
 
 Example: * Serinette - Basic example of playing music and sound effects.
@@ -204,10 +204,10 @@ The example media files can be downloaded from http://vorple-if.com/vorple/doc/i
 	Carry out closing the serinette when the serinette is wound:
 		stop music.
 	
-	Test me with "x serinette/wind serinette/open serinette".
+	Test me with "x serinette / wind serinette / open serinette".
 
 
-Example: * The Trampoline - Rewarding the player with a YouTube video
+Example: * The Trampoline - Rewarding the player with a YouTube video.
 
 This example adds an option for the player to watch a video on YouTube after they've won. Vorple plays the video automatically, and other interpreters show the URL of the video.
 
@@ -231,10 +231,10 @@ This example adds an option for the player to watch a video on YouTube after the
 	Instead of jumping:
 		end the story finally saying "Whee!"
 
-	Test me with "jump/watch".
+	Test me with "jump / watch".
 
 
-Example: ** Port Royal Reggae - Applying background music to different regions
+Example: ** Port Royal Reggae - Applying background music to different regions.
 
 We'll spice up example 9 - Port Royal 3 with some background music.
 
@@ -317,7 +317,7 @@ The audio files used here can be downloaded from http://vorple-if.com/vorple/doc
 	The background audio of Tavern is "tavern.mp3".
 	
 	Every turn when the map region of the location is not nothing and the background audio of the map region of the location is not the current audio and the background audio of the map region of the location is not "" (this is the play background audio rule):
-		play music file "[background audio of the map region of the location]", looping;
+		play music file background audio of the map region of the location, looping;
 		now the current audio is the background audio of the map region of the location.
 		
 	[Every turn rules aren't run on the first turn so we'll run it manually.]
@@ -325,4 +325,4 @@ The audio files used here can be downloaded from http://vorple-if.com/vorple/doc
 		if the map region of the location is not nothing and the background audio of the map region of the location is not "":
 			follow the play background audio rule.		
 
-	Test me with "s/s/n/e/e/s/in".
+	Test me with "s / s / n / e / e / s / in".

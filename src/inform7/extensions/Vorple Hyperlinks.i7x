@@ -47,7 +47,6 @@ Vorple Hyperlinks ends here.
 
 ---- DOCUMENTATION ----
 
-Chapter: Links
 
 A hyperlink can link to either a web URL or clicking on it can trigger a command that's sent to the parser. 
 
@@ -67,7 +66,7 @@ Leaving out the text content will print the link target instead (so you don't ha
 
 	say "Feel free to ";
 	place a link to command "look";
-	say " around."
+	say " around.";
 
 Options "without showing the command" and "without showing the response" do exactly that: run the command but don't show it or the story's response.
 
@@ -76,7 +75,7 @@ Options "without showing the command" and "without showing the response" do exac
 
 Suppressing both the command and the response is useful if the command triggers something only in the user interface or sends information to the story file that shouldn't give feedback to the reader.
 
-If the story is run in a normal interpreter, the link description text is displayed but not the web site address (and of course the links won't work).
+If the story is run in a normal interpreter, the link description text is displayed but not the web site address (and of course clicking on the text won't do anything).
 
 
 Example: * Click to Learn More - Hyperlinks to external web pages, email links and action links, with a fallback if Vorple is not available.
@@ -111,9 +110,11 @@ Note how we mark the action "normal" - otherwise the out of world action would b
 		say "(Type ";
 		place a link to command "ABOUT";
 		say " for more information.)[line break]".
+
+	Test me with "about".
 		
 		
-Example: ** Click to Retry - Clickable options when play ends
+Example: ** Click to Retry - Clickable options when play ends.
 
 If the story makes use of hyperlinks, we will probably want the options presented when the play ends be clickable as well. This example replaces the rule in the Standard Rules with one that prints the options as hyperlinks.
 

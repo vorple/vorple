@@ -50,7 +50,9 @@ Displayed notifications is a list of text that varies.
 Before reading a command (this is the print notifications fallback rule):
 	if Vorple is not supported:
 		repeat with note running through displayed notifications:
-			say "[italic type][bracket][note][close bracket][roman type][paragraph break]".
+			say "[italic type][bracket]" (A);
+			say note;
+			say "[close bracket][roman type][paragraph break]" (B).
 
 Before reading a command (this is the empty displayed notifications list rule):
 	truncate displayed notifications to 0 entries.
@@ -60,6 +62,8 @@ Vorple Notifications ends here.
 
 
 ---- DOCUMENTATION ----
+
+Chapter: Notifications
 
 Notifications are messages that show briefly on the screen and then fade away. A notification can be displayed simply with:
 
@@ -136,7 +140,7 @@ Example: * How To I - Showing small tips to new players who might not be familia
 	After reading a command when the player's command includes "examine":
 		show notification "Tip: You can abbreviate EXAMINE to just X".
 			
-	Test me with "take test tube/examine test tube/x trolley".
+	Test me with "take test tube / examine test tube / x trolley".
 
 
 Example: ** Score Notifications - A visual notification when the player is awarded points.
@@ -158,8 +162,9 @@ We'll create a rule that will show the score change as a Vorple notification, or
 	
 	This is the enhanced notify score changes rule:
 		if Vorple is supported:
-			show notification "[score notification message]" at top center;
-			now the last notified score is the score;
+			if the last notified score is not the score:
+				show notification "[score notification message]" at top center;
+				now the last notified score is the score;
 		otherwise:
 			follow the notify score changes rule.
 	
@@ -175,4 +180,4 @@ We'll create a rule that will show the score change as a Vorple notification, or
 	Carry out taking a valuable when the noun is not handled (this is the award points for finding valuables rule):
 		increase the score by one.
 	
-	Test me with "take coins/take diamonds and rubies/take all".
+	Test me with "take coins / take diamonds and rubies / take all".

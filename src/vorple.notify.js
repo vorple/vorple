@@ -109,7 +109,7 @@ vorple.notify = (function($) {
      * @see http://needim.github.com/noty
      * 
      * @param {string} text The text to show in the notification
-     * @param {object} options Notification options. 
+     * @param {object=} options Notification options.
      * @See http://needim.github.com/noty/#options
      *
      * @public

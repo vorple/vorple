@@ -675,9 +675,6 @@ We can also show text aligned right:
 
 This will only work online. In offline interpreters the text will be left-aligned.
 
-Vorple Screen Effects ends here.
-
-
 
 Example: * Letters from a Madman - Example of all different styles available in the extension.
 
@@ -709,7 +706,7 @@ The letter in this example story has all the styles defined in the extension, pl
 	To say end is nigh:
 		right-align "The end is nigh."
 
-	Test me with "open mailbox/read letter/z".
+	Test me with "open mailbox / read letter".
 
 
 Example: *** Monty Hall - A game show where the result is displayed with fancy font effects.
@@ -783,4 +780,4 @@ The CSS file can be downloaded from http://vorple-if.com/vorple/doc/inform7/exam
 	After printing the player's obituary:
 		say end style.
 
-    Test me with "open A/open A".
+    Test me with "open A / open A".

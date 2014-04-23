@@ -23,7 +23,7 @@ To display a/-- tooltip (tip - text) on/at the/-- element called (classes - text
 Chapter 2 - Tooltips triggered manually
 
 To display a/-- tooltip (tip - text) on/at all the/-- (classes - text) elements in (delay - number) milliseconds:
-	queue JavaScript command "vorple.tooltip.show('.[classes]','[escaped tip]',{delay:[delay]})".
+	queue JavaScript command "setTimeout(function(){vorple.tooltip.show('.[classes]','[escaped tip]')},[delay])".
 
 To display a/-- tooltip (tip - text) on/at all the/-- (classes - text) elements in (delay - number) seconds:
 	display a tooltip tip on all the classes elements in delay * 1000 milliseconds.
@@ -106,33 +106,36 @@ Example: * How To II - More tips to new players who might not be familiar with s
 
 We'll show a tooltip on the prompt to direct the player to use the keyboard, hint about what kind of commands to use if the first command they try is an error and direct their attention to parts of items. 
 
-Parser errors are automatically given the class "parserError" which we can use.
 
 	*: "How To II"
 	
 	Include Vorple Tooltips by Juhana Leinonen.  
 	Release along with the "Vorple" interpreter.
 	
-	The bedroom is a room.
+	Bedroom is a room.
 	
 	The wardrobe is openable closed fixed in place container in the bedroom.
 	
 	Instead of examining the wardrobe when the wardrobe is closed:
 		say "The wardrobe is ";
-		place text "closed" with a tooltip reading "You can OPEN WARDROBE to see what's inside.";
+		place an element called "wardrobe-closed" reading "closed";
+		display a tooltip "You can OPEN WARDROBE to see what's inside." on the element called "wardrobe-closed" in 2 seconds;
 		say ".";
 		
 	The jacket is a wearable thing in the wardrobe.
 	
 	Rule for printing the name of the jacket when the jacket is in the wardrobe:
-		place text "jacket" with a tooltip reading "The jacket is something you can TAKE or WEAR."
+		place an element called "jacket-text" reading "jacket";
+		display a tooltip "The jacket is something you can TAKE or WEAR." on the element called "jacket-text" in 2 seconds.
 	
 	When play begins (this is the show prompt hint rule):
 		display tooltip "Type a command to play" on the prompt.
 		
 	Rule for printing a parser error (this is the show parser error hint rule):
-		display tooltip "Try to for example EXAMINE things you see or take INVENTORY." on the element called "parserError" on mouseover.
-		
+		display tooltip "Try to for example EXAMINE things you see or take INVENTORY." on the prompt.
+
+	Test me with "x wardrobe / open wardrobe".
+
 		
 Example: * Medical Dictionary - Technical terms that have their definitions shown in a tooltip.
 
@@ -157,11 +160,9 @@ Example: * Medical Dictionary - Technical terms that have their definitions show
 		place text "[printed name of the item]" with a tooltip reading "[definition of item]".
 		
  
-		
-		
-Example: ** Ibid. (2) - Footnotes that can be read by placing the mouse cursor over them. 
+Example: ** Ibid. (2) - Footnotes that can be read by placing the mouse cursor over them.
 
-We're modifying example 293 (Ibid.) from Writing with Inform to show the footnotes when the mouse cursor is on top of the footnote reference numbers. 
+We're modifying example 300 (Ibid.) from Writing with Inform to show the footnotes when the mouse cursor is on top of the footnote reference numbers.
 
 	*: "Ibidem"
 

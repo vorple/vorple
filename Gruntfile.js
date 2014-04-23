@@ -5,9 +5,7 @@ module.exports = function( grunt ) {
     var thirdpartyLibraries = [
         'vendor/jquery-1.11.0.min.js',
         'vendor/jquery-migrate-1.2.1.min.js',
-        'vendor/jquery.noty.js',
-        'vendor/noty/default.js',
-        'vendor/noty/layouts.js',
+        'vendor/jquery.noty.min.js',
         'vendor/jquery.qtip.min.js',
         'vendor/soundmanager2.min.js'
     ];

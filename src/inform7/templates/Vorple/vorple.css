@@ -10,7 +10,12 @@ a {
 }
 
 .main {
-	white-space: pre-wrap;
+	white-space:pre-wrap;
+}
+
+/* Preserve line breaks in notifications */
+body.play .noty_text {
+    white-space:pre-wrap;
 }
 
 .coverimage, .links, .interpretercredit {
@@ -29,10 +34,10 @@ a {
 	margin:15px auto;
 	max-width:600px;
 	padding:1em;
-	border:1px solid #ccf;
-	box-shadow:5px 5px 5px #000;
-	-webkit-box-shadow:5px 5px 5px #000;
-	-moz-box-shadow:5px 5px 5px #000;
+	border:1px solid #ccc;
+	box-shadow:2px 2px 3px #333;
+	-webkit-box-shadow:2px 2px 3px #333;
+	-moz-box-shadow:2px 2px 3px #333;
 }
 
 #vorple {

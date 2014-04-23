@@ -83,7 +83,7 @@ First startup rule (this is the set a flag for whether Vorple is supported rule)
 	execute JavaScript command "vorple.parser.setVorpleStory()".
 
 To decide whether Vorple/JavaScript is supported/available: 
-    (- (Vp_vorpleSupported) -).
+	(- (Vp_vorpleSupported) -).
 
 To decide whether Vorple/JavaScript is not supported/available:
 	if Vorple is supported, decide no;
@@ -260,15 +260,28 @@ Chapter 7 - Element positions
 [This value is used by other extensions.]
 An element position is a kind of value. Element positions are top left, top center, top right, left top, right top, left center, center left, screen center, right center, center right, left bottom, right bottom, bottom left, bottom center, bottom right, top banner, and bottom banner.
 
+
+Chapter 8 - Restart fix
+
+[Replaces the restart confirmation prompt with a browser's native prompt]
+Carry out restarting the game (this is the Vorple restart prompt rule):
+	if Vorple is supported:
+		let question be "Are you sure you want to restart?" (A);
+		execute JavaScript command "if(confirm('[escaped question]'))window.location.reload();";
+	otherwise:
+		follow the restart the game rule.
+
+The restart the game rule is not listed in the carry out restarting the game rulebook.
+
 			
-Chapter 8 - Credits
+Chapter 9 - Credits
 
 First after printing the banner text (this is the display Vorple credits rule):
 	if Vorple is supported:
-		say "Vorple version ";
+		say "Vorple version " (A);
 		place inline element called "vorple-version";
 		execute JavaScript command "$('.vorple-version').html(vorple.core.getVersion())";
-		say paragraph break.
+		say "[paragraph break]" (B).
 	
 	
 Vorple ends here.
@@ -278,12 +291,12 @@ Vorple ends here.
 
 The Vorple core extension defines some of the basic structure that's needed for Vorple to communicate with the story file.
 
-Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and fallback phrases). The rest of this documentation handles more advanced usage. For more practical usage of Vorple, see other Vorple extensions that implement features like multimedia support and hyperlinks.
+Authors who are not familiar with JavaScript or who wish to just use the basic Vorple features can read only the first two chapters (Vorple setup and compatibility with offline interpreters). The rest of this documentation handles more advanced usage. For more practical usage of Vorple, see other Vorple extensions that implement features like multimedia support and hyperlinks.
 
 
 Chapter: Vorple setup
 
-Every Vorple story must include at least one Vorple extension and the custom web interpreter.
+Every Vorple story must include at least one Vorple extension and the custom web interpreter. The Vorple web interpreter template is included with the standard installation of Inform 7.
 
 	*: Include Vorple by Juhana Leinonen.
 	Release along with the "Vorple" interpreter.
@@ -291,6 +304,8 @@ Every Vorple story must include at least one Vorple extension and the custom web
 All standard Vorple extensions already have the "Include Vorple" line, so it's not necessary to add it to the story project if at least one of the other extensions are used.
 
 At the moment Vorple supports Z-machine only.
+
+For more detailed instructions on how to get started, see the documentation at the vorple-if.com web site.
 
 
 Chapter: Compatibility with offline interpreters
@@ -309,10 +324,10 @@ A story file can detect if it's being run on an interpreter that supports Vorple
 
 The say phrase in the above example is called a "fallback" and it's displayed only in normal non-Vorple interpreters.
 
-All Vorple features do nothing by default if they're not supported by the interpreter. If substitute content is not necessary, we don't need to specifically check for Vorple compatibility:
+All Vorple features do nothing by default if they're not supported by the interpreter, unless otherwise stated in the extension's documentation. If substitute content is not necessary, we don't need to specifically check for Vorple compatibility:
 
-    Instead of going north:
-        play sound file "marching_band.mp3".
+	Instead of going north:
+		play sound file "marching_band.mp3".
 
 
 Chapter: Embedding HTML elements
@@ -348,11 +363,11 @@ This technique can be used to modify the story output later (see example "Scramb
 
 In the above examples the element contents should be plain text only. Trying to add nested tags or text styles will lead to erratic behavior. For longer and more complex contents the tags can be opened and closed manually:
 
-    Report reading the letter:
-	    open HTML tag "div" called "letter";
-	    place "h2" element reading "Dear Esther,";
-	    say "I'm writing to tell you...";
-	    close HTML tag.
+	Report reading the letter:
+		open HTML tag "div" called "letter";
+		place "h2" element reading "Dear Esther,";
+		say "I'm writing to tell you...";
+		close HTML tag.
 
 
 Chapter: Turn types
@@ -363,7 +378,7 @@ Sometimes we want to change that behavior. The turn type can be overridden manua
 
 	mark the current turn "normal";
 	
-The turn types are "normal", "meta" (out of world actions), "error" and "dialog". The "dialog" turn type shows the turn contents in a dialog box with an "ok" that has to be clicked for the story to resume.
+The turn types are "normal", "meta" (out of world actions), "error" and "dialog". The "dialog" turn type shows the turn contents in a dialog box with an "ok" button that has to be clicked for the story to resume.
 
 
 Chapter: Evaluating JavaScript expressions
@@ -439,8 +454,8 @@ To suppress the response as well, use "queue silent parser command".
 
 There's also a "primary" queue that is handled before the "normal" queue. In other regards it acts exactly like described above.
 
-    queue primary parser command "'x me'";
-    queue silent primary parser command "'__do_whatever'";
+	queue primary parser command "'x me'";
+	queue silent primary parser command "'__do_whatever'";
 
 The purpose of the primary queue is to make sure commands that are related to the current action are handled immediately after this turn. If they're put into the normal queue there's no guarantee how many other commands there might already be in the queue.
 
@@ -458,7 +473,7 @@ Another drawback of this method is that the length of the command is limited. An
 A more practical way of communication between the story file and the interpreter will be introduced in later versions of Vorple.
 
 		
-Example: ** Convenience Store - Displaying the inventory styled as a HTML list
+Example: ** Convenience Store - Displaying the inventory styled as a HTML list.
 
 We'll display the inventory listing using HTML unordered lists ("ul"). It might not be immediately obvious why one would want to do this, but if the items are displayed in a proper HTML structure it's possible to use CSS to style them further.
 		
@@ -486,10 +501,10 @@ We'll display the inventory listing using HTML unordered lists ("ul"). It might 
 
 	The Convenience store is a room. The eggs, the milk, the jar of pickles, the magazine, and the can opener are in the Convenience store. The paper bag is an open container in the Convenience store.
 	
-	Test me with "take all/i/put all in paper bag/i".
+	Test me with "take all / i / put all in paper bag / i".
 
 
-Example: ** Scrambled Eggs - Hints that are initially shown obscured and revealed on request
+Example: ** Scrambled Eggs - Hints that are initially shown obscured and revealed on request.
 
 The hint system works by wrapping scrambled hints in named elements. Their contents can then be later replaced with unscrambled text.
 
@@ -562,7 +577,7 @@ The hint system works by wrapping scrambled hints in named elements. Their conte
 		choose row number understood in the table of hints;
 		display hint entry in the element "hint-[number understood]".
 		
-	Test me with "hints/reveal 1/reveal 2/reveal 3".
+	Test me with "hints / reveal 1 / reveal 2 / reveal 3".
 
 
 Example: *** Spy Games - Setting the story time to match the real-world time.
@@ -593,7 +608,7 @@ Once set, the story time will soon drop out of sync and will advance one minute 
 		say "It is [time of day] and you're about to infiltrate the villain's lair."
 
 
-Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a third party service
+Example: **** The Sum of Human Knowledge - Retrieving and displaying data from a third party service.
 
 Here we set up an encyclopedia that can be used to query articles from Wikipedia. The actual querying code is a bit longer so it's placed in an external encyclopedia.js file, which can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources/javascript/encyclopedia.js .
 
@@ -615,6 +630,6 @@ Here we set up an encyclopedia that can be used to query articles from Wikipedia
 	Report looking up when Vorple is not supported:
 		say "You find the correct volume and learn about [topic understood].".
 	 	
-	Test me with "look up ducks/look up mars/look up interactive fiction".
+	Test me with "look up ducks / look up mars / look up interactive fiction".
 	
 	

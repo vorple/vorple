@@ -136,7 +136,7 @@ vorple.parser = (function($) {
         if( !turn ) {
             return false;
         }
-        
+
         switch( metadata.turn.type ) {
             case 'error':
                 turn.classes += "parserError ";
@@ -145,19 +145,8 @@ vorple.parser = (function($) {
                 turn.meta = true;
                 break;
             case 'undo':
-                // TODO
-                /*
-                $( '.previousTurn .content' ).animate({opacity: 0}, 1500).slideUp(500);
-                $( '.previousTurn' ).addClass( 'undoneTurn' ).removeClass( 'normalTurn' );
-                $( '<span>' ).text( ' (undone)' ).addClass( 'undoClarification' ).appendTo( $( '.previousTurn .oldPrompt' ) );
-//              $( '.previousTurn', this.container.vorple ).prev().nextAll().not( $element ).animate({opacity: 0}, 1500).slideUp(500);
-                $element.addClass( 'undoMessage' ).addClass( 'transient' );
-                $( '.previousTurn' ).removeClass( 'previousTurn' ).prevAll( '.normalTurn' ).first().addClass( 'previousTurn' );
-                $( '.penultimateTurn' ).removeClass( 'penultimateTurn' ).prevAll( '.normalTurn' ).first().addClass( 'penultimateTurn' );
-                $( '.currentPrompt' ).empty();
-//              return false;
-*/
-                break;
+                // For now do the same as meta commands because this needs more
+                // work to make it work flawlessly with hidden commands and such.
             case 'meta':
                 if( $.trim( $( turn.content.text ).text() ) !== "" ) {
                    vorple.notify.show( turn.content.text );
