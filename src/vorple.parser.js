@@ -928,8 +928,16 @@ vorple.parser = (function($) {
                     .addClass( filteredContents.classes )
                     .append( $newTurn );
 
+                // Until the bug is fully fixed, remove extra line breaks caused
+                // by JS evaluation
+                var $lastChild = $newTurn.find( '.main input:last' ).prev();
+
+                if( $lastChild.prop( 'tagName' ) === 'SPAN' && $newTurn.text().substr( $newTurn.text().length - 3 ) === '\n\n\n' ) {
+                    $lastChild.remove();
+                }
+
                 // Remove the previous turn class from the old content
-                if( !filteredContents.meta && e.mode == 'line' ) {
+                if( !filteredContents.meta && e.mode === 'line' ) {
                     $( '.penultimateTurn' ).removeClass( 'penultimateTurn' );
                     $( '.previousTurn' ).addClass( 'penultimateTurn' ).removeClass( 'previousTurn' ).addClass( 'previousTurnFader' ).removeClass( 'previousTurnFader', 1000 );
                     $newTurnContainer.addClass( 'previousTurn' );
