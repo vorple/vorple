@@ -44,40 +44,38 @@ z
 ! to be) "story.zblorb.js".
 
 [INTERPRETERHEAD]
-	<script type="text/javascript">
-		// This is the content that's displayed when the interpreter is loading.
-		// It can be overwritten in vorple.custom.js. 
-		var vorpleLoaderMessage = "Loading..."
-	</script>
     <script type="text/javascript" src="interpreter/vorple.parchment.min.js"></script>
 	<script type="text/javascript">
+	    // The loading message can be changed by setting a global variable
+	    // vorpleLoaderMessage in a custom JavaScript file
     	$( function() {
-    		$( '#vorpleLoader' ).html( vorpleLoaderMessage );
+    		$( '#vorpleLoader' ).html(
+    		    typeof vorpleLoaderMessage === 'string' ? vorpleLoaderMessage : 'Loading...'
+            );
     	});
 	</script>
     
-	<link rel="stylesheet" href="interpreter/parchment.min.css">
-	<link rel="stylesheet" href="interpreter/jquery.qtip.min.css">
 	<link rel="stylesheet" href="interpreter/vorple.css">
 	
 	<script type="text/javascript">
 		parchment.options.lib_path = 'interpreter/';
 		parchment.options.default_story = [ "[STORYFILE]", "interpreter/[ENCODEDSTORYFILE]" ];
 		parchment.options.lock_story = 1;
-		
-		$( function() {
-			$( '.coverimage, .links, .interpretercredit' ).detach();
-			$( '#vorpleContainer' ).unwrap(); 
-		});
+
 
 		vorple.media.defaults.swfPath = 'interpreter/';
 		vorple.media.defaults.audioPath = '.';
 		vorple.media.defaults.imagePath = '.';
 		vorple.media.defaults.musicPath = '.';
 		vorple.media.defaults.videoPath = '.';
-		
-		vorple.core.init( parchment );
-		parchment.init();
+
+		$( function() {
+			$( '.coverimage, .links, .interpretercredit' ).detach();
+			$( '#vorpleContainer' ).unwrap();
+
+            vorple.core.init( parchment );
+            parchment.init();
+		});
 	</script>
 []
 
@@ -123,4 +121,5 @@ processBase64Zcode('
 
 vorple.parchment.min.js
 vorple.css
+zvm.min.js
 soundmanager2.swf

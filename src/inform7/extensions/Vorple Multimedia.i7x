@@ -1,4 +1,4 @@
-Version 5 of Vorple Multimedia (for Z-Machine only) by Juhana Leinonen begins here.
+Version 2/140430 of Vorple Multimedia (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Displaying images, playing sounds and music, and showing videos from YouTube."
 
@@ -143,6 +143,8 @@ Example: * Serinette - Basic example of playing music and sound effects.
 
 The serinette (a type of music box) plays music when it opens and a sound effect when it's wound. We'll also show its picture when it's examined.
 
+The example media files can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources.
+
 	*: "Serinette"
 	
 	Include Vorple Multimedia by Juhana Leinonen.
@@ -205,6 +207,33 @@ The serinette (a type of music box) plays music when it opens and a sound effect
 	Test me with "x serinette/wind serinette/open serinette".
 
 
+Example: * The Trampoline - Rewarding the player with a YouTube video
+
+This example adds an option for the player to watch a video on YouTube after they've won. Vorple plays the video automatically, and other interpreters show the URL of the video.
+
+    *: "The Trampoline"
+
+	Include Vorple Multimedia by Juhana Leinonen.
+	Release along with the "Vorple" interpreter.
+
+	Table of Final Question Options (continued)
+	final question wording	only if victorious	topic	final response rule	final response activity
+	"WATCH your prize video"	true	"watch"	watch the video rule	--
+
+	This is the watch the video rule:
+		if Vorple is supported:
+			play YouTube video "GifZWBxBDn8";
+		otherwise:
+			say "See your prize video at https://www.youtube.com/watch?v=GifZWBxBDn8."
+
+	There is a room called On the trampoline. "You're on a huge trampoline. You know what to do!"
+
+	Instead of jumping:
+		end the story finally saying "Whee!"
+
+	Test me with "jump/watch".
+
+
 Example: ** Port Royal Reggae - Applying background music to different regions
 
 We'll spice up example 9 - Port Royal 3 with some background music.
@@ -213,9 +242,9 @@ When the player moves around the map the music will change according to the regi
 
 With small modifications the code could be used with individual rooms or scenes.
 
-The first part is identical with Port Royal 3. Vorple-specific code starts from chapter 2 at the end.
+The first part is identical with Port Royal 3, example 10 in the Writing with Inform manual. Vorple-specific code starts from chapter 2 at the end.
 
-Audio credits: RTB45 (inland.mp3, https://www.freesound.org/people/RTB45/), avakas (waterfront.mp3, https://www.freesound.org/people/avakas/), Benboncan (wind.mp3, https://www.freesound.org/people/Benboncan/), LondonSoundSurvey (tavern.mp3, https://www.freesound.org/people/LondonSoundSurvey/)
+The audio files used here can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources/music.
 
 	*: "1691"
 		

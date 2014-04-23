@@ -1,4 +1,4 @@
-Version 5 of Vorple Notifications (for Z-Machine only) by Juhana Leinonen begins here.
+Version 2/140430 of Vorple Notifications (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Notifications and dialogs."
 

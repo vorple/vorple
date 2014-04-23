@@ -6,35 +6,17 @@
 @import url(http://fonts.googleapis.com/css?family=Spicy+Rice);
 
 .room-header {
-    font-family:"Spicy Rice";
+    font-family:"Spicy Rice", fantasy;
     font-size:larger;
 }
 
-/* "You have won" message and its animation */
-.prize div {
-    font-family:"Spicy Rice";
-    font-size:50px;
+/* "You have won" message */
+.prize {
     color: #ff0000;
+    display:block;
+    font-family:"Spicy Rice", fantasy;
+    font-size:50px;
     margin-top:30px;
     text-align:center;
-    text-shadow: 0px 0px 25px #c6cc4c;
-
-    -moz-transition: -moz-transform 0.6s;
-    -webkit-transition: -webkit-transform 0.6s;
-    -o-transition: -o-transform 0.6s;
-    transition: transform 0.6s;
-
-    -moz-transform: rotate(0deg) scale(0);
-    -webkit-transform: rotate(0deg) scale(0);
-    -o-transform: rotate(0deg) scale(0);
-    transform: rotate(0deg) scale(0);
-}
-
-.prize div.animate {
-    display:block;
-    -moz-transform:rotate(370deg) scale(1);
-    -webkit-transform:rotate(370deg) scale(1);
-    -o-transform:rotate(370deg) scale(1);
-    transform:rotate(370deg) scale(1);
-
+    text-shadow: 0 0 25px #c6cc4c;
 }

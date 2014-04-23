@@ -56,10 +56,15 @@ module.exports = function( grunt ) {
             src: [ 'stories/undum/**/*', 'lib/**/*', 'vendor/parchment*', 'vendor/soundmanager/*' ],
             dest: 'release/zip/vorple-examples.zip'
         },
-        'i7': {
-            cwd: 'release/inform7/',
+        'i7-template': {
+            cwd: 'release/inform7/templates/',
             src: [ 'release/inform7/templates/Vorple/*' ],
             dest: 'release/zip/vorple-inform7-template.zip'
+        },
+        'extensions': {
+            cwd: 'release/inform7/extensions/',
+            src: 'release/inform7/extensions/**/*',
+            dest: 'release/zip/vorple-inform7-extensions.zip'
         },
         'doc': {
             cwd: 'release/',
@@ -91,6 +96,7 @@ module.exports = function( grunt ) {
 
         grunt.file.mkdir( 'build/tmp/i7example/Build' );
         grunt.file.mkdir( 'build/tmp/i7example/Index' );
+        grunt.file.mkdir( 'build/Extensions/Reserved' );
 
         for( i = 0; i < i7extensions.length; ++i ) {
             var extension = i7extensions[ i ].substr( 0, i7extensions[ i ].length - 4 ),
@@ -136,13 +142,14 @@ module.exports = function( grunt ) {
                     // compile with I7
                     grunt.file.copy( out, 'build/tmp/i7example/Source/story.ni' );
 
-                    i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules ../../Extensions -extension=z8' );
+                    i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules /Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions -extensions ../../Extensions -sandboxed -extension=z8' );
+//                    a = 'ni "-rules" "/Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions" "-sandboxed" "-extensions" "/Users/jleinonen/Library/Inform/Extensions" "-package" "/Users/jleinonen/Documents/if/Inform/Vorple extensions.inform" "-extension=z8" "-release"'
 
                     if( i7result.code ) {
                         grunt.fail.warn( 'ni compilation for ' + k + ' in extension ' + extension + ' failed.\n' + i7result.stdout, i7result.code );
                     }
                     else {
-                        i6result = exec.exec( 'cd build/tmp/i7example; inform-6.32-biplatform Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../release/doc/inform7/examples/stories/' + extension + '/' + k + '.z8"' );
+                        i6result = exec.exec( 'cd build/tmp/i7example; inform6-biplatform Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../release/doc/inform7/examples/stories/' + extension + '/' + k + '.z8"' );
 
                         if( i6result.code ) {
                             grunt.fail.warn( 'Inform 6 compilation for ' + k + ' in extension ' + extension + ' failed.\n' + i6result.stdout, i6result.code );
@@ -160,13 +167,13 @@ module.exports = function( grunt ) {
 
         // unit test
         grunt.file.copy( 'tests/lib/story.ni', 'build/tmp/i7example/Source/story.ni' );
-        i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules ../../Extensions -extension=z8' );
+        i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules /Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions -extensions ../../Extensions -sandboxed -extension=z8' );
 
         if( i7result.code ) {
             grunt.fail.warn( 'ni compilation for the unit test story failed.\n' + i7result.stdout, i7result.code );
         }
         else {
-            i6result = exec.exec( 'cd build/tmp/i7example; inform-6.32-biplatform Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../tests/lib/unittest.z8"' );
+            i6result = exec.exec( 'cd build/tmp/i7example; inform6-biplatform Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../tests/lib/unittest.z8"' );
 
             if( i6result.code ) {
                 grunt.fail.warn( 'Inform 6 compilation for the unit test story failed.\n' + i6result.stdout, i6result.code );

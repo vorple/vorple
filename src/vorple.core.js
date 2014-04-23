@@ -44,7 +44,7 @@ vorple.core = (function($){
          *
          * @public
          * @field
-         * @type boolean
+         * @type boolean|string
          */
         confirmWindowClose: false,
 
@@ -161,7 +161,7 @@ vorple.core = (function($){
      * Generates a random unique id composed of letters and numbers [1-9a-zA-Z].  
      * The first character is never a number.
      * 
-     * @param {integer} [length=32] The length of the generated id
+     * @param {number} [length=32] The length of the generated id
      * @returns {string} The generated id
      *
      * @public

@@ -1,4 +1,4 @@
-Version 5 of Vorple Screen Effects by Juhana Leinonen begins here.
+Version 2/140430 of Vorple Screen Effects by Juhana Leinonen begins here.
 
 "Vorple equivalent of Basic Screen Effects by Emily Short. Waiting for a keypress, clearing the screen, aligning, styling and coloring text."
 
@@ -112,19 +112,19 @@ Include (-
 [ CenterPrint str depth i j len;
 	font off;
 	i = VM_ScreenWidth();
-	len = IT_CharacterLength(str);
+	len = TEXT_TY_CharacterLength(str);
 	if (len > 63) len = 63;
 	j = (i-len)/2 - 1;
 	VM_MoveCursorInStatusLine(depth, j);
-	print (I7_string) str; 
+	print (I7_string) str;
 	font on;
 ];
 
 [ CenterPrintComplex str i j len;
 	font off;
-	print "^"; 
+	print "^";
 	i = VM_ScreenWidth();
-	len = IT_CharacterLength(str);
+	len = TEXT_TY_CharacterLength(str);
 	if (len > 63) len = 63;
 	j = (i-len)/2 - 1;
 	spaces j;
@@ -163,18 +163,18 @@ To right align the/-- cursor to (depth - a number):
 Include (- 
 
 [ DeepStatus depth i screen_width;
-	VM_StatusLineHeight(depth);
-	screen_width = VM_ScreenWidth();
-	#ifdef TARGET_GLULX;
-		VM_ClearScreen(1);
-	#ifnot;
-		style reverse;
-		for (i=1:i<depth+1:i++)
-		{
-			 @set_cursor i 1;
-			 spaces(screen_width);
-		} 
-	#endif;
+    VM_StatusLineHeight(depth);
+    screen_width = VM_ScreenWidth();
+    #ifdef TARGET_GLULX;
+        VM_ClearScreen(1);
+    #ifnot;
+        style reverse;
+        for (i=1:i<depth+1:i++)
+        {
+             @set_cursor i 1;
+             spaces(screen_width);
+        }
+    #endif;
 ]; 
 
 [ I7VM_MoveCursorInStatusLine depth;
@@ -712,11 +712,11 @@ The letter in this example story has all the styles defined in the extension, pl
 	Test me with "open mailbox/read letter/z".
 
 
-Example: *** Monty Hall - A game show where the result is displayed with flashy animated text.
+Example: *** Monty Hall - A game show where the result is displayed with fancy font effects.
 
 Imagine a game show where you are presented with three doors. Behind one of them is a brand new car, and behind the rest are goats. You get to choose one of the doors. Then the game host opens one of the other doors revealing a goat, and you are given a chance to either switch to the one remaining door or open the one you picked originally. The Monty Hall paradox is a counterintuitive statistical fact that switching the door gives a much higher chance at finding a car behind it.
 
-We'll display the game's result using a custom-made CSS style file that makes the text spin and zoom in. It also styles the text and uses a font downloaded from Google Fonts (http://www.google.com/fonts/). The last line of the example triggers the animation.
+We'll display the game's result using a custom-made CSS style file. It also styles the room header and uses a font from Google Fonts (http://www.google.com/fonts/).
 
 The CSS file can be downloaded from http://vorple-if.com/vorple/doc/inform7/examples/resources/css/montyhall.css.
 
@@ -782,3 +782,5 @@ The CSS file can be downloaded from http://vorple-if.com/vorple/doc/inform7/exam
 
 	After printing the player's obituary:
 		say end style.
+
+    Test me with "open A/open A".

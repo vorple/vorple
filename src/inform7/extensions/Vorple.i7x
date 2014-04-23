@@ -1,4 +1,4 @@
-Version 5 of Vorple (for Z-Machine only) by Juhana Leinonen begins here.
+Version 2/140430 of Vorple (for Z-Machine only) by Juhana Leinonen begins here.
 
 "Core functionality of Vorple, including JavaScript evaluation, HTML elements and turn type marking."
 
