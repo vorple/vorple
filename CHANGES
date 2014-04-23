@@ -1,4 +1,4 @@
-Release 2.5 (2014-??-??)
+Release 2.5 (2014-04-30)
 ========================
 
 I7 Extensions
@@ -11,29 +11,30 @@ I7 Extensions
    "Core" to just "Vorple"
  - Added the "Vorple Screen Effects" extension
  - Added and fixed examples across the board
- - Common: Separate checks for new Z-machine 1.2 streams
+ - Vorple: Separate checks for new Z-machine 1.2 streams
    and caching Vorple availability (closes #1)
- - Common: Removed the Undo Output Control which is now unneeded
- - Common: Reworked the creation and placing content to HTML tags completely.
+ - Vorple: Removed the Undo Output Control which is now unneeded
+ - Vorple: Reworked the creation and placing content to HTML tags completely.
    The only allowed phrases are now "place an ["element"] element
    [called "name"] [reading "text"]", "display "text" in the element "name""
    and "display "text" in all "name" elements". The "display "text" in the
    element "name"" phrase affects only the last available element.
- - Common: Changed "eval" to "execute JavaScript command/code" and "queue code"
+ - Vorple: Changed "eval" to "execute JavaScript command/code" and "queue code"
    to "queue JavaScript command/code"
- - Common: Moved transient text to the Screen Effects extension
- - Common: Added phrases to issue commands directly to the parser
+ - Vorple: Moved transient text to the Screen Effects extension
+ - Vorple: Added phrases to issue commands directly to the parser
  - Hyperlinks: Added a missing full stop at the end of first line which
    prevented the extension from installing correctly
  - Hyperlinks: Added an option for external links to open in the same
    window
- - Hyperlinks: Renamed the phrases to match the new phrasing in Common
+ - Hyperlinks: Renamed the phrases to match the new phrasing in the main
+   extension
  - Hyperlinks: Leaving out the links' text content will default to the link
    target.
  - Multimedia: Replaced documentation about including resources with
    the current version
  - Tooltips: Added the missing "Z-machine only" directive
- - Tooltips: Renamed the say phrase to match the Common's new phrases
+ - Tooltips: Renamed the say phrase to match the main extension's new phrases
  - Tooltips: By default tooltips are shown only on the last matching element
  - Tooltips: Phrases to create tooltips that are activated on mouseover
  - Tooltips: The delay for showing the tooltip can be supplied, and the default
@@ -48,7 +49,9 @@ Libraries
  - Replaced jPlayer with SoundManager 2
  - Updated jQuery to 1.11.0 (with jQuery Migrate to provide compatibility
    with Parchment and Undum)
- - Updated Noty
+ - Updated Noty to 2.2.2
+ - An undetermined bug that caused a halt in Safari 7 has fixed itself,
+   possibly due to third party library updates (closes #7)
 
 
 Modules
