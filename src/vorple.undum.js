@@ -131,7 +131,7 @@ vorple.undum = (function($) {
      * Mark a link disposed so that it will be disabled in the future.
      * Multiple links can be given, either as an array of strings or as
      * multiple string parameters.
-     * 
+     *
      * @param {...String|String[]} name Name of the link to dispose
      *
      * @public
@@ -240,16 +240,15 @@ vorple.undum = (function($) {
     // initialization
     $( document ).on( 'init.vorple', function() {
         if( vorple.core.engine( 'undum' ) ) {
-            var undum = vorple.core.getEngine();
             // Undum hooks
-            if( !undum.afterEnter ) {
-                undum.afterEnter = function( character, system, oldSituationId, newSituationId ) {
+            if( !undum.game.afterEnter ) {
+                undum.game.afterEnter = function( character, system, oldSituationId, newSituationId ) {
                     return self.afterEnterTrigger( character, system, oldSituationId, newSituationId );
                 };
             }
             
-            if( !undum.afterAction ) {
-                undum.afterAction = function( character, system, situationId, actionId ) {
+            if( !undum.game.afterAction ) {
+                undum.game.afterAction = function( character, system, situationId, actionId ) {
                     return self.afterActionTrigger( character, system, situationId, actionId );
                 };
             }

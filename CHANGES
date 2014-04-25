@@ -44,6 +44,7 @@ I7 Extensions
 Libraries
 ---------
 
+ - Updated Undum to version 2
  - Updated Parchment, should work with IE8 now. Also fixes the bug where
    escaping a single quote would crash Parchment.
  - Replaced jPlayer with SoundManager 2
