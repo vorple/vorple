@@ -1,7 +1,7 @@
 module( 'core' );
 
 test( 'engine', function( ) {
-    vorple.core.init( undum );
+    vorple.core.init( undumSystem );
     equal( vorple.core.engine(), 'undum', 'Undum loaded' );
     equal( vorple.core.engine( 'undum' ), true, 'testing for Undum after it is loaded' );
     equal( vorple.core.engine( 'parchment' ), false, 'testing for anything else after Undum has loaded' );

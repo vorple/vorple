@@ -124,7 +124,7 @@ vorple.core = (function($){
     self.engine = function( name ) {
         // If the system object contains "setQuality",
         // the engine is most likely Undum.
-        var isUndum = !!( engine && typeof engine.Situation === 'function' );
+        var isUndum = !!( engine && typeof engine.setQuality === 'function' );
 
         // Similar test for Parchment
         var isParchment = !!( engine && typeof engine.vms === 'object' );
