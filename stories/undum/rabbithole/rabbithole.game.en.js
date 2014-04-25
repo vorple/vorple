@@ -1,5 +1,5 @@
 undum.game.id = "36c3ad41-4924-434b-8632-bab19a24124a";
-undum.game.version = "1.0";
+undum.game.version = "2.5";
 undum.game.start = "start";
 
 
@@ -11,7 +11,7 @@ undum.game.situations.start = new undum.Situation( {
     enter: function( character, system, from ) {
         character.sandbox.atStart = true;
 
-        if( from == null ) {
+        if( from === null ) {
             // show the intro for the first time
             system.write(
                 vorple.html.p( "Down, down, down. Would the fall "
@@ -36,12 +36,43 @@ undum.game.situations.start = new undum.Situation( {
                     }
                 )
             );
+
+
+/*
+            new vorple.button.Link( 'Theater', 'theater' ),
+                new vorple.button.Link( 'Museum', 'museum' ),
+                new vorple.button.Link( 'Music room', 'music' ),
+                new vorple.button.Link( 'Garden', 'garden' )
+                */
         }
         else {
             system.write( vorple.html.p( "You return to the hall." ) );
         }
 
-        system.write( undum.game.mainButtons.html() );
+        system.write(
+            vorple.html.tag(
+                'div',
+                vorple.html.link(
+                    'theater',
+                    'Theater'
+                )
+                + vorple.html.link(
+                    'museum',
+                    'Museum'
+                )
+                + vorple.html.link(
+                    'music',
+                    'Music room'
+                )
+                + vorple.html.link(
+                    'garden',
+                    'Garden'
+                ),
+                {
+                    classes: 'mainbuttons transient'
+                }
+            )
+        );
     },
     exit: function( character, system, to ) {
         // show a tooltip that describes what the back button does,
@@ -111,7 +142,7 @@ undum.game.situations.theater = new undum.Situation( {
     },
     act: function( character, system, action ) {
         // choose which element on the screen acts as the video's container
-        $screen = $( '#silverscreen' ); 
+        var $screen = $( '#silverscreen' );
         
         // If the screen is empty, start the video. Otherwise remove it.
         if( $screen.html() == '' ) {
@@ -338,17 +369,7 @@ undum.game.init = function( character, system ) {
     character.sandbox.firstVisit = true;
     
     // Disposable links
-    vorple.undum.settings.disposableLinks = [ 'cage' ];
-    
-    // Main room buttons
-    var buttons = [
-           new vorple.button.Link( 'Theater', 'theater' ),
-           new vorple.button.Link( 'Museum', 'museum' ),
-           new vorple.button.Link( 'Music room', 'music' ),
-           new vorple.button.Link( 'Garden', 'garden' )
-       ];
-    
-    undum.game.mainButtons = new vorple.button.Group( buttons, { classes: 'transient mainbuttons' } );
+    vorple.undum.defaults.disposableLinks = [ 'cage' ];
     
     // Go back to the start when the back button is clicked
     $( '#reset-button' ).click( function( e ) {
@@ -366,7 +387,6 @@ undum.game.init = function( character, system ) {
             );
         }
     });
-    
 
     // have the museum pictures trigger a tooltip
     vorple.tooltip.enable(
@@ -378,8 +398,7 @@ undum.game.init = function( character, system ) {
             }
         }
     );
-    
-    
+
     // preload images
     vorple.media.preloadImage([
         'lamps.jpg',
@@ -389,9 +408,11 @@ undum.game.init = function( character, system ) {
         'teaparty.jpg',
         'rabbit.jpg'
         ]);
-        
+
+    // set the correct path for Soundmanager files
     vorple.media.defaults.swfPath = '../../../vendor/soundmanager';
-    
+
+    // initialize Vorple
     vorple.core.init( system );
 };
 
@@ -407,7 +428,7 @@ $( document ).on( 'click', '.info-icon', function( event ) {
             buttons: [{ 
                 type: 'button', 
                 text: 'ok', 
-                click: function( $notification ) {
+                onClick: function( $notification ) {
                     $notification.close();
                 }
             }],

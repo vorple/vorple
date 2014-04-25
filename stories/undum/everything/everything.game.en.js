@@ -1,9 +1,8 @@
 undum.game.id = "b44da7d8-387a-45ed-b83d-df71e916696c";
-undum.game.version = "1.0";
+undum.game.version = "2.5";
 undum.game.start = "start";
 
 undum.game.vars = {};
-
 
 undum.game.situations.start = new undum.SimpleSituation( 
     vorple.html.p( 
@@ -11,7 +10,6 @@ undum.game.situations.start = new undum.SimpleSituation(
         { classes: 'transient' }
     )
 );
-
 
 
 /**
@@ -98,8 +96,7 @@ undum.game.situations.core = new undum.Situation({
          */
         system.write( 
             vorple.html.p(
-                "Vorple version " + vorple.core.version
-                + " release " + vorple.core.release
+                "Vorple version " + vorple.core.getVersion()
                 + " using " + vorple.core.engine() + " engine"
             )
         );
@@ -743,23 +740,13 @@ vorple.tooltip.enable( 'a' );
 
 
 undum.game.init = function( character, system ) {
-    /**
-     * BUTTONS
-     */
-    // clear the navigation element so that buttons won't be duplicated
-    // when clearing the save game (which restarts the game and re-runs 
-    // undum.game.init()
-    $( '#navButtons' ).empty();
-    
-    var navButtonGroup = new vorple.button.Group([
-        new vorple.button.Button( 'Cookie', function() { system.doClick( 'cookie' ); } ),
-        new vorple.button.Button( 'Core', function() { system.doClick( 'core' ); } ),
-        new vorple.button.Button( 'HTML', function() { system.doClick( 'html' ); } ),
-        new vorple.button.Button( 'Media', function() { system.doClick( 'media' ); } ),
-        new vorple.button.Button( 'Notify', function() { system.doClick( 'notify' ); } ),
-        new vorple.button.Button( 'Tooltip', function() { system.doClick( 'tooltip' ); } ),
-        new vorple.button.Button( 'Undum', function() { system.doClick( 'undum' ); } )
-     ], '#navButtons' );
+    // Make buttons in the navigation bar go to their target situations
+    $( '#navButtons a' ).on( 'click', function( e ) {
+        var $this = $( this );
+        e.preventDefault();
+
+       system.doLink( $this.attr( 'href' ) );
+    });
 
     // Handler for the "toggle all" button
     $( '#toggleAll' ).click( function() {
