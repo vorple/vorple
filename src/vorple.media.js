@@ -1,8 +1,10 @@
 /*  vorple.media.js - Videos and sounds */
 
-/** @namespace media
+/**
+ * @namespace media
  * @name media
- * @description Audio and video functions. */
+ * @description Audio and video functions.
+ */
 vorple.media = (function($) {
     var self = {};
 

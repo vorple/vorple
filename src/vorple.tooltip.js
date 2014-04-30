@@ -1,7 +1,7 @@
 /* vorple.tooltip.js - helpers for QTip2 tooltips */
 
-/** 
- * @module tooltip
+/**
+ * @namespace tooltip
  * @name tooltip
  * @description Tooltip helpers. Uses the
  * {@link http://craigsworks.com/projects/qtip2/|qTip2 library}.

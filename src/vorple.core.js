@@ -3,7 +3,7 @@
 var vorple = window.vorple = {};
 
 /**
- * @namespace
+ * @namespace core
  * @name core
  * @description Most of these are used internally
  *  as helper functions and using them directly is often not necessary.

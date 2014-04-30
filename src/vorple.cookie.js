@@ -1,4 +1,5 @@
-/** @namespace cookie
+/**
+ * @namespace cookie
  * @name cookie
  * @description Creating, reading and deleting cookies.
  *

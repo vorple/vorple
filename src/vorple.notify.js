@@ -2,7 +2,8 @@
  *  (http://needim.github.com/noty/)  
  */
 
-/** @namespace notify
+/**
+ * @namespace notify
  * @name notify
  * @description Notifications.
  * Based on the {@see http://needim.github.com/noty/|noty library}.
