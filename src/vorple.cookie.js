@@ -3,7 +3,7 @@
  * @name cookie
  * @description Creating, reading and deleting cookies.
  *
- *  Based on {@link https://github.com/carhartl/jquery-cookie|jquery.cookie.js}
+ *  Based on [jquery.cookie.js](https://github.com/carhartl/jquery-cookie)
  */
 vorple.cookie = (function($) {
     var self = {};

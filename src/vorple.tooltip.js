@@ -4,7 +4,7 @@
  * @namespace tooltip
  * @name tooltip
  * @description Tooltip helpers. Uses the
- * {@link http://craigsworks.com/projects/qtip2/|qTip2 library}.
+ * [qTip2 library](http://craigsworks.com/projects/qtip2/).
  */
 vorple.tooltip = (function($) {
     var self = {};

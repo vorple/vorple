@@ -237,10 +237,12 @@ vorple.core = (function($){
      * A custom event 'init.vorple' is triggered after the core
      * initialization has been done. Custom initialization functions can
      * be added using a listener: 
-     * <code>
+     *
+     * ```
      * $( document ).on( 'init.vorple', function() {
      *     console.log( 'Vorple started!' );
-     * });</code> 
+     * });
+     * ```
      * 
      * @param {object} [system] The engine running the story
      *
@@ -261,6 +263,7 @@ vorple.core = (function($){
      * number is assumed, except for parts of the version number that are
      * omitted. For example if the actual current version number is 2.4.1, then:
      *
+     * ```
      * vorple.core.requireVersion( "2" )      =>  true
      * vorple.core.requireVersion( "2.4" )    =>  true
      * vorple.core.requireVersion( "2.4.1" )  =>  true
@@ -268,6 +271,7 @@ vorple.core = (function($){
      * vorple.core.requireVersion( "2.3" )    =>  error
      * vorple.core.requireVersion( "2.4.0" )  =>  error
      * vorple.core.requireVersion( "2.4.2" )  =>  error
+     * ```
      *
      * The version number can be given as an array of two version numbers.
      * The version number is then required to be inside the given range (inclusive).

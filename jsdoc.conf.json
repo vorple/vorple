@@ -1,0 +1,25 @@
+{
+    "tags"      : {
+        "allowUnknownTags" : true
+    },
+    "templates" : {
+        "cleverLinks"     : false,
+        "monospaceLinks"  : false,
+        "default"         : {
+            "outputSourceFiles" : true
+        },
+        "systemName"      : "Vorple",
+        "footer"          : "",
+        "copyright"       : "Vorple Copyright © 2011-2014 the Vorple project",
+        "navType"         : "vertical",
+        "theme"           : "journal",
+        "linenums"        : true,
+        "collapseSymbols" : false,
+        "inverseNav"      : true
+    },
+    "plugins"   : ["node_modules/grunt-jsdoc/node_modules/jsdoc/plugins/markdown"],
+    "markdown"  : {
+        "parser"   : "gfm",
+        "hardwrap" : true
+    }
+}
