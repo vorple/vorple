@@ -1,4 +1,4 @@
-Release 2.5 (2014-04-30)
+Release 2.5 (2014-05-07)
 ========================
 
 I7 Extensions
@@ -78,7 +78,7 @@ Modules
  - Parser: Meta and dialog commands that have no output will not pop up
    a notification/dialog
  - Parser: Support for nested HTML tags
- - Parser: Support for commands issued from the story file before  play begins
+ - Parser: Support for commands issued from the story file before play begins
  - Parser: A proper method for adding expressions to the JavaScript queue
    (vorple.parser.queueExpression())
  - Parser: Fixed a bug that prevented custom filters from running
