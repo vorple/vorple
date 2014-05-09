@@ -115,9 +115,11 @@ module.exports = function( grunt ) {
                     nifiles[ examplename ] = '';
 
                     listHTML += '<h4>' + examplename + '</h4>'
-                        + '<div class="blurb">' + header[ 4 ] + '</div>'
-                        + '<div class="dl_links"><a href="/vorple/release/doc/inform7/examples/interpreter.html?story=stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.z8">play</a>'
-                        + '&mdash; <a href="/vorple/release/doc/inform7/examples/stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.ni">view source</a></div>\n';
+                        + '<div class="blurb"><p>' + header[ 4 ] + '</p></div>'
+                        + '<div class="dl_links"><button class="view">'
+                        + '<a href="/vorple/release/doc/inform7/examples/interpreter.html?story=stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.z8"><i class="fa fa-play"></i> Play</a>'
+                        + '</button> <button class="source">'
+                        + '<a href="/vorple/release/doc/inform7/examples/stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.ni"><i class="fa fa-info"></i> View source</a></button></div>\n';
                 }
                 else if( examplename && ( lines[ j ].indexOf( '\t' ) === 0 || lines[ j ].replace( /\s/, '' ) === '' ) ) {
                     nifiles[ examplename ] += lines[ j ].substring( 1 ).replace( /^\*: /, '' ) + '\n';
@@ -140,14 +142,14 @@ module.exports = function( grunt ) {
                     // compile with I7
                     grunt.file.copy( out, 'build/tmp/i7example/Source/story.ni' );
 
-                    i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules /Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions -extensions ../../Extensions -sandboxed -extension=z8' );
+                    i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules /Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions -extensions ../../Extensions -extension=z8' );
 //                    a = 'ni "-rules" "/Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions" "-sandboxed" "-extensions" "/Users/jleinonen/Library/Inform/Extensions" "-package" "/Users/jleinonen/Documents/if/Inform/Vorple extensions.inform" "-extension=z8" "-release"'
 
                     if( i7result.code ) {
                         grunt.fail.warn( 'ni compilation for ' + k + ' in extension ' + extension + ' failed.\n' + i7result.stdout, i7result.code );
                     }
                     else {
-                        i6result = exec.exec( 'cd build/tmp/i7example; inform6-biplatform Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../release/doc/inform7/examples/stories/' + extension + '/' + k + '.z8"' );
+                        i6result = exec.exec( 'cd build/tmp/i7example; inform6 Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../release/doc/inform7/examples/stories/' + extension + '/' + k + '.z8"' );
 
                         if( i6result.code ) {
                             grunt.fail.warn( 'Inform 6 compilation for ' + k + ' in extension ' + extension + ' failed.\n' + i6result.stdout, i6result.code );
@@ -165,13 +167,13 @@ module.exports = function( grunt ) {
 
         // unit test
         grunt.file.copy( 'tests/lib/story.ni', 'build/tmp/i7example/Source/story.ni' );
-        i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules /Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions -extensions ../../Extensions -sandboxed -extension=z8' );
+        i7result = exec.exec( 'cd build/tmp/i7example; ni -package . -rules /Applications/Inform_DEV.app/Contents/Resources/Inform7/Extensions -extensions ../../Extensions -extension=z8' );
 
         if( i7result.code ) {
             grunt.fail.warn( 'ni compilation for the unit test story failed.\n' + i7result.stdout, i7result.code );
         }
         else {
-            i6result = exec.exec( 'cd build/tmp/i7example; inform6-biplatform Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../tests/lib/unittest.z8"' );
+            i6result = exec.exec( 'cd build/tmp/i7example; inform6 Build/auto.inf +"../../Library/6.11/" -kE2SDwv8 -o "../../../tests/lib/unittest.z8"' );
 
             if( i6result.code ) {
                 grunt.fail.warn( 'Inform 6 compilation for the unit test story failed.\n' + i6result.stdout, i6result.code );
