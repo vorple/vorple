@@ -116,10 +116,11 @@ module.exports = function( grunt ) {
 
                     listHTML += '<h4>' + examplename + '</h4>'
                         + '<div class="blurb"><p>' + header[ 4 ] + '</p></div>'
-                        + '<div class="dl_links"><button class="view">'
-                        + '<a href="/vorple/release/doc/inform7/examples/interpreter.html?story=stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.z8"><i class="fa fa-play"></i> Play</a>'
-                        + '</button> <button class="source">'
-                        + '<a href="/vorple/release/doc/inform7/examples/stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.ni"><i class="fa fa-info"></i> View source</a></button></div>\n';
+                        + '<div class="dl_links">'
+                        + '<a href="/vorple/release/doc/inform7/examples/interpreter.html?story=stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.z8">'
+                        + '<button class="view"><i class="fa fa-play"></i> Play</button></a>'
+                        + '<a href="/vorple/release/doc/inform7/examples/stories/' + encodeURIComponent( extension ) + '/' + encodeURIComponent( examplename ) + '.ni">'
+                        + '<button class="source"><i class="fa fa-info"></i> View source</button></a></div>\n';
                 }
                 else if( examplename && ( lines[ j ].indexOf( '\t' ) === 0 || lines[ j ].replace( /\s/, '' ) === '' ) ) {
                     nifiles[ examplename ] += lines[ j ].substring( 1 ).replace( /^\*: /, '' ) + '\n';
