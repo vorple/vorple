@@ -93,9 +93,9 @@ vorple.parser = (function($) {
         
             // The previous command is the first line
             structure.previousCommand = $contents.text().split( '\n' )[ 0 ];
-            
+
             // remove the first line
-            $contents.html( $contents.html().replace( /^.*\n/, '' ) );
+            $contents.html( $contents.html().replace( /(<span>)?.*\n/, '$1' ) );
             
             // The last span's last line contains the new prompt.
             var $parchmentPromptContainer = $( 'span:last', $contents );
