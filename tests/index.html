@@ -3,53 +3,81 @@
     <head>
         <meta charset="utf-8">
         <title>Vorple unit tests</title>
-        <link rel="stylesheet" href="lib/qunit-git.css">
-        
-        <script src="../release/lib/vorple.3rdparty-bundle.min.js"></script>
-        <script src="../vendor/parchment.min.js"></script>
-        <script src="../vendor/undum.js"></script>
-        <script src="../src/vorple.core.js"></script>
-        <script src="../src/vorple.cookie.js"></script>
-        <script src="../src/vorple.html.js"></script>
-        <script src="../src/vorple.media.js"></script>
-        <script src="../src/vorple.notify.js"></script>
-        <script src="../src/vorple.parser.js"></script>
-        <script src="../src/vorple.tooltip.js"></script>
-        <script src="../src/vorple.undum.js"></script>
+        <link rel="stylesheet" href="../node_modules/qunitjs/qunit/qunit.css">
+        <link rel="stylesheet" href="../node_modules/qtip2/dist/jquery.qtip.css">
 
+        <!--
         <link rel="stylesheet" href="../vendor/parchment/parchment.css">
         <link rel="stylesheet" href="../src/inform7/templates/Vorple/vorple.css">
+-->
+
+        <script src="../node_modules/requirejs/require.js"></script>
+        <script>
+            requirejs.config({
+                baseUrl: '../src',
+                paths: {
+                    jquery: '../node_modules/jquery/dist/jquery',
+                    noty: '../node_modules/noty/js/noty/packaged/jquery.noty.packaged',
+                    parchment: '../../parchment/lib/parchment.debug',
+                    qtip2: '../node_modules/qtip2/dist/jquery.qtip',
+                    qunit: '../node_modules/qunitjs/qunit/qunit',
+                    soundmanager2: '../node_modules/soundmanager2/script/soundmanager2',
+                    zvm: '../../parchment/lib/zvm.debug'
+                },
+                shim: {
+                    qunit: {
+                        exports: 'qunit',
+                        init: function() {
+                            QUnit.config.autoload = false;
+                            QUnit.config.autostart = false;
+                        }
+                    }
+                }
+            });
+        </script>
     </head>
     <body>
         <div id="qunit"></div>
         <div id="qunit-fixture"></div>
-        
-        <script src="lib/qunit-git.js"></script>
+        <div id="parchment"></div>
 
         <script>
-          // We can't let QUnit reorder tests since it might screw up
-          // Parchment's asynchronous script loading. We must wait for
-          // Parchment to fully load before we can run any tests with it.
-          QUnit.config.reorder = false;
-
           // Initialize Vorple
-          $(function() {
-            vorple.media.defaults.swfPath = '../vendor/soundmanager';
-            vorple.media.defaults.audioPath = '../stories/undum/everything/media/audio';
-            vorple.media.defaults.imagePath = '../stories/undum/everything/media/image';
-            vorple.media.defaults.musicPath = '../stories/undum/everything/media/music';
-            vorple.core.init();
+          require( [ 'jquery', 'core', 'media', 'qunit' ], function ( $, core, media, QUnit ) {
+              // We can't let QUnit reorder tests since it might screw up
+              // asynchronous script loading.
+              QUnit.config.reorder = false;
+
+              $( function () {
+                  media.defaults.swfPath = '../vendor/soundmanager';
+                  media.defaults.audioPath = '../stories/undum/everything/media/audio';
+                  media.defaults.imagePath = '../stories/undum/everything/media/image';
+                  media.defaults.musicPath = '../stories/undum/everything/media/music';
+                  core.init();
+
+                  require([
+                      '../tests/core.test',
+                      '../tests/html.test',
+                      '../tests/media.test',
+                      '../tests/notify.test',
+                      '../tests/parser.test',
+                      '../tests/tooltip.test'
+                  ], function() {
+                      QUnit.load();
+                      QUnit.start();
+                  });
+              });
           });
         </script>
 
+        <!--
         <script src="lib/dummy-undum.js"></script>
-        <script src="vorple.core.test.js"></script>
-        <script src="vorple.cookie.test.js"></script>
         <script src="vorple.html.test.js"></script>
         <script src="vorple.media.test.js"></script>
         <script src="vorple.notify.test.js"></script>
         <script src="vorple.parser.test.js"></script>
         <script src="vorple.tooltip.test.js"></script>
         <script src="vorple.undum.test.js"></script>
+        -->
     </body>
 </html>

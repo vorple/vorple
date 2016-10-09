@@ -6,34 +6,21 @@
   "license": "MIT/CC-BY",
   "repository": {
     "type": "git",
-    "url": "https://github.com/juhana/vorple.git"
+    "url": "https://github.com/vorple/vorple.git"
   },
   "devDependencies": {
+    "almond": "^0.3.2",
     "grunt": "~0.4.1",
-    "grunt-closure-compiler": "0.0.21",
-    "grunt-exec": "~0.4.2",
-    "grunt-jsdoc": "~0.4.1",
-    "grunt-contrib-concat": "~0.3.0",
+    "grunt-contrib-clean": "^1.0.0",
+    "grunt-contrib-copy": "^1.0.0",
+    "grunt-contrib-cssmin": "^1.0.1",
     "grunt-contrib-jshint": "~0.7.1",
-    "grunt-contrib-compress": "~0.5.2",
-    "grunt-contrib-copy": "~0.4.1",
-    "grunt-zip": "~0.10.0",
-    "grunt-template": "~0.2.1",
-    "execSync": "~1.0.1-pre",
-    "karma-script-launcher": "~0.1.0",
-    "karma-firefox-launcher": "~0.1.0",
-    "karma-chrome-launcher": "~0.1.0",
-    "karma-html2js-preprocessor": "~0.1.0",
-    "karma-jasmine": "~0.1.3",
-    "karma-requirejs": "~0.1.0",
-    "karma-coffee-preprocessor": "~0.1.0",
-    "karma-phantomjs-launcher": "~0.1.0",
-    "karma": "~0.10.4",
-    "grunt-karma": "~0.6.2",
-    "karma-coverage": "~0.1.2",
-    "karma-safari-launcher": "~0.1.1",
-    "karma-opera-launcher": "~0.1.0",
-    "qunitjs": "~1.12.0",
-    "karma-qunit": "~0.1.1"
+    "grunt-contrib-requirejs": "^1.0.0",
+    "jquery": "^3.1.0",
+    "noty": "^2.3.8",
+    "qtip2": "^3.0.3",
+    "qunitjs": "^2.0.1",
+    "requirejs": "^2.2.0",
+    "soundmanager2": "^2.97.20150601"
   }
 }

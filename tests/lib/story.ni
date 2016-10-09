@@ -30,6 +30,12 @@ Book Core
 
 Include Vorple by Juhana Leinonen.
 
+Carry out testing "core vorple detect":
+	if Vorple is supported:
+		say "Pass";
+	otherwise:
+		say "Fail".
+
 Carry out testing "core eval":
 	execute JavaScript command "window.evalTest = true".
 
