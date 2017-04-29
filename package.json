@@ -1,26 +1,25 @@
 {
-  "name": "Vorple",
-  "version": "2.5.0",
-  "description": "User interface library for interactive fiction",
-  "author": "Juhana Leinonen <vorple@nitku.net>",
-  "license": "MIT/CC-BY",
+  "name": "vorple",
+  "version": "3.0.0",
+  "description": "Vorple",
+  "scripts": {
+    "build": "rm -rf ../build; mkdir -p ../build/vorple; (cd ../cheapglk && exec emmake make); (cd ../Git && exec npm run compile); (cd ../haven && exec npm run build); cp index.html *.css ../build/vorple; cp git.js* ../build/vorple; uglifyjs src/{vorple,debug,haven,audio,layout,prompt}.js -o ../build/vorple/vorple.min.js -c --screw-ie8; mkdir ../build/vendor; cp -r vendor/*.js vendor/fonts/roboto ../build/vendor; npm run cssmin; (cd ../inform7 && exec npm run build)",
+    "cssmin": "cleancss --skip-rebase vendor/flexboxgrid/css/flexboxgrid.css vendor/toastr.min.css vendor/vex.css vendor/vex-theme-plain.css vendor/jquery.powertip.min.css vendor/fonts/roboto/roboto.css haven/ui.css haven/styles.css vorple.css -o ../build/vorple/vorple.min.css",
+    "lint": "jshint src/*.js"
+  },
   "repository": {
     "type": "git",
-    "url": "https://github.com/vorple/vorple.git"
+    "url": "git+https://github.com/vorple/vorple.git"
   },
+  "author": "Juhana Leinonen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vorple/vorple/issues"
+  },
+  "homepage": "https://vorple-if.com",
   "devDependencies": {
-    "almond": "^0.3.2",
-    "grunt": "~0.4.1",
-    "grunt-contrib-clean": "^1.0.0",
-    "grunt-contrib-copy": "^1.0.0",
-    "grunt-contrib-cssmin": "^1.0.1",
-    "grunt-contrib-jshint": "~0.7.1",
-    "grunt-contrib-requirejs": "^1.0.0",
-    "jquery": "^3.1.0",
-    "noty": "^2.3.8",
-    "qtip2": "^3.0.3",
-    "qunitjs": "^2.0.1",
-    "requirejs": "^2.2.0",
-    "soundmanager2": "^2.97.20150601"
+    "clean-css": "^3.4.24",
+    "jshint": "^2.9.4",
+    "uglify-js": "^2.7.5"
   }
 }

@@ -1,0 +1,71 @@
+<!doctype html>
+<html>
+<head>
+    <title>Vorple</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="stylesheet" href="vendor/flexboxgrid/css/flexboxgrid.css">
+    <link rel="stylesheet" href="vendor/toastr.min.css">
+    <link rel="stylesheet" href="vendor/vex.css">
+    <link rel="stylesheet" href="vendor/vex-theme-plain.css">
+    <link rel="stylesheet" href="vendor/jquery.powertip.min.css">
+    <link rel="stylesheet" href="vendor/fonts/roboto/roboto.css">
+
+    <link rel="stylesheet" href="haven/ui.css">
+    <link rel="stylesheet" href="haven/styles.css">
+    <link rel="stylesheet" href="vorple.css">
+</head>
+<body>
+    <main id="haven">
+        <div id="output">
+            <div id="window0" aria-live="polite" aria-atomic="false" aria-relevant="additions"></div>
+        </div>
+
+        <form id="lineinput">
+            <label id="lineinput-prefix" for="lineinput-field">#</label><input name="lineinput" id="lineinput-field" type="text" autocapitalize="none">
+        </form>
+
+        <div id="loader">
+            <h2 id="loader-message">Loading scripts</h2>
+            <div id="spinner">V</div>
+        </div>
+    </main>
+
+    <script src="vendor/jquery.min.js"></script>
+    <script src="vendor/toastr.min.js"></script>
+    <script src="vendor/vex.combined.min.js"></script>
+    <script src="vendor/jquery.powertip.min.js"></script>
+
+    <script src="haven.js"></script>
+    <script src="vorple.js"></script>
+
+    <form id="upload" style="display:none;" method="post" action="upload.php" enctype="multipart/form-data">
+        <input type="file" id="gamefile" name="gamefile" required>
+        <button>Upload .ulx or .gblorb file</button>
+    </form>
+
+    <script>
+        vorple.options = {
+            autosave: false,
+            engineColors: false,
+
+            // URL to the game file
+            story: ""
+        };
+
+        vorple.debug.off();
+
+        if( location.href.indexOf( '?story' ) > -1 ) {
+            vorple.init();
+        }
+        else {
+            document.getElementById( 'upload' ).style.display = 'block';
+            document.getElementById( 'loader' ).style.display = 'none';
+        }
+    </script>
+
+    <script src="git.js" defer></script>
+</body>
+</html>

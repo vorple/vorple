@@ -1,0 +1,328 @@
+html, body {
+    font-family: "Roboto", sans-serif;
+}
+
+a, a:visited {
+    color: #369;
+}
+
+blockquote {
+    border: 1px solid #ccc;
+    padding: 0.5em 1em;
+}
+
+#output {
+    line-height: 1.5em;
+}
+
+.force-hidden {
+    visibility: hidden;
+}
+
+.font-proportional,
+input {
+    font-family: "Roboto", sans-serif;
+    font-size: inherit;
+}
+
+.font-fixed-width {
+    font-family: monospace;
+    font-size: inherit;
+}
+
+.uiblock {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    top: 0;
+    z-index: 999999;
+}
+
+
+/* Vorple Screen Effects */
+
+.center-align {
+    text-align: center;
+}
+
+.right-align {
+    text-align: right;
+}
+
+.cursive-font {
+    font-style: italic;
+}
+
+.emphasized-font {
+    font-style: italic;
+}
+
+.fantasy-font {
+    font-family: fantasy;
+}
+
+.monospace-font {
+    font-family: monospace;
+}
+
+#output span.nowrap-font,
+#output span.nowrap-font * {
+    white-space: nowrap;
+}
+
+.strikethrough-font {
+    text-decoration: line-through;
+}
+
+.strong-font {
+    font-weight: bold;
+}
+
+.underlined-font {
+    text-decoration: underline;
+}
+
+.xx-small-font {
+    font-size: xx-small;
+}
+
+.x-small-font {
+    font-size: x-small;
+}
+
+.small-font {
+    font-size: small;
+}
+
+.large-font {
+    font-size: large;
+}
+
+.x-large-font {
+    font-size: x-large;
+}
+
+.xx-large-font {
+    font-size: xx-large;
+}
+
+.white-letters {
+    color: #fff;
+}
+
+.black-letters {
+    color: #000;
+}
+
+.blue-letters {
+    color: #00a;
+}
+
+.green-letters {
+    color: #0a0;
+}
+
+.cyan-letters {
+    color: #0aa;
+}
+
+.red-letters {
+    color: #a00;
+}
+
+.magenta-letters {
+    color: #a0a;
+}
+
+.brown-letters {
+    color: #a50;
+}
+
+.yellow-letters {
+    color: #ff5;
+}
+
+.dark-gray-letters {
+    color: #555;
+}
+
+.light-gray-letters {
+    color: #aaa;
+}
+
+.light-blue-letters {
+    color: #55f;
+}
+
+.light-green-letters {
+    color: #5f5;
+}
+
+.light-cyan-letters {
+    color: #5ff;
+}
+
+.light-red-letters {
+    color: #f55;
+}
+
+.light-magenta-letters {
+    color: #f5f;
+}
+
+.white-background {
+    background-color: #fff;
+}
+
+.black-background {
+    background-color: #000;
+}
+
+.blue-background {
+    background-color: #00a;
+}
+
+.green-background {
+    background-color: #0a0;
+}
+
+.cyan-background {
+    background-color: #0aa;
+}
+
+.red-background {
+    background-color: #a00;
+}
+
+.magenta-background {
+    background-color: #a0a;
+}
+
+.brown-background {
+    background-color: #a50;
+}
+
+.yellow-background {
+    background-color: #ff5;
+}
+
+.dark-gray-background {
+    background-color: #555;
+}
+
+.light-gray-background {
+    background-color: #aaa;
+}
+
+.light-blue-background {
+    background-color: #55f;
+}
+
+.light-green-background {
+    background-color: #5f5;
+}
+
+.light-cyan-background {
+    background-color: #5ff;
+}
+
+.light-red-background {
+    background-color: #f55;
+}
+
+.light-magenta-background {
+    background-color: #f5f;
+}
+
+
+/* Status line */
+
+.status-line-container {
+    background-color: #00a;
+    color: #fff;
+    margin-left: 0;
+    position: fixed;
+    top: 0;
+    white-space: pre-wrap;
+    width: 100%;
+}
+
+.status-line-left {
+    text-align: left;
+}
+
+.status-line-middle,
+.status-line-mobile {
+    text-align: center;
+}
+
+.status-line-right {
+    text-align: right;
+}
+
+
+/* Image alignments */
+
+.vorple-image img {
+    max-width: 100%;
+}
+
+.centered {
+    text-align: center;
+}
+
+.left-aligned {
+    text-align: left;
+}
+
+.right-aligned {
+    text-align: right;
+}
+
+.left-floating {
+    float: left;
+}
+
+.right-floating {
+    float: right;
+}
+
+
+/* Modal windows */
+
+.vex {
+    z-index: 9999999;
+}
+
+body .vex.vex-theme-plain .vex-content {
+    max-width: 850px;
+    width: 90%;
+}
+
+.vex-dialog-message {
+    white-space: pre-wrap;
+}
+
+
+/* Tooltips */
+
+#powerTip {
+    max-width: 90%;
+    white-space: pre-wrap;
+}
+
+
+/* Responsive classes */
+
+@media screen and (min-width: 569px) {
+    .sm-only {
+        display: none;
+    }
+}
+
+@media screen and (max-width: 568px) {
+    .lg-only {
+        display: none;
+    }
+}

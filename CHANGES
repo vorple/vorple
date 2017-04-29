@@ -1,246 +1,34 @@
-Release 2.5 (2014-05-07)
-========================
+See also the changelog of the Inform 7 extensions
+(https://github.com/vorple/inform7/CHANGES).
 
-I7 Extensions
+
+Release 3.0
+===========
+
+Version 3 is a complete rewrite. Instead of Parchment, it's built on top of
+Git (https://github.com/DavidKinder/Git) and CheapGlk
+(https://github.com/erkyrath/cheapglk) that have been compiled to JavaScript
+(https://github.com/vorple/Git and https://github.com/vorple/cheapglk).
+The frontend uses Haven (https://github.com/vorple/haven).
+
+The API has changed completely, so individual changes are not specified here.
+
+Version 3 doesn't directly support Undum anymore. With Undum please use
+version 2.5.
+
+
+Libraries
+---------
+
+- Replaced the notification/modal library Noty with Toastr and Vex
+- Replaced the tooltip library qTip2 with PowerTip
+- Added the Flexboxgrid library
+- Updated jQuery to 3.1.1
+
+
+Miscellaneous
 -------------
 
- - Updated to work with the new I7 release
- - Changed the author's name from "The Vorple Project" to "Juhana Leinonen"
-   to conform with Inform 7 extension guidelines, added "Vorple" in front
-   of extension names, renamed "Hypertext" to "Hyperlinks" and
-   "Core" to just "Vorple"
- - Added the "Vorple Screen Effects" extension
- - Added and fixed examples across the board
- - Vorple: Separate checks for new Z-machine 1.2 streams
-   and caching Vorple availability (closes #1)
- - Vorple: Removed the Undo Output Control which is now unneeded
- - Vorple: Reworked the creation and placing content to HTML tags completely.
-   The only allowed phrases are now "place an ["element"] element
-   [called "name"] [reading "text"]", "display "text" in the element "name""
-   and "display "text" in all "name" elements". The "display "text" in the
-   element "name"" phrase affects only the last available element.
- - Vorple: Changed "eval" to "execute JavaScript command/code" and "queue code"
-   to "queue JavaScript command/code"
- - Vorple: Moved transient text to the Screen Effects extension
- - Vorple: Added phrases to issue commands directly to the parser
- - Hyperlinks: Added a missing full stop at the end of first line which
-   prevented the extension from installing correctly
- - Hyperlinks: Added an option for external links to open in the same
-   window
- - Hyperlinks: Renamed the phrases to match the new phrasing in the main
-   extension
- - Hyperlinks: Leaving out the links' text content will default to the link
-   target.
- - Multimedia: Replaced documentation about including resources with
-   the current version
- - Tooltips: Added the missing "Z-machine only" directive
- - Tooltips: Renamed the say phrase to match the main extension's new phrases
- - Tooltips: By default tooltips are shown only on the last matching element
- - Tooltips: Phrases to create tooltips that are activated on mouseover
- - Tooltips: The delay for showing the tooltip can be supplied, and the default
-   delay is dropped from 3 seconds to nothing.
-
-
-Libraries
----------
-
- - Updated Undum to version 2
- - Updated Parchment, should work with IE8 now. Also fixes the bug where
-   escaping a single quote would crash Parchment.
- - Replaced jPlayer with SoundManager 2
- - Updated jQuery to 1.11.0 (with jQuery Migrate to provide compatibility
-   with Parchment and Undum)
- - Updated Noty to 2.2.2
- - An undetermined bug that caused a halt in Safari 7 has fixed itself,
-   possibly due to third party library updates (closes #7)
-
-
-Modules
--------
-
- - Changed the source code into a more modular system with actual private
-   variables. Functions and variables previously prefixed with underscore
-   can't be accessed outside the modules anymore.
- - Core: Added vorple.core.getEngine() to give the current engine object
- - Core: Version and release numbers combined into one version number which
-   can be retrieved with vorple.core.getVersion(). Changed requireRelease()
-   into requireVersion() which handles version numbers more flexibly.
- - HTML: Fixed a bug where the second parameter to vorple.html.attributes()
-   would have no effect
- - Media: Updated to work with SoundManager instead of jPlayer
- - Media: Added stopSound()
- - Media: Music now fades out when stopped or another song is played, and
-   all functions that stop sounds can fade out instead
- - Parser: Character input support
- - Parser: Commands triggered while a turn is running are put into a queue
-   and ran when the prompt is ready. There's a separate queue for "primary"
-   commands, which is always resolved before the main command queue.
- - Parser: Meta and dialog commands that have no output will not pop up
-   a notification/dialog
- - Parser: Support for nested HTML tags
- - Parser: Support for commands issued from the story file before play begins
- - Parser: A proper method for adding expressions to the JavaScript queue
-   (vorple.parser.queueExpression())
- - Parser: Fixed a bug that prevented custom filters from running
-   in some cases
- - Parser: scrollTo() accepts a callback function that runs after scrolling
-   has finished
- - Undum: Changed vorple.undum.settings to vorple.undum.defaults
-
-
-Releases
---------
-
- - Replaced the old convoluted build script with Grunt
- - The project is now self-contained, except for the Inform compilers
- - The library is now packaged to three complete minified library files that
-   includes everything needed by the system, one for each engine and one
-   "vanilla" with no engine. There's also a single JavaScript file that
-   contains all third party libraries.
- - Using a single library file also fixes the problem where jQuery was not
-   loaded correctly in the Inform 7 interpreter template when there was no
-   Internet connection
- - Added a configurable loader message for Parchment
- - Fixed a rejected command's CSS rule so that it's styled correctly
- - I7 now supports adding custom JavaScript and CSS files, so automatically
-   loaded "vorple.custom.js" and "vorple.custom.css" files are now removed
- - CSS files used by Parchment are now compressed into a single
-   "vorple.css" file
- - Vorple is now dual licensed under MIT or CC-BY to avoid any issues with
-   the I7 extension repository which implicitly assumes CC-BY license
-
-
-
-Release 2.4 (2012-09-29)
-========================
-
-Support for Parchment (Z-machine) and Inform 7.
-
-Modules
--------
-
- - Cookie: Added vorple.cookie.list()
- - Core: changed the initialization event from "vorpleInit" to "init.vorple",
-   in preparation of namespaced parser events
- - Core: Made vorple.core.engine() return the engine that's used to initialize
-   Vorple, not the engine that is otherwise available
- - Core: Removed the clickLink() method, replaced by vorple.undum.doClick()
-   and vorple.undum.doLink()
- - Html: Fixed a bug where vorple.html.url() would not return correct values
-   when no filename was given
- - Media: Changed the default YouTube video width from 640 pixels to 600 pixels
-   so that the videos fit in the new Parchment version layout
- - Parser: Added the module and Parchment/Inform 7 support
- - Undum: Added doClick() and doLink() that expose undum.doClick()
-   and undum.doLink()
-
-
-Libraries
----------
-
- - Updated the Noty library
-
-
-Tests
------
-
- - Restructured the tests so that they can be run at the same time
- - Updated QUnit to the latest version
-
-
-
-Release 1.3 (2012-04-26)
-========================
-
-Documentation
--------------
-
- - Added a fallback to local jQuery UI library if the CDN fails
- - Added the undum namespace to examples where it was missing
- - Removed the rather weak "resources" section from the Undum introduction
- - Added a link to Starborn
- - Added links to example stories' source codes
- - Added a section about link popups to the documentation and the API
- - Removed the vertical scroll bars from the code examples
- - Added a note about Mobile Safari audio limitations
-
-
-Examples
---------
-
- - New folder structure in preparation for Inform 7 examples
- - Added the Inform 7 preview
- - One With Everything: Fixed a bug where navigation buttons would be
-   duplicated when a save game was erased
- - Rabbithole: Switched to using the notify module instead of jQuery UI
-
-
-Libraries
----------
-
- - Added the noty library
- - Updated to latest qTip2
-
-
-Modules
--------
-
- - Added the notify module
-
-
-Releases
---------
-
- - Added the missing qTip CSS file to the Undum theme
-
-
-
-Release 1.2 (2012-02-04)
-========================
-
-Documentation
--------------
-
- - Fixed the documentation for preloading multiple images.
- - Added a note about playing sounds in iOS devices.
-
-
-Examples
---------
-
- - Down the Rabbit-Hole now preloads the images it uses.
-
-
-Libraries
----------
-
- - Updated jQuery to 1.7.1.
-
-
-Modules
--------
-
- - Buttons: rewrote the button system.
- - Core: added Crockford's inheritance method.
- - Core: passing the Undum engine to the initializer is now mandatory.
- - Core: added a function for "clicking" links.
- - HTML: link() accepts the link building parameters as a single object.
- - HTML: link() can create multiple choice popups.
- - HTML: url() now recognizes that filenames starting with ./ or ../ should
-   not have the default directory prepended to them. 
- - Media: added isMuted().
- - Tooltip: removed a stray uninitialized variable that caused problems 
-   in some browsers.
- 
- 
-Releases
---------
-
- - Added the media/music directory to theme packages.
- 
- 
- 
-Release 1.1 (2011-11-20)
-========================
-
-Initial release.
+- Inform extensions are split into a separate repository, so dual-licensing
+  the entire project isn't necessary anymore: the JavaScript library is now
+  using the MIT license and the Inform 7 extensions use the CC-BY license.
