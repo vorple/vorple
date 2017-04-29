@@ -2,8 +2,8 @@ See also the changelog of the Inform 7 extensions
 (https://github.com/vorple/inform7/CHANGES).
 
 
-Release 3.0
-===========
+Release 3.0 preview (2017-04-29)
+================================
 
 Version 3 is a complete rewrite. Instead of Parchment, it's built on top of
 Git (https://github.com/DavidKinder/Git) and CheapGlk

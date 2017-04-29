@@ -41,11 +41,6 @@
     <script src="haven.js"></script>
     <script src="vorple.js"></script>
 
-    <form id="upload" style="display:none;" method="post" action="upload.php" enctype="multipart/form-data">
-        <input type="file" id="gamefile" name="gamefile" required>
-        <button>Upload .ulx or .gblorb file</button>
-    </form>
-
     <script>
         vorple.options = {
             autosave: false,
@@ -56,14 +51,7 @@
         };
 
         vorple.debug.off();
-
-        if( location.href.indexOf( '?story' ) > -1 ) {
-            vorple.init();
-        }
-        else {
-            document.getElementById( 'upload' ).style.display = 'block';
-            document.getElementById( 'loader' ).style.display = 'none';
-        }
+        vorple.init();
     </script>
 
     <script src="git.js" defer></script>
