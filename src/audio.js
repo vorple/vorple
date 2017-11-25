@@ -7,6 +7,7 @@
         musicPauseTimer,
         playlist = [];
 
+    audio.pauseBetweenTracks = 1000;    // how long to pause between music tracks, in milliseconds
 
     /**
      * Fade out sound over the duration of 1 second.
@@ -41,7 +42,8 @@
 
 
     /**
-     * Set a timer that starts the next track in the music queue after 1 second.
+     * Set a timer that starts the next track in the music queue
+     * after the time specified by audio.pauseBetweenTracks.
      */
     function timeNextTrack() {
         clearTimeout( musicPauseTimer );
@@ -59,9 +61,9 @@
             var next = musicQueue.shift();
 
             if( next ) {
-                audio.playMusic( next );
+                audio.playMusic( next.url, next.looping );
             }
-        }, 1000 );
+        }, audio.pauseBetweenTracks );
     }
 
 
@@ -198,7 +200,7 @@
                 .prop( 'loop', !!loop ).get( 0 ).play();
         }
         else if( audio.isElementPlaying( '.vorple-music' ) ) {
-            musicQueue.unshift( url );
+            musicQueue.unshift({ url: url, looping: !!loop });
             fadeOut( $music, timeNextTrack )
         }
         else {
@@ -224,6 +226,19 @@
             playlist = [];
             return;
         }
+
+        // if the playlist is a list of URLs, turn them into objects that have
+        // the "looping" property
+        list = list.map( function( item ) {
+            if( typeof item === 'string' ) {
+                return {
+                    url: item,
+                    looping: false
+                };
+            }
+
+            return item;
+        });
 
         musicQueue = list.slice( 1 );
 

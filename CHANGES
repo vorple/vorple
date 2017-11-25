@@ -1,6 +1,14 @@
 See also the changelog of the Inform 7 extensions
 (https://github.com/vorple/inform7/CHANGES).
 
+Release 3.0
+===========
+
+- Fixed a bug that prevented a music track from looping if it was started
+  when a previous track was already playing
+- Added the vorple.audio.pauseBetweenTracks variable to set the duration of the
+  pause between tracks in a playlist
+
 
 Release 3.0 preview (2017-04-29)
 ================================
