@@ -1,271 +1,321 @@
-(function() {
-    "use strict";
+import $ from "jquery";
 
-    var audio = {},
-        fadeOutTimer,
-        musicQueue = [],
-        musicPauseTimer,
-        playlist = [];
+let musicQueue = [];
+let musicPauseTimer;
+let playlist = [];
 
-    audio.pauseBetweenTracks = 1000;    // how long to pause between music tracks, in milliseconds
 
-    /**
-     * Fade out sound over the duration of 1 second.
-     *
-     * @param element
-     * @param callback
-     */
-    function fadeOut( element, callback ) {
-        var $sound = $( element ),
-            sound = $sound.get(0);
+export const defaults = {
+    fadeDuration: 1000,         // the duration of fade in or out, in milliseconds
+    pauseBetweenTracks: 1000    // how long to pause between music tracks, in milliseconds
+};
 
-        clearTimeout( fadeOutTimer );
 
-        $sound.data( 'stopping', true );
+/**
+ * Set a timer that starts the next track in the music queue
+ * after the time specified by defaults.pauseBetweenTracks.
+ */
+function timeNextTrack() {
+    clearTimeout( musicPauseTimer );
+    console.log(musicQueue, playlist);
 
-        function next( volume ) {
-            sound.volume = Math.max( volume, 0 );
-
-            if( volume > 0 ) {
-                fadeOutTimer = setTimeout( function() {
-                    next( volume - 0.05 );
-                }, 50 );
-            }
-            else {
-                $sound.remove();
-                callback();
-            }
-        }
-
-        next( sound.volume - 0.05 );
+    if( musicQueue.length === 0 && playlist.length > 0 ) {
+        musicQueue = playlist.slice();
     }
 
-
-    /**
-     * Set a timer that starts the next track in the music queue
-     * after the time specified by audio.pauseBetweenTracks.
-     */
-    function timeNextTrack() {
-        clearTimeout( musicPauseTimer );
-
-        if( musicQueue.length === 0 && playlist.length > 0 ) {
-            musicQueue = playlist.slice();
-        }
-
-        // no tracks in any queue, do nothing
-        if( musicQueue.length === 0 ) {
-            return;
-        }
-
-        musicPauseTimer = setTimeout( function() {
-            var next = musicQueue.shift();
-
-            if( next ) {
-                audio.playMusic( next.url, next.looping );
-            }
-        }, audio.pauseBetweenTracks );
+    // no tracks in any queue, do nothing
+    if( musicQueue.length === 0 ) {
+        return;
     }
 
+    // make sure the "stopping" flag is set (even though the audio has already stopped)
+    $( '.vorple-music' ).data( "stopping", true );
 
-    /**
-     * Clear the playlist and the music queue.
-     */
-    audio.clearPlaylist = function() {
-        playlist = [];
-        musicQueue = [];
-    };
+    musicPauseTimer = setTimeout( function() {
+        const next = musicQueue.shift();
 
-
-    /**
-     * Gets the name of the currently playing music file, or null if nothing
-     * is playing. If music has been asked to stop, returns the
-     * music that will play next.
-     *
-     * @returns {string|null}
-     */
-    audio.currentMusicPlaying = function() {
-        var $music = $( '.vorple-music' );
-
-        if( $music.length === 0 ) {
-            return null;
+        if( next ) {
+            playMusic( next.url, next.looping );
         }
-
-        if( $music.data( 'stopping' ) ) {
-            if( musicQueue.length > 0 ) {
-                return musicQueue[ 0 ];
-            }
-
-            if( playlist.length > 0 ) {
-                return playlist[ 0 ];
-            }
-
-            return null;
-        }
-
-        return $music.attr( 'src' );
-    };
-
-    /**
-     * Check if any audio is playing.
-     */
-    audio.isAudioPlaying = function() {
-        return audio.isEffectPlaying() || audio.isMusicPlaying();
-    };
+    }, defaults.pauseBetweenTracks );
+}
 
 
-    /**
-     * Check if any sound effect is playing.
-     *
-     * @returns {boolean}
-     */
-    audio.isEffectPlaying = function() {
-        var isEffectPlaying = false;
-
-        $( '.vorple-sound' ).each( function() {
-            if( audio.isElementPlaying( this ) ) {
-                isEffectPlaying = true;
-                return false;
-            }
-        });
-
-        return isEffectPlaying;
-    };
+/**
+ * Clear the playlist and the music queue. Does not stop music that's
+ * currently playing.
+ */
+export function clearPlaylist() {
+    playlist = [];
+    musicQueue = [];
+}
 
 
-    /**
-     * Check if an audio element is playing.
-     *
-     * @param audioElement DOM element, jQuery object or jQuery selector of the audio element
-     * @returns {boolean}
-     */
-    audio.isElementPlaying = function( audioElement ) {
-        var elem = $( audioElement ).get( 0 );
+/**
+ * Gets the name of the currently playing music file, or null if nothing
+ * is playing. If music has been asked to stop, returns the
+ * music that will play next.
+ *
+ * @returns {string|null}
+ */
+export function currentMusicPlaying() {
+    const $music = $( '.vorple-music' );
 
-        return !!( elem && elem.currentTime > 0 && !elem.paused );
-    };
+    if( $music.length === 0 ) {
+        return null;
+    }
 
-
-    /**
-     * Check if music is playing. Returns true if music is actually playing
-     * and it isn't fading out at the moment.
-     */
-    audio.isMusicPlaying = function() {
-        var $music = $( '.vorple-music' );
-
-        // if the audio element doesn't exist, music is never playing
-        if( $music.length === 0 ) {
-            return false;
-        }
-
-        // if there are tracks in the music queue, music is playing
+    if( $music.data( 'stopping' ) || !isMusicPlaying() ) {
         if( musicQueue.length > 0 ) {
-            return true;
+            return musicQueue[ 0 ].url;
         }
 
-        // if the queue is empty but there's a playlist, music is playing
         if( playlist.length > 0 ) {
-            return true;
+            return playlist[ 0 ].url;
         }
 
-        // if the music is stopping, it's not considered playing
-        if( $music.data( 'stopping' ) ) {
-            return false;
+        return null;
+    }
+
+    return $music.attr( 'src' );
+}
+
+
+/**
+ * Fade out sound.
+ *
+ * @param element The audio element that should fade out
+ * @param duration The duration of the fade in milliseconds, default 1000 ms (1 second).
+ *      Note that the duration is calculated from 100% volume, even if the
+ *      current volume of the sound is less than that.
+ * @param callback Function that is called when the audio has stopped completely
+ */
+export function fadeOut( element, duration, callback ) {
+    const tick = 50;    // how often the volume is changed
+    const $sound = $( element );
+    const sound = $sound.get( 0 );
+
+    const runCallbackIfExists = remove => {
+        if( remove ) {
+            $sound.remove();
         }
 
-        // finally check the audio's actual play state
-        return audio.isElementPlaying( $music );
+        if( typeof callback === "function" ) {
+            callback();
+        }
     };
 
+    if( typeof duration !== "number" ) {
+        duration = defaults.fadeDuration;
+    }
 
-    /**
-     * Start playing music. If the same music file is already playing, do nothing
-     * except set the looping property. If another music file is playing,
-     * fade out the old one before playing the new one.
-     *
-     * @param url
-     * @param loop
-     */
-    audio.playMusic = function( url, loop ) {
-        var $music = $( '.vorple-music' );
+    if( !sound || sound.tagName !== "AUDIO" ) {
+        runCallbackIfExists( false );
+        return;
+    }
 
-        clearTimeout( musicPauseTimer );
+    if( duration <= 0 ) {
+        runCallbackIfExists( true );
+        return;
+    }
 
-        // check if this specific track is already playing
-        if( ( $music.length > 0 && $music.attr( 'src' ) === url ) ||
-            ( $music.length === 0 && musicQueue[0] === url ) ) {
-            // if the music is fading out, stop the fadeout and continue
-            clearTimeout( fadeOutTimer );
+    duration = Math.min( duration, 60000 ); // cap the duration to 1 minute
 
-            $music.prop( 'volume', 1 ).data( 'stopping', false )
-                .prop( 'loop', !!loop ).get( 0 ).play();
-        }
-        else if( audio.isElementPlaying( '.vorple-music' ) ) {
-            musicQueue.unshift({ url: url, looping: !!loop });
-            fadeOut( $music, timeNextTrack )
+    const delta = tick / duration;  // how much to change the volume on each tick
+
+    clearTimeout( $sound.data( "fadeouttimer" ) );
+
+    $sound.data( "stopping", true );
+
+    function next( volume ) {
+        sound.volume = Math.max( volume, 0 );
+
+        if( volume > 0 ) {
+            const newTimer = setTimeout( function() {
+                next( volume - delta );
+            }, tick );
+
+            $sound.data( "fadeouttimer", newTimer );
         }
         else {
-            $music.remove();
-            $( '<audio class="vorple-audio vorple-music">' )
-                .attr( 'src', url )
-                .prop( 'loop', !!loop )
-                .appendTo( 'body' )
-                .on( 'ended', timeNextTrack )
-                .get(0).play();
+            $sound.remove();
+            runCallbackIfExists( true );
         }
-    };
+    }
+
+    next( sound.volume - delta );
+}
 
 
-    /**
-     * Set the playlist and start playing it.
-     *
-     * @param list
-     */
-    audio.setPlaylist = function( list, looping ) {
-        if( list.length === 0 ) {
-            musicQueue = [];
-            playlist = [];
-            return;
+/**
+ * Check if any audio is playing. Note that sound that is being loaded or
+ * has received a play command but isn't playing for some other reason
+ * isn't considered as playing, even though it's about to start.
+ *
+ * @returns {boolean}
+ */
+export function isAudioPlaying() {
+    return isEffectPlaying() || isMusicPlaying();
+}
+
+
+/**
+ * Check if any sound effect is playing.
+ *
+ * @returns {boolean}
+ */
+export function isEffectPlaying () {
+    let isEffectPlaying = false;
+
+    $( '.vorple-sound' ).each( function() {
+        if( isElementPlaying( this ) ) {
+            isEffectPlaying = true;
+            return false;
         }
+    } );
 
-        // if the playlist is a list of URLs, turn them into objects that have
-        // the "looping" property
-        list = list.map( function( item ) {
-            if( typeof item === 'string' ) {
-                return {
-                    url: item,
-                    looping: false
-                };
-            }
-
-            return item;
-        });
-
-        musicQueue = list.slice( 1 );
-
-        if( looping ) {
-            playlist = list.slice();
-        }
-
-        // start the first track unless it's already playing
-        if( !audio.isElementPlaying( '.vorple-music' ) || $( '.vorple-music' ).attr( 'src' ) !== list[ 0 ] ) {
-            audio.playMusic( list[ 0 ] );
-        }
-    };
+    return isEffectPlaying;
+}
 
 
-    /**
-     * Stop playing music.
-     */
-    audio.stopMusic = function() {
-        var $music = $( '.vorple-music' );
+/**
+ * Check if an audio element is playing.
+ *
+ * @param audioElement DOM element, jQuery object or jQuery selector of the audio element
+ * @returns {boolean}
+ */
+export function isElementPlaying( audioElement ) {
+    const elem = $( audioElement ).get( 0 );
 
+    return !!( elem && elem.tagName === "AUDIO" && !elem.paused );
+}
+
+
+/**
+ * Check if music is playing. Returns true if music is actually playing
+ * and it isn't fading out at the moment.
+ */
+export function isMusicPlaying() {
+    const $music = $( '.vorple-music' );
+
+    // if the audio element doesn't exist, music is never playing
+    if( $music.length === 0 ) {
+        return false;
+    }
+
+    // if there are tracks in the music queue, music is playing
+    if( musicQueue.length > 0 ) {
+        return true;
+    }
+
+    // if the queue is empty but there's a playlist, music is playing
+    if( playlist.length > 0 ) {
+        return true;
+    }
+
+    // if the music is stopping, it's not considered playing
+    if( $music.data( 'stopping' ) ) {
+        return false;
+    }
+
+    // finally check the audio's actual play state
+    return isElementPlaying( $music );
+}
+
+
+/**
+ * Start playing music. If the same music file is already playing, do nothing
+ * except set the looping property. If another music file is playing,
+ * fade out the old one before playing the new one.
+ *
+ * @param url
+ * @param loop
+ */
+export function playMusic( url, loop ) {
+    const $music = $( '.vorple-music' );
+
+    clearTimeout( musicPauseTimer );
+
+    // check if this specific track is already playing
+    if( ($music.length > 0 && $music.attr( 'src' ) === url) ||
+        ($music.length === 0 && musicQueue.length > 0 && musicQueue[ 0 ].url === url) ) {
+        // if the music is fading out, stop the fadeout and continue
+        clearTimeout( $music.data( "fadeOutTimer" ) );
+
+        $music.prop( 'volume', 1 ).data( 'stopping', false )
+            .prop( 'loop', !!loop ).get( 0 ).play();
+    }
+    else if( isElementPlaying( '.vorple-music' ) ) {
+        musicQueue.unshift( { url, looping: !!loop} );
+        fadeOut( $music, null, timeNextTrack )
+    }
+    else {
+        $music.remove();
+        $( '<audio class="vorple-audio vorple-music">' )
+            .attr( 'src', url )
+            .prop( 'loop', !!loop )
+            .appendTo( 'body' )
+            .on( 'ended', timeNextTrack )
+            .get( 0 ).play();
+    }
+}
+
+
+/**
+ * Set the playlist and start playing it.
+ *
+ * @param list
+ * @param looping If true, the playlist starts over after the last track
+ */
+export function setPlaylist( list, looping ) {
+    if( list.length === 0 ) {
         musicQueue = [];
         playlist = [];
+        return;
+    }
 
-        if( $music.length > 0 ) {
-            fadeOut( $music, timeNextTrack )
+    // if the playlist is a list of URLs, turn them into objects that have
+    // the "looping" property
+    list = list.map( function( item ) {
+        if( typeof item === 'string' ) {
+            return {
+                url: item,
+                looping: false
+            };
         }
-    };
 
-    vorple.audio = audio;
-})();
+        return item;
+    } );
+
+    musicQueue = list.slice( 1 );
+
+    if( looping ) {
+        playlist = list.slice();
+    }
+
+    // start the first track unless it's already playing
+    if( currentMusicPlaying() !== list[ 0 ].url ) {
+        playMusic( list[ 0 ].url, list[ 0 ].looping );
+    }
+}
+
+
+/**
+ * Stop playing music. Clears the music queue and the playlist.
+ *
+ * @param fadeoutDuration The duration of the fadeout. Set to 0 to stop immediately.
+ */
+export function stopMusic( fadeoutDuration ) {
+    const $music = $( '.vorple-music' );
+
+    musicQueue = [];
+    playlist = [];
+
+    if( $music.length > 0 ) {
+        // note: although we just cleared the playlist and queue,
+        // it's possible that a new track is added while the music is fading out.
+        // That's why we have to add the timeNextTrack callback so that the
+        // next track will start playing in that case.
+        fadeOut( $music, fadeoutDuration, timeNextTrack )
+    }
+}

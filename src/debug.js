@@ -1,71 +1,81 @@
-(function( vorple ) {
-    "use strict";
+import havenError from "../haven/error";
+import { append } from "../haven/buffer";
 
-    var debug = {};
-
-    var DEBUGGING = false;
+let debugState = false;
 
 
-    /**
-     *
-     * @returns {boolean} true if a debugging message was printed, otherwise false
-     */
-    debug.log = function( text ) {
-        if( !DEBUGGING ) {
-            return false;
-        }
+/**
+ * Show an error in the console and on the screen.
+ *
+ * @param text Error message
+ * @return {boolean} Always returns true, for consistency with log()
+ */
+export function error( text ) {
+    console.error( text );
+    havenError( text );
 
-        console.log( text );
-        haven.buffer.append( '[' + text + ']\n', 0 );
-
-        return true;
-    };
+    return true;
+}
 
 
-    /**
-     * Set the debugging status off.
-     *
-     * @returns {boolean} the new status (false)
-     */
-    debug.off = function() {
-        DEBUGGING = false;
+/**
+ * Print a logging message to console and on the screen if debugging mode is on.
+ *
+ * @returns {boolean} true if a debugging message was printed, otherwise false
+ */
+export function log( text ) {
+    if( !debugState ) {
+        return false;
+    }
 
-        return true;
-    };
+    console.log( text );
+    append( '[' + text + ']\n', 0 );
 
-
-    /**
-     * Set the debugging status on.
-     *
-     * @returns {boolean} the new status (true)
-     */
-    debug.on = function() {
-        DEBUGGING = true;
-
-        return true;
-    };
+    return true;
+}
 
 
-    /**
-     * Returns the current state of the debugging flag.
-     *
-     * @returns {boolean}
-     */
-    debug.status = function() {
-        return DEBUGGING;
-    };
+/**
+ * Set the debugging status off.
+ *
+ * @returns {boolean} the new status (false)
+ */
+export function off() {
+    debugState = false;
+
+    return status();
+}
 
 
-    /**
-     * Set or unset the the debugging flag.
-     *
-     * @returns {boolean} The new status of the debugging flag.
-     */
-    debug.toggle = function() {
-        DEBUGGING = !DEBUGGING;
+/**
+ * Set the debugging status on.
+ *
+ * @returns {boolean} the new status (true)
+ */
+export function on() {
+    debugState = true;
 
-        return DEBUGGING;
-    };
+    return status();
+}
 
-    vorple.debug = debug;
-})( window.vorple );
+
+/**
+ * Returns the current state of the debugging flag.
+ *
+ * @returns {boolean}
+ */
+export function status() {
+    return debugState;
+}
+
+
+/**
+ * Set or unset the the debugging flag.
+ *
+ * @returns {boolean} The new status of the debugging flag.
+ */
+export function toggle() {
+    debugState = !debugState;
+
+    return status();
+}

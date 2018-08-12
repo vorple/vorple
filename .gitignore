@@ -1,2 +1,5 @@
+.cache
 library
-haven
+!library/README.md
+dist
+errorShots

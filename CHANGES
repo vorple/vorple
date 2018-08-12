@@ -8,6 +8,32 @@ Release 3.0
   when a previous track was already playing
 - Added the vorple.audio.pauseBetweenTracks variable to set the duration of the
   pause between tracks in a playlist
+- Fixed the return value of debug.off() that was always true but documented to
+  be always false
+- vorple.requireVersion() returns a boolean that indicates the check status and
+  accepts a callback that will be run after the check instead of the default
+  one that prints an error message
+- Fixed a bug where versions larger than 9 would pass vorple.requireVersion()
+  check
+- Compatibility with Internet Explorer 11
+- Added default audio options that can be set by the user
+- Exposed audio.fadeOut() method so that it can be called directly
+- Fixed a bug where fading out a sound while another sound was in the middle of
+  fading out would stop the other sound's fadeout
+- Added a parameter for audio.stopMusic that determines the fadeout duration.
+  By extension setting the fadeout duration to 0 stops the music immediately.
+
+
+Project
+-------
+
+- The code is updated to use latest JavaScript features (ES6) and the build
+  process is simplified. The JavaScript library is built with Webpack which
+  also handles other build tasks.
+- Updated the Git engine to compile with the latest version of Emscripten
+  which also drastically reduced the size of the resulting JavaScript file
+- Added documentation for how to get development environment for Vorple itself
+  and its tests installed and running
 
 
 Release 3.0 preview (2017-04-29)
@@ -34,8 +60,8 @@ Libraries
 - Updated jQuery to 3.1.1
 
 
-Miscellaneous
--------------
+Project
+-------
 
 - Inform extensions are split into a separate repository, so dual-licensing
   the entire project isn't necessary anymore: the JavaScript library is now

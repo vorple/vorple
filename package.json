@@ -3,9 +3,13 @@
   "version": "3.0.0",
   "description": "Vorple",
   "scripts": {
-    "build": "rm -rf ../build; mkdir -p ../build/vorple; (cd ../cheapglk && exec emmake make); (cd ../Git && exec npm run compile); (cd ../haven && exec npm run build); cp index.html *.css ../build/vorple; cp git.js* ../build/vorple; uglifyjs src/{vorple,debug,haven,audio,layout,prompt}.js -o ../build/vorple/vorple.min.js -c --screw-ie8; mkdir ../build/vendor; cp -r vendor/*.js vendor/fonts/roboto ../build/vendor; npm run cssmin; (cd ../inform7 && exec npm run build)",
-    "cssmin": "cleancss --skip-rebase vendor/flexboxgrid/css/flexboxgrid.css vendor/toastr.min.css vendor/vex.css vendor/vex-theme-plain.css vendor/jquery.powertip.min.css vendor/fonts/roboto/roboto.css haven/ui.css haven/styles.css vorple.css -o ../build/vorple/vorple.min.css",
-    "lint": "jshint src/*.js"
+    "compile": "(cd cheapglk && exec emmake make); (cd Git && exec npm run compile)",
+    "lint": "jshint src/*.js",
+    "start": "webpack-dev-server",
+    "build": "webpack",
+    "test": "wdio wdio.conf.js",
+    "test:chrome": "BROWSER=chrome wdio wdio.conf.js",
+    "test:all": "npm run test && npm run test:chrome"
   },
   "repository": {
     "type": "git",
@@ -18,8 +22,21 @@
   },
   "homepage": "https://vorple-if.com",
   "devDependencies": {
-    "clean-css": "^3.4.24",
-    "jshint": "^2.9.4",
-    "uglify-js": "^2.7.5"
+    "chai": "^4.1.2",
+    "chai-webdriverio": "^0.4.3",
+    "chromedriver": "^2.38.3",
+    "copy-webpack-plugin": "^4.5.1",
+    "jshint": "^2.9.5",
+    "wdio-chromedriver-service": "^0.1.3",
+    "wdio-mocha-framework": "^0.5.13",
+    "wdio-spec-reporter": "^0.1.4",
+    "webdriverio": "^4.12.0",
+    "webpack": "^4.5.0",
+    "webpack-cli": "^2.0.14",
+    "webpack-dev-server": "^3.1.4"
+  },
+  "dependencies": {
+    "jquery": "^3.3.1",
+    "vex-js": "^4.1.0"
   }
 }
