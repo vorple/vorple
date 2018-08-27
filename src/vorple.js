@@ -99,6 +99,18 @@ export function fileClosed( filename ) {
         return;
     }
 
+    /**
+     * Stringify a value, or return null if the value can't be stringified
+     */
+    const safe_stringify = function( value ) {
+        try {
+            return JSON.stringify( value );
+        }
+        catch( e ) {
+            return null;
+        }
+    };
+
     if( filename.indexOf( JS_EVAL_FILENAME + FILE_EXTENSION ) !== -1 ) {
         let code = FS.readFile( filename, {encoding: 'utf8'} );
         let retval;
@@ -140,7 +152,7 @@ export function fileClosed( filename ) {
             retval = retval.toString();
         }
         else if( typeof Set !== 'undefined' && retval instanceof Set ) {
-            retval = JSON.stringify( Array.from( retval ) );
+            retval = safe_stringify( Array.from( retval ) );
         }
         else if( retval === Infinity ) {
             retval = 'Infinity';
@@ -152,7 +164,7 @@ export function fileClosed( filename ) {
             retval = 'NaN';
         }
         else {
-            retval = JSON.stringify( retval );
+            retval = safe_stringify( retval );
         }
 
         log( 'Return value: ' + retval );

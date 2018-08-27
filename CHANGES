@@ -1,7 +1,11 @@
 See also the changelog of the Inform 7 extensions
 (https://github.com/vorple/inform7/CHANGES).
 
-Release 3.0
+Numbers refer to GitHub issues and the repository they're posted in.
+E.g. (inform7 #42) refers to github.com/vorple/inform7/issues/42.
+
+
+Release 3.1
 ===========
 
 - Fixed a bug that prevented a music track from looping if it was started
@@ -22,6 +26,9 @@ Release 3.0
   fading out would stop the other sound's fadeout
 - Added a parameter for audio.stopMusic that determines the fadeout duration.
   By extension setting the fadeout duration to 0 stops the music immediately.
+- When the result of a JavaScript expression can't be JSON-stringified (e.g. it
+  contains a circular reference) the interpreter will no longer throw an error
+  and null is returned instead (vorple #32)
 
 
 Project
@@ -32,8 +39,10 @@ Project
   also handles other build tasks.
 - Updated the Git engine to compile with the latest version of Emscripten
   which also drastically reduced the size of the resulting JavaScript file
+- Automated testing has been rewritten using Webdriver.io and Selenium
 - Added documentation for how to get development environment for Vorple itself
   and its tests installed and running
+- Vorple is published in nmp: https://www.npmjs.com/package/vorple
 
 
 Release 3.0 preview (2017-04-29)
