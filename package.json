@@ -9,7 +9,9 @@
     "build": "webpack",
     "test": "wdio wdio.conf.js",
     "test:chrome": "BROWSER=chrome wdio wdio.conf.js",
-    "test:all": "npm run test && npm run test:chrome"
+    "test:firefox": "BROWSER=firefox wdio wdio.conf.js",
+    "test:safari": "BROWSER=safari wdio wdio.conf.js",
+    "test:all": "npm run test:chrome && npm run test:firefox && npm run test:safari"
   },
   "repository": {
     "type": "git",

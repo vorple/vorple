@@ -1,4 +1,7 @@
-const { expect } = require( "chai" );
+const chai = require( "chai" );
+const chaiWebdriver = require( "chai-webdriverio" ).default;
+chai.use( chaiWebdriver( browser ) );
+const expect = chai.expect;
 
 const VERSION = require( "../../package.json" ).version;
 const getVorple = require( "../utility" ).getVorple;

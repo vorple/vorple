@@ -3,7 +3,12 @@ const path = require( "path" );
 
 module.exports = {
     devServer: {
-        contentBase: [ path.join( __dirname, "dist" ), path.join( __dirname, "tests" ), path.join( __dirname, "library" ) ],
+        contentBase: [
+            path.join( __dirname, "dist" ),
+            path.join( __dirname, "tests" ),
+            path.join( __dirname, "library" ),
+            path.join( __dirname, "../inform7/tests" )
+        ],
         compress: true,
         port: process.env.PORT || 9000
     },

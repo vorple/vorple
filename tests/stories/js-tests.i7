@@ -1,0 +1,21 @@
+"Vorple Integration Tests"
+
+Include Vorple by Juhana Leinonen.
+Include Vorple Hyperlinks by Juhana Leinonen.
+
+There is a room.
+
+Setting a flag is an action out of world applying to a topic.
+
+Understand "set flag [text]" as setting a flag.
+
+Carry out setting a flag:
+	execute JavaScript command "window.testFlags[bracket]'[escaped topic understood]'[close bracket] = true".
+
+First when play begins (this is the create the flag object rule):
+	execute JavaScript command "window.testFlags = {}".
+
+[The link is used to verity that disabling the UI disables the links as well]
+When play begins:
+	say "Command hyperlink: ";
+	place a link to the command "set flag link clicked" called "link-click".

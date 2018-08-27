@@ -1,12 +1,10 @@
-let vorple = null;
-
 // before all tests...
 before( () => {
     // start the unit test game
-    browser.url( "/?story=stories/unittest.ulx" );
+    browser.url( "/?story=stories/js-tests.ulx" );
 
     // wait for the game to have loaded (prompt exists)
-    browser.waitForExist( "#lineinput", 5000 );
+    browser.waitForExist( "#lineinput", 30000 );
 });
 
 

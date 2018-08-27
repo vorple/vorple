@@ -53,9 +53,9 @@ Vorple and Haven source files use latest ECMAScript features like `import`. It's
 You should also install the same npm libraries that Vorple and Haven have included in their `package.json` files. 
 
 
-## Unit tests
+## Test suite
 
-Unit tests for the JavaScript library are in the `tests/specs` directory. The test runner stack is [WebDriver](http://webdriver.io) + [Selenium](https://www.seleniumhq.org) + [Mocha](https://mochajs.org) + [Chai](http://www.chaijs.com).
+Tests for the JavaScript library are in the `tests/specs` directory. The test runner stack is [WebDriver](http://webdriver.io) + [Selenium](https://www.seleniumhq.org) + [Mocha](https://mochajs.org) + [Chai](http://www.chaijs.com).
 
 To run the tests:
 
@@ -66,7 +66,7 @@ To run the tests:
 
 You should now see a bunch of browser windows pop up, load Vorple, and close soon after. The terminal where you ran `npm test` should show whether the tests pass or fail.
 
-`npm test` runs the tests using Firefox, `npm test:chrome` uses Chrome and `npm test:all` runs tests once for both browsers.
+`npm test` runs the tests using Firefox, `npm test:chrome` uses Chrome, `npm test:safari` uses Safari and `npm test:all` runs tests once with all browsers. To run tests in Safari, you need to enable WebDriver support [as per these instructions](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari#2957277).
 
 Hint: running the entire test set might take some time, so if you're working on only one feature you can temporarily skip other tests by changing `'./tests/specs/**/*.js'` near the start of the wdio.conf.js file to point to a specific test file.  
 
