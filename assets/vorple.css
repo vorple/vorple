@@ -40,6 +40,32 @@ input {
 }
 
 
+/* Basic styles */
+
+.font-bold {
+    font-weight: bold;
+}
+
+.font-italic {
+    font-style: italic;
+}
+
+.font-underline {
+    text-decoration: underline;
+}
+
+.font-proportional {
+    font-family: serif;
+    font-size: 17px;
+}
+
+.font-fixed-width {
+    font-family: monospace;
+    font-size: 15px;
+    padding: 2px 0;
+}
+
+
 /* Vorple Screen Effects */
 
 .center-align {

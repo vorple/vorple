@@ -24,8 +24,10 @@ module.exports = {
         new CopyWebpackPlugin(
             [
                 { from: "assets/**/*", flatten: true },
-                { from: "haven/*.css", flatten: true },
+                { from: "haven/haven.css", flatten: true },
                 { from: "Git/build/engine.*", flatten: true },
+                { from: "node_modules/vex-js/dist/css/vex.css", flatten: true },
+                { from: "node_modules/vex-js/dist/css/vex-theme-plain.css", flatten: true },
                 "vendor/fonts"
             ],
         )

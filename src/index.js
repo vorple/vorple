@@ -1,4 +1,5 @@
 import "../haven/bootstrap";
+import vex from "vex-js";
 import { version } from "../package.json";
 
 window.vorple = {
@@ -13,3 +14,7 @@ window.vorple = {
 };
 
 window.jQuery = window.$ = require( "jquery" );
+
+vex.registerPlugin( require( "vex-dialog" ) );
+window.vex = vex;
+vex.defaultOptions.className = "vex-theme-os";
