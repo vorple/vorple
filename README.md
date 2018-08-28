@@ -68,6 +68,8 @@ You should now see a bunch of browser windows pop up, load Vorple, and close soo
 
 `npm test` runs the tests using Firefox, `npm test:chrome` uses Chrome, `npm test:safari` uses Safari and `npm test:all` runs tests once with all browsers. To run tests in Safari, you need to enable WebDriver support [as per these instructions](https://developer.apple.com/documentation/webkit/testing_with_webdriver_in_safari#2957277).
 
+There are two separate story files for the Inform 6 and Inform 7 libraries. The Inform 7 tests file is used by default. The environment variable INFORM_VERSION defines which file to use, e.g. `INFORM_VERSION=6 npm test:chrome` tests the Inform 6 story file using Chrome. 
+
 Hint: running the entire test set might take some time, so if you're working on only one feature you can temporarily skip other tests by changing `'./tests/specs/**/*.js'` near the start of the wdio.conf.js file to point to a specific test file.  
 
 The tests in this repository test the individual JavaScript library methods. There are many more tests in the [Inform 7 repository](https://github.com/vorple/inform7) for the extensions.
