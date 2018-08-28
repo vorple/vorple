@@ -166,8 +166,15 @@ exports.config = {
      * @param {Array.<Object>} capabilities list of capabilities details
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
-    // before: function (capabilities, specs) {
-    // },
+    before: function( capabilities, specs ) {
+        const INFORM_VERSION = process.env.INFORM_VERSION || "7";
+
+        // start the unit test game
+        browser.url( `/?story=stories/js-tests.i${INFORM_VERSION}.ulx` );
+
+        // wait for the game to have loaded (prompt exists)
+        browser.waitForExist( "#lineinput", 30000 );
+    },
     /**
      * Runs before a WebdriverIO command gets executed.
      * @param {String} commandName hook command name

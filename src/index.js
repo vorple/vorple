@@ -13,8 +13,16 @@ window.vorple = {
     version
 };
 
+// expose jQuery
 window.jQuery = window.$ = require( "jquery" );
 
+// initialize Vex modal windows
 vex.registerPlugin( require( "vex-dialog" ) );
 window.vex = vex;
-vex.defaultOptions.className = "vex-theme-os";
+vex.defaultOptions.className = "vex-theme-plain";
+
+// load the PowerTip tooltip library
+require( "jquery-powertip" );
+
+// expose Toastr notification library
+window.toastr = require( "toastr" );

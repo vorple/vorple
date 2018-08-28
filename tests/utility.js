@@ -1,13 +1,3 @@
-// before all tests...
-before( () => {
-    // start the unit test game
-    browser.url( "/?story=stories/js-tests.ulx" );
-
-    // wait for the game to have loaded (prompt exists)
-    browser.waitForExist( "#lineinput", 30000 );
-});
-
-
 /**
  * Retrieves the value of a flag set by the test story.
  *

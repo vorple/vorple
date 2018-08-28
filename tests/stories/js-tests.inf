@@ -1,0 +1,41 @@
+Constant Story "Vorple Integration Tests";
+
+Include "vorple.h";
+Include "parser";
+Include "verblib";
+Include "vorple-command-prompt-control.h";
+Include "vorple-element-manipulation.h";
+Include "vorple-hyperlinks.h";
+Include "vorple-modal-windows.h";
+Include "vorple-multimedia.h";
+Include "vorple-screen-effects.h";
+
+Include "grammar";
+
+Object room ""
+has light;
+
+[ Initialise ;
+  VorpleInitialise();
+   VorpleExecuteJavascriptCommand("window.testFlags = {}");
+   location = room;
+
+  print "Command hyperlink: ";
+  VorpleLinkCommandText("set flag link clicked","link-click");
+];
+
+Array comm -> 100;
+
+[ SetFlagSub i ;
+    bp_output_stream(3, comm, 1000);
+    for (i=9: i<(buffer-->0): i++) { ! skip "set flag "
+	print (char) buffer->(WORDSIZE+i);
+    }
+    bp_output_stream(-3);
+    !print (PrintStringOrArray) comm;
+    VorpleExecuteJavascriptCommand(BuildCommand("window.testFlags['", VorpleEscape(comm), "'] = true"));
+];
+
+Extend 'set'
+* 'flag' topic ->SetFlag;
+

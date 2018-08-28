@@ -222,9 +222,6 @@ export function init() {
             FS.syncfs( false, done );
         } );
     } );
-
-    // initialize Vex modals
-    vex.defaultOptions.className = 'vex-theme-plain';
 }
 
 
