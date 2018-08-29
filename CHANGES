@@ -1,7 +1,8 @@
 See also the changelog of the Inform 7 extensions
 (https://github.com/vorple/inform7/CHANGES).
 
-The numbers after the items refer to GitHub issues.
+The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
+number xx in the Inform extensions/libraries repositories.
 
 
 Release 3.1
@@ -28,6 +29,7 @@ Release 3.1
 - When the result of a JavaScript expression can't be JSON-stringified (e.g. it
   contains a circular reference) the interpreter will no longer throw an error
   and null is returned instead (#32)
+- Fixed save/restore (inform7 #4)
 
 
 Project
