@@ -30,6 +30,8 @@ Release 3.1
   contains a circular reference) the interpreter will no longer throw an error
   and null is returned instead (#32)
 - Fixed save/restore (inform7 #4)
+- Glk errors thrown by the interpreter are shown in the browser console instead
+  of printing them on the screen
 
 
 Project
