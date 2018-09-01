@@ -130,7 +130,7 @@ export function fileClosed( filename ) {
             })();
         }
         catch(e) {
-            error( 'JavaScript from story file threw an error: ' + e.message );
+            error( 'JavaScript code from story file threw an error: ' + e.message + '\n\n' + code );
         }
 
         // build the return value
