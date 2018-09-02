@@ -8,6 +8,9 @@ number xx in the Inform extensions/libraries repositories.
 Release 3.1
 ===========
 
+- BREAKING CHANGE: JavaScript evaluation no longer writes the implicit value of
+  the last expression to the return value file. Code must explicitly return a
+  value, otherwise the file is left untouched.
 - Fixed a bug that prevented a music track from looping if it was started
   when a previous track was already playing
 - Added the vorple.audio.pauseBetweenTracks variable to set the duration of the
@@ -32,6 +35,10 @@ Release 3.1
 - Fixed save/restore (inform7 #4)
 - Glk errors thrown by the interpreter are shown in the browser console instead
   of printing them on the screen
+- Errors thrown by JavaScript code executed in the story file now show the code
+  in the error message (#33)
+- JavaScript evaluation now uses new Function() instead of eval() which is
+  significantly faster in some browsers
 
 
 Project

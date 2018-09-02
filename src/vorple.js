@@ -112,7 +112,7 @@ export function fileClosed( filename ) {
     };
 
     if( filename.indexOf( JS_EVAL_FILENAME + FILE_EXTENSION ) !== -1 ) {
-        let code = FS.readFile( filename, {encoding: 'utf8'} );
+        let code = FS.readFile( filename, { encoding: 'utf8' });
         let retval;
 
         const header = getHeader( code );
@@ -122,22 +122,24 @@ export function fileClosed( filename ) {
         log( 'Evaluating: ' + code );
 
         // Evaluate the JavaScript code.
-        // Wrapping the eval in a self-executing function makes sure
-        // variables declared in eval don't become global.
         try {
-            retval = (function() {
-                return (0, eval)( code ); // (0, eval) guarantees "this" points to window
-            })();
+            retval = new Function( "'use strict';\n" + code )();
         }
         catch(e) {
             error( 'JavaScript code from story file threw an error: ' + e.message + '\n\n' + code );
         }
 
+        const type = typeof retval;
+
         // build the return value
-        if( typeof retval === 'string' ) {
+        if( type === 'undefined' ) {
+            log( 'The code did not return anything' );
+            return;
+        }
+        else if( type === 'string' ) {
             retval = '"' + retval + '"';
         }
-        else if( typeof retval === 'number' ) {
+        else if( type === 'number' ) {
             if( Math.abs( retval ) > 1e20 ) {   // more than 20 digits are displayed in scientific notation
                 retval = eToInt( retval );
             }
@@ -145,10 +147,7 @@ export function fileClosed( filename ) {
                 retval = "" + retval;
             }
         }
-        else if( retval === undefined ) {
-            retval = 'undefined';
-        }
-        else if( typeof retval === 'function' || typeof retval === 'symbol' ) {
+        else if( type === 'function' || type === 'symbol' ) {
             retval = retval.toString();
         }
         else if( typeof Set !== 'undefined' && retval instanceof Set ) {
@@ -172,7 +171,7 @@ export function fileClosed( filename ) {
         FS.writeFile(
             JS_RETURN_VALUE_FILENAME + FILE_EXTENSION,
             header + retval,
-            {encoding: 'utf8'}
+            { encoding: 'utf8' }
         );
     }
 };
