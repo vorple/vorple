@@ -17,7 +17,6 @@ export const defaults = {
  */
 function timeNextTrack() {
     clearTimeout( musicPauseTimer );
-    console.log(musicQueue, playlist);
 
     if( musicQueue.length === 0 && playlist.length > 0 ) {
         musicQueue = playlist.slice();
@@ -228,32 +227,39 @@ export function isMusicPlaying() {
  * except set the looping property. If another music file is playing,
  * fade out the old one before playing the new one.
  *
+ * Options:
+ *  - looping: rewind & replay when the track ends
+ *  - restart: always play from the start, even when this track is already playing
+ *
  * @param url
- * @param loop
+ * @param options
  */
-export function playMusic( url, loop ) {
+export function playMusic( url, options = {} ) {
     const $music = $( '.vorple-music' );
+    const { looping, restart } = options;
 
     clearTimeout( musicPauseTimer );
 
     // check if this specific track is already playing
-    if( ($music.length > 0 && $music.attr( 'src' ) === url) ||
-        ($music.length === 0 && musicQueue.length > 0 && musicQueue[ 0 ].url === url) ) {
+    if( !restart && (
+            ( $music.length > 0 && $music.attr( 'src' ) === url ) ||
+            ( $music.length === 0 && musicQueue.length > 0 && musicQueue[ 0 ].url === url )
+        ) ) {
         // if the music is fading out, stop the fadeout and continue
         clearTimeout( $music.data( "fadeOutTimer" ) );
 
         $music.prop( 'volume', 1 ).data( 'stopping', false )
-            .prop( 'loop', !!loop ).get( 0 ).play();
+            .prop( 'loop', !!looping ).get( 0 ).play();
     }
-    else if( isElementPlaying( '.vorple-music' ) ) {
-        musicQueue.unshift( { url, looping: !!loop} );
+    else if( restart && isElementPlaying( '.vorple-music' ) ) {
+        musicQueue.unshift( { url, looping: !!looping} );
         fadeOut( $music, null, timeNextTrack )
     }
     else {
         $music.remove();
         $( '<audio class="vorple-audio vorple-music">' )
             .attr( 'src', url )
-            .prop( 'loop', !!loop )
+            .prop( 'loop', !!looping )
             .appendTo( 'body' )
             .on( 'ended', timeNextTrack )
             .get( 0 ).play();
@@ -262,21 +268,63 @@ export function playMusic( url, loop ) {
 
 
 /**
+ * Start playing a sound effect.
+ *
+ * @param url
+ * @param options If options.looping is true, the sound effect keeps repeating
+ */
+export function playSound( url, options = {} ) {
+    const looping = !!options.looping;
+
+    const $audio = $( '<audio class="vorple-audio vorple-music">' )
+        .attr( 'src', url )
+        .prop( 'loop', looping )
+        .appendTo( 'body' )
+        .get( 0 ).play();
+
+    // if the sound is not looping, remove the element from the DOM when it finishes playing
+    if( !looping ) {
+        $audio.on( 'ended', function() {
+            this.remove();
+        });
+    }
+}
+
+
+/* from https://stackoverflow.com/a/6274381 */
+function shuffleArray( a ) {
+    for( let i = a.length - 1; i > 0; i-- ) {
+        const j = Math.floor( Math.random() * (i + 1) );
+        [ a[ i ], a[ j ] ] = [ a[ j ], a[ i ] ];
+    }
+    return a;
+}
+
+
+/**
  * Set the playlist and start playing it.
  *
+ * Options:
+ *  - looping: when the playlist ends, start playing again from the first one
+ *  - restart: always play from the start, even when a track in the playlist is already playing
+ *  - shuffle: shuffle the playlist before playing it
+ *
  * @param list
- * @param looping If true, the playlist starts over after the last track
+ * @param options
  */
-export function setPlaylist( list, looping ) {
+export function setPlaylist( list, options ) {
     if( list.length === 0 ) {
         musicQueue = [];
         playlist = [];
         return;
     }
 
+    const { looping, restart, shuffled } = options;
+    const currentTrackUrl = currentMusicPlaying();
+
     // if the playlist is a list of URLs, turn them into objects that have
     // the "looping" property
-    list = list.map( function( item ) {
+    const pl = list.map( item => {
         if( typeof item === 'string' ) {
             return {
                 url: item,
@@ -285,17 +333,24 @@ export function setPlaylist( list, looping ) {
         }
 
         return item;
-    } );
+    });
 
-    musicQueue = list.slice( 1 );
+    if( shuffled ) {
+        shuffleArray( pl );
+    }
+
+    const currentlyPlayingIndex = restart ? -1 : pl.findIndex( track => track.url === currentTrackUrl );
+    const startFromIndex = ( currentlyPlayingIndex < 1 ) ? 0 : currentlyPlayingIndex;
+
+    musicQueue = pl.slice( startFromIndex + 1 );
 
     if( looping ) {
-        playlist = list.slice();
+        playlist = pl.slice();
     }
 
     // start the first track unless it's already playing
-    if( currentMusicPlaying() !== list[ 0 ].url ) {
-        playMusic( list[ 0 ].url, list[ 0 ].looping );
+    if( currentTrackUrl !== pl[ startFromIndex ].url ) {
+        playMusic( pl[ startFromIndex ].url );
     }
 }
 

@@ -44,6 +44,8 @@ Release 3.1
   in the error message (#33)
 - JavaScript evaluation now uses new Function() instead of eval() which is
   significantly faster in some browsers
+- Audio playlist features have been expanded and partially moved from Inform
+  libraries to the JavaScript library
 
 
 Project
