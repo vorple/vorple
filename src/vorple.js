@@ -11,6 +11,7 @@ import { version } from "../package.json";
 const HANDSHAKE_FILENAME = 'VpHndshk';
 const JS_EVAL_FILENAME = 'VpJSEval';
 const JS_RETURN_VALUE_FILENAME = 'VpJSRtrn';
+const JS_RETURN_VALUE_TYPE_FILENAME = 'VpJSType';
 const FILE_EXTENSION = '.glkdata';
 
 
@@ -121,6 +122,8 @@ export function fileClosed( filename ) {
 
         log( 'Evaluating: ' + code );
 
+        let i7type = "nothing";
+
         // Evaluate the JavaScript code.
         try {
             retval = new Function( "'use strict';\n" + code )();
@@ -138,6 +141,31 @@ export function fileClosed( filename ) {
         }
         else if( type === 'string' ) {
             retval = '"' + retval + '"';
+            i7type = "text";
+        }
+        else if( type === 'function' || type === 'symbol' ) {
+            retval = retval.toString();
+            i7type = "function";
+        }
+        else if( typeof Set !== 'undefined' && retval instanceof Set ) {
+            retval = safe_stringify( Array.from( retval ) );
+            i7type = "list";
+        }
+        else if( retval === Infinity ) {
+            retval = 'Infinity';
+            i7type = "infinity";
+        }
+        else if( retval === -Infinity ) {
+            retval = '-Infinity';
+            i7type = "infinity";
+        }
+        else if( retval !== retval ) {   // NaN !== NaN
+            retval = 'NaN';
+            i7type = "NaN";
+        }
+        else if( type === "boolean" ) {
+            retval = String( retval );
+            i7type = "truth state";
         }
         else if( type === 'number' ) {
             if( Math.abs( retval ) > 1e20 ) {   // more than 20 digits are displayed in scientific notation
@@ -146,35 +174,38 @@ export function fileClosed( filename ) {
             else {
                 retval = "" + retval;
             }
-        }
-        else if( type === 'function' || type === 'symbol' ) {
-            retval = retval.toString();
-        }
-        else if( typeof Set !== 'undefined' && retval instanceof Set ) {
-            retval = safe_stringify( Array.from( retval ) );
-        }
-        else if( retval === Infinity ) {
-            retval = 'Infinity';
-        }
-        else if( retval === -Infinity ) {
-            retval = '-Infinity';
-        }
-        else if( retval !== retval ) {   // NaN !== NaN
-            retval = 'NaN';
+            i7type = "number";
         }
         else {
             retval = safe_stringify( retval );
+
+            if( retval ) {
+                const firstChar = retval.charAt( 0 );
+
+                if( firstChar === "[" ) {
+                    i7type = "list";
+                }
+                else if( firstChar === "{" ) {
+                    i7type = "object";
+                }
+            }
         }
 
-        log( 'Return value: ' + retval );
+        log( `Return value (${i7type}): ${retval}` );
 
         FS.writeFile(
             JS_RETURN_VALUE_FILENAME + FILE_EXTENSION,
             header + retval,
             { encoding: 'utf8' }
         );
+
+        FS.writeFile(
+            JS_RETURN_VALUE_TYPE_FILENAME + FILE_EXTENSION,
+            header + i7type,
+            { encoding: 'utf8' }
+        );
     }
-};
+}
 
 
 /**
