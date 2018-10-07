@@ -19,17 +19,6 @@ blockquote {
     visibility: hidden;
 }
 
-.font-proportional,
-input {
-    font-family: "Roboto", sans-serif;
-    font-size: inherit;
-}
-
-.font-fixed-width {
-    font-family: monospace;
-    font-size: inherit;
-}
-
 .uiblock {
     position: fixed;
     bottom: 0;
@@ -54,15 +43,13 @@ input {
     text-decoration: underline;
 }
 
+/* the following two are specified by the Haven interpreter but are unused in Vorple at the moment */
 .font-proportional {
-    font-family: serif;
-    font-size: 17px;
+    font-family: "Roboto", serif;
 }
 
 .font-fixed-width {
-    font-family: monospace;
-    font-size: 15px;
-    padding: 2px 0;
+    font-family: "Roboto Mono", monospace;
 }
 
 
@@ -89,7 +76,7 @@ input {
 }
 
 .monospace-font {
-    font-family: monospace;
+    font-family: "Roboto Mono", monospace;
 }
 
 #output span.nowrap-font,
