@@ -11,11 +11,9 @@ Release 3.1
 - BREAKING CHANGE: JavaScript evaluation no longer writes the implicit value of
   the last expression to the return value file. Code must explicitly return a
   value, otherwise the file is left untouched.
-- BREAKING CHANGE: For performance reasons the interpreter now writes the type
-  of the evaluated JavaScript expression to a file for Inform to pick up,
-  instead of having the Inform extension deduce the type from the value. This
-  means that the phrase to get the type is now a fixed phrase "type of the value
-  returned by the JavaScript command" instead of the previous "type of (text)".
+- For performance reasons the interpreter now writes the type of the evaluated
+  JavaScript expression to a file for Inform to pick up, instead of having the
+  Inform extension deduce the type from the value.
 - Fixed a bug that prevented a music track from looping if it was started
   when a previous track was already playing
 - Added the vorple.audio.pauseBetweenTracks variable to set the duration of the
