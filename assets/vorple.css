@@ -252,25 +252,33 @@ blockquote {
 /* Status line */
 
 .status-line-container {
-    background-color: #00a;
-    color: #fff;
-    margin-left: 0;
+    display: flex;
+    background-color: #fff;
+    border-bottom: 3px double #ccc;
     position: fixed;
     top: 0;
     white-space: pre-wrap;
+    max-width: inherit;
     width: 100%;
 }
 
+#output > .status-line-container {
+    margin-left: -15px;
+}
+
 .status-line-left {
+    flex: 1;
     text-align: left;
 }
 
 .status-line-middle,
 .status-line-mobile {
+    flex: 1;
     text-align: center;
 }
 
 .status-line-right {
+    flex: 1;
     text-align: right;
 }
 
