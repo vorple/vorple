@@ -1,3 +1,8 @@
+/**
+ * @private
+ * @module index
+ */
+
 import "../haven/bootstrap";
 import vex from "vex-js";
 import { version } from "../package.json";

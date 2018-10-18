@@ -1,4 +1,7 @@
 /**
+ * @module haven
+ * @private
+ *
  * Helper functions and monkey patches to the Haven engine
  */
 

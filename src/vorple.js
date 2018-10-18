@@ -1,5 +1,6 @@
-import vex from "vex-js";
-
+/**
+ * @module vorple
+ */
 import { addCallback } from "../haven/assets";
 import { start } from "../haven/haven";
 
@@ -16,13 +17,14 @@ const FILE_EXTENSION = '.glkdata';
 
 
 /**
+ * @private
  * Converts a number in scientific notation (e.g. 1e+30)
  * to a decimal string.
  *
  * From http://stackoverflow.com/a/1685917
  *
- * @param x
- * @returns {*}
+ * @param {number} x
+ * @returns {string}
  */
 function eToInt( x ) {
     let e;
@@ -47,9 +49,12 @@ function eToInt( x ) {
 
 
 /**
+ * @private
  * Inform 7 adds the game's IFID to the text file which we must remove
  * before evaluating the actual content. We'll use the same header
  * to build the response file to make Inform think it's its own file.
+ *
+ * @param {string} content  The contents of the file
  */
 function getHeader( content ) {
     if( content.charAt( 0 ) === '*' ) {
@@ -61,11 +66,12 @@ function getHeader( content ) {
 
 
 /**
+ * @private
  * Receive a handshake from the game and write our response.
  * The game should write "Callooh!" to the handshake file
  * and we respond with "Callay!" (yes, it's cheesy)
  *
- * @param filename
+ * @param {string} filename
  */
 function handshake( filename ) {
     const gameHandshake = FS.readFile( filename, {encoding: 'utf8'} );
@@ -92,7 +98,10 @@ function handshake( filename ) {
  * The story file has closed a file. If it's a handshake file, initiate
  * handshake. If it's the eval file, evaluate the JavaScript it contains.
  *
- * @param filename
+ * This method is called by the interpreter engine and is unlikely to be useful
+ * for other purposes.
+ *
+ * @param {string} filename
  */
 export function fileClosed( filename ) {
     if( filename.indexOf( HANDSHAKE_FILENAME + FILE_EXTENSION ) !== -1 ) {
@@ -265,9 +274,9 @@ export function init() {
  * one boolean parameter: true if version matches, false otherwise.
  * Otherwise an error is thrown if the version doesn't match.
  *
- * @param {string} requiredVersion The minimum version of Vorple that's required.
- * @param {function} callback A custom callback
- * @return {boolean} true if version matches
+ * @param {string} requiredVersion  The minimum version of Vorple that's required.
+ * @param {function} [callback]  A custom callback
+ * @return {boolean} True if version matches
  */
 export function requireVersion( requiredVersion, callback ) {
     const thisVer = version.split( '.' ).map( str => Number( str ) );

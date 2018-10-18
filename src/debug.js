@@ -1,13 +1,20 @@
+/**
+ * @module debug
+ */
 import havenError from "../haven/error";
 import { append } from "../haven/buffer";
 
+/**
+ * @private
+ * @type {boolean}
+ */
 let debugState = false;
 
 
 /**
  * Show an error in the console and on the screen.
  *
- * @param text Error message
+ * @param {string} text  Error message
  * @return {boolean} Always returns true, for consistency with log()
  */
 export function error( text ) {
@@ -21,7 +28,8 @@ export function error( text ) {
 /**
  * Print a logging message to console and on the screen if debugging mode is on.
  *
- * @returns {boolean} true if a debugging message was printed, otherwise false
+ * @param {string} text  Text to log
+ * @returns {boolean} True if a debugging message was printed, false otherwise
  */
 export function log( text ) {
     if( !debugState ) {
@@ -38,7 +46,7 @@ export function log( text ) {
 /**
  * Set the debugging status off.
  *
- * @returns {boolean} the new status (false)
+ * @returns {boolean} the new status (always false)
  */
 export function off() {
     debugState = false;
@@ -50,7 +58,7 @@ export function off() {
 /**
  * Set the debugging status on.
  *
- * @returns {boolean} the new status (true)
+ * @returns {boolean} the new status (always true)
  */
 export function on() {
     debugState = true;

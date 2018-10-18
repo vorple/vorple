@@ -1,10 +1,29 @@
+/**
+ * @module audio
+ */
 import $ from "jquery";
 
+/**
+ * @private
+ */
 let musicQueue = [];
+
+/**
+ * @private
+ */
 let musicPauseTimer;
+
+/**
+ * @private
+ */
 let playlist = [];
 
 
+/**
+ * Default values for durations.
+ *
+ * @type {{fadeDuration: number, pauseBetweenTracks: number}}
+ */
 export const defaults = {
     fadeDuration: 1000,         // the duration of fade in or out, in milliseconds
     pauseBetweenTracks: 1000    // how long to pause between music tracks, in milliseconds
@@ -12,6 +31,8 @@ export const defaults = {
 
 
 /**
+ * @private
+ *
  * Set a timer that starts the next track in the music queue
  * after the time specified by defaults.pauseBetweenTracks.
  */
@@ -83,11 +104,17 @@ export function currentMusicPlaying() {
 /**
  * Fade out sound.
  *
- * @param element The audio element that should fade out
- * @param duration The duration of the fade in milliseconds, default 1000 ms (1 second).
- *      Note that the duration is calculated from 100% volume, even if the
- *      current volume of the sound is less than that.
- * @param callback Function that is called when the audio has stopped completely
+ * @param {string|object} element  The audio element that should fade out
+ * @param {number} [duration=1000]  The duration of the fade in milliseconds,
+ *      default 1000 ms (1 second) or the value set in
+ *      vorple.defaults.fadeDuration. Note that the duration is calculated from
+ *      100% volume, even if the current volume of the sound is less than that.
+ * @param {function} [callback]  Function that is called when the audio has
+ *      stopped completely with a boolean as the first parameter that matches
+ *      what this function returned
+ *
+ * @returns {boolean}  False if the element doesn't exist or is not an audio
+ *      element, true otherwise
  */
 export function fadeOut( element, duration, callback ) {
     const tick = 50;    // how often the volume is changed
@@ -110,12 +137,12 @@ export function fadeOut( element, duration, callback ) {
 
     if( !sound || sound.tagName !== "AUDIO" ) {
         runCallbackIfExists( false );
-        return;
+        return false;
     }
 
     if( duration <= 0 ) {
         runCallbackIfExists( true );
-        return;
+        return true;
     }
 
     duration = Math.min( duration, 60000 ); // cap the duration to 1 minute
@@ -143,6 +170,8 @@ export function fadeOut( element, duration, callback ) {
     }
 
     next( sound.volume - delta );
+
+    return true;
 }
 
 
@@ -180,7 +209,8 @@ export function isEffectPlaying () {
 /**
  * Check if an audio element is playing.
  *
- * @param audioElement DOM element, jQuery object or jQuery selector of the audio element
+ * @param {string|object} audioElement  DOM element, jQuery object or jQuery
+ *      selector of the audio element
  * @returns {boolean}
  */
 export function isElementPlaying( audioElement ) {
@@ -193,6 +223,8 @@ export function isElementPlaying( audioElement ) {
 /**
  * Check if music is playing. Returns true if music is actually playing
  * and it isn't fading out at the moment.
+ *
+ * @returns {boolean}
  */
 export function isMusicPlaying() {
     const $music = $( '.vorple-music' );
@@ -231,8 +263,8 @@ export function isMusicPlaying() {
  *  - looping: rewind & replay when the track ends
  *  - restart: always play from the start, even when this track is already playing
  *
- * @param url
- * @param options
+ * @param {string} url
+ * @param {object} options
  */
 export function playMusic( url, options = {} ) {
     const $music = $( '.vorple-music' );
@@ -270,8 +302,8 @@ export function playMusic( url, options = {} ) {
 /**
  * Start playing a sound effect.
  *
- * @param url
- * @param options If options.looping is true, the sound effect keeps repeating
+ * @param {string} url
+ * @param {object} options  If options.looping is true, the sound effect keeps repeating
  */
 export function playSound( url, options = {} ) {
     const looping = !!options.looping;
@@ -302,15 +334,16 @@ function shuffleArray( a ) {
 
 
 /**
- * Set the playlist and start playing it.
+ * Set a playlist and start playing it.
  *
- * Options:
- *  - looping: when the playlist ends, start playing again from the first one
- *  - restart: always play from the start, even when a track in the playlist is already playing
- *  - shuffle: shuffle the playlist before playing it
- *
- * @param list
- * @param options
+ * @param {string[]} list  An array of music file URLs
+ * @param {object} options
+ * @param {boolean} options.looping  If true, the playlist starts playing again
+ *      from the start when it ends
+ * @param {boolean} options.restart  If true, always play from the start even
+ *      when a track in the playlist is already playing
+ * @param {boolean} options.shuffle  If true, shuffles the playlist in random
+ *      order before playing it
  */
 export function setPlaylist( list, options ) {
     if( list.length === 0 ) {
@@ -358,7 +391,8 @@ export function setPlaylist( list, options ) {
 /**
  * Stop playing music. Clears the music queue and the playlist.
  *
- * @param fadeoutDuration The duration of the fadeout. Set to 0 to stop immediately.
+ * @param {number} [fadeoutDuration=1000] The duration of the fadeout. Set to 0
+ *      to stop immediately.
  */
 export function stopMusic( fadeoutDuration ) {
     const $music = $( '.vorple-music' );

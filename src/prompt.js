@@ -1,3 +1,6 @@
+/**
+ * @module prompt
+ */
 import $ from "jquery";
 
 import {
@@ -44,7 +47,8 @@ export function init() {
  * the command immediately.
  *
  * @param {string} cmd
- * @param {boolean} [silent=false] If true, the command isn't added to the transcript.
+ * @param {boolean} [silent=false]  If true, the command isn't shown on the
+ *      screen. The result of the command will still print normally.
  */
 export function queueCommand( cmd, silent = false ) {
     commandQueue.push( {
@@ -66,7 +70,7 @@ export function queueCommand( cmd, silent = false ) {
  * for all future command prompts until changed again.
  *
  * @param prefix
- * @param {boolean} [html=false] If true, the prefix is inserted into the DOM
+ * @param {boolean} [html=false]  If true, the prefix is inserted into the DOM
  *   as HTML. Otherwise HTML is escaped and shown as-is.
  *
  *  @return {string} The new prefix.
@@ -96,6 +100,9 @@ export function setValue( value ) {
 
 /**
  * Trigger the submit event of the lineinput.
+ *
+ * @param {boolean} [silent=false]  If true, the command isn't shown on the
+ *      screen. The result of the command will still print normally.
  */
 export function submit( silent = false ) {
     getHavenPrompt().dispatchEvent( new CustomEvent( 'submit', { detail: { silent: !!silent } } ) );

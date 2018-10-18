@@ -1,3 +1,6 @@
+/**
+ * @module layout
+ */
 import $ from "jquery";
 
 import { flush } from "../haven/buffer";
@@ -21,7 +24,7 @@ export function block() {
         e.stopImmediatePropagation();
         return false;
     } ).appendTo( 'body' );
-};
+}
 
 
 /**
@@ -31,7 +34,7 @@ export function block() {
  * in the sense that it would be missing the closing tag. Instead we jump
  * out of the tag and set output focus back to its parent element.
  *
- * @param targetWindow {number=0}
+ * @param {number} [targetWindow=0]
  * @returns {boolean} True if a tag was open, false if we were already
  *  at the top window level and nothing was done
  */
@@ -52,8 +55,8 @@ export function closeTag( targetWindow = 0 ) {
 /**
  * Set output focus to an element.
  *
- * @param targetElement
- * @param targetWindow
+ * @param {string|object} targetElement
+ * @param {number} [targetWindow=0]
  *
  * @returns {boolean} True if the focus was set successfully, false if the
  *   element wasn't found
@@ -79,9 +82,9 @@ export function focus( targetElement, targetWindow = 0 ) {
  * Example:
  *  layout.openTag( 'div', 'vorple', 0 )  -->  <div class="vorple"></div>
  *
- * @param tagName {string} Name of the tag to create
- * @param classes {string} Class names to add to the element
- * @param targetWindow {number=0} The number of the target window
+ * @param {string} tagName  Name of the tag to create
+ * @param {string} classes  Class names to add to the element
+ * @param {number} [targetWindow=0]  The number of the target window
  *
  * @see layout.closeTag
  *
@@ -107,6 +110,8 @@ export function openTag( tagName, classes, targetWindow = 0 ) {
  * half of the page.
  *
  * If the element doesn't exist, the function doesn't do anything.
+ *
+ * @param {string|object} target  The target element
  *
  * @return {boolean} True if scrolling was needed, false otherwise
  */
