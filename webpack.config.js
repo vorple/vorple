@@ -30,7 +30,7 @@ module.exports = {
                 { from: "node_modules/toastr/build/toastr.css", flatten: true },
                 { from: "node_modules/vex-js/dist/css/vex.css", flatten: true },
                 { from: "node_modules/vex-js/dist/css/vex-theme-plain.css", flatten: true },
-                "vendor/fonts"
+                { from: "vendor/fonts/**/*", ignore: "LICENSE.txt", flatten: true }
             ],
         )
     ]

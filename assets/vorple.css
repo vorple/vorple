@@ -1,4 +1,6 @@
-html, body {
+html,
+body,
+input {
     font-family: "Roboto", sans-serif;
 }
 
