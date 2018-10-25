@@ -44,6 +44,8 @@ Release 3.1
   significantly faster in some browsers
 - Audio playlist features have been expanded and partially moved from Inform
   libraries to the JavaScript library
+- Fixed command history manipulation methods in Haven, which would cause them to
+  manipulate the start of the command history instead of the latest commands
 
 
 Project
@@ -58,6 +60,7 @@ Project
 - Added documentation for how to get development environment for Vorple itself
   and its tests installed and running
 - Vorple is published in nmp: https://www.npmjs.com/package/vorple
+- Added a Code of Conduct to the project
 
 
 Release 3.0 preview (2017-04-29)
