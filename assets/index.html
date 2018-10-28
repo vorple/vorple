@@ -6,44 +6,52 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <link rel="stylesheet" type="text/css" href="roboto/roboto.css">
-    <link rel="stylesheet" type="text/css" href="jquery.powertip.css">
-    <link rel="stylesheet" type="text/css" href="toastr.css">
-    <link rel="stylesheet" type="text/css" href="vex.css">
-    <link rel="stylesheet" type="text/css" href="vex-theme-plain.css">
+    <link rel="stylesheet" type="text/css" href="interpreter/roboto.css">
+    <link rel="stylesheet" type="text/css" href="interpreter/jquery.powertip.css">
+    <link rel="stylesheet" type="text/css" href="interpreter/toastr.css">
+    <link rel="stylesheet" type="text/css" href="interpreter/vex.css">
+    <link rel="stylesheet" type="text/css" href="interpreter/vex-theme-plain.css">
 
-    <link rel="stylesheet" type="text/css" href="haven.css">
-    <link rel="stylesheet" type="text/css" href="vorple.css">
+    <link rel="stylesheet" type="text/css" href="interpreter/haven.css">
+    <link rel="stylesheet" type="text/css" href="interpreter/vorple.css">
 </head>
 <body>
-    <main id="haven">
-        <div id="output">
-            <div id="window0" aria-live="polite" aria-atomic="false" aria-relevant="additions"></div>
-        </div>
+<main id="haven">
+    <div id="output">
+        <div id="window0" aria-live="polite" aria-atomic="false" aria-relevant="additions"></div>
+    </div>
 
-        <form id="lineinput">
-            <label id="lineinput-prefix" for="lineinput-field">#</label><input name="lineinput" id="lineinput-field" type="text" autocapitalize="none">
-        </form>
+    <form id="lineinput">
+        <label id="lineinput-prefix" for="lineinput-field">#</label><input name="lineinput" id="lineinput-field" type="text" autocapitalize="none">
+    </form>
 
-        <div id="loader">
-            <h2 id="loader-message">Loading scripts</h2>
-            <div id="spinner">V</div>
-        </div>
-    </main>
+    <div id="loader">
+        <h2 id="loader-message">Loading scripts</h2>
+        <div id="spinner">V</div>
+    </div>
+</main>
 
-    <script src="vorple.min.js"></script>
+<script src="interpreter/vorple.min.js"></script>
 
-    <script>
-        vorple.options = {
-            autosave: false,
-            engineColors: false,
+<script>
+    vorple.options = {
+        autosave: false,
+        engineColors: false,
+        resource_paths: {
+            images: "resources/images",
+            audio: "resources/audio"
+        },
 
-            // URL to the game file
-            story: ""
-        };
+        // URL to the game file
+        story: "test.ulx"
+    };
 
-        vorple.debug.off();
-        vorple.init();
-    </script>
+    Module.locateFile = function( name ) {
+        return "interpreter/" + name;
+    };
+
+    vorple.debug.off();
+    vorple.init();
+</script>
 </body>
 </html>

@@ -14,9 +14,9 @@ const getVolume = id => {
 };
 
 // the test sound files are silent on purpose
-const audiofile = "media/silence.mp3";  // duration 30 s
-const shortaudio = "media/short1.mp3";  // duration 180 ms
-const shortaudio2 = "media/short2.mp3"; // identical to shortaudio
+const audiofile = "/media/silence.mp3";  // duration 30 s
+const shortaudio = "/media/short1.mp3";  // duration 180 ms
+const shortaudio2 = "/media/short2.mp3"; // identical to shortaudio
 
 const startSound = ( id = "", file = audiofile ) => {
     browser.execute( function( id, file ) {
@@ -48,7 +48,6 @@ describe( "Audio methods", () => {
         it( "when an external sound is playing", () => {
             browser.execute( function( audiofile ) {
                 $( "<audio src='" + audiofile + "' id='externalSound' autoplay>" ).appendTo( 'body' )
-                console.log("<audio src='" + audiofile + "' id='externalSound' autoplay>" );
             }, audiofile );
             browser.pause( 200 );
             expect( vorple( "audio", "isAudioPlaying" ) ).to.be.false;
