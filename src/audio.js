@@ -33,7 +33,7 @@ export const defaults = {
 /**
  * @private
  *
- * Set a timer that starts the next track in the music queue
+ * Sets a timer that starts the next track in the music queue
  * after the time specified by defaults.pauseBetweenTracks.
  */
 function timeNextTrack() {
@@ -62,7 +62,7 @@ function timeNextTrack() {
 
 
 /**
- * Clear the playlist and the music queue. Does not stop music that's
+ * Clears the playlist and the music queue. Does not stop music that's
  * currently playing.
  */
 export function clearPlaylist() {
@@ -102,7 +102,7 @@ export function currentMusicPlaying() {
 
 
 /**
- * Fade out sound.
+ * Fades out sound.
  *
  * @param {string|object} element  The audio element that should fade out
  * @param {number} [duration=1000]  The duration of the fade in milliseconds,
@@ -176,7 +176,7 @@ export function fadeOut( element, duration, callback ) {
 
 
 /**
- * Check if any audio is playing. Note that sound that is being loaded or
+ * Checks if any audio is playing. Note that sound that is being loaded or
  * has received a play command but isn't playing for some other reason
  * isn't considered as playing, even though it's about to start.
  *
@@ -188,7 +188,7 @@ export function isAudioPlaying() {
 
 
 /**
- * Check if any sound effect is playing.
+ * Checks if any sound effect is playing.
  *
  * @returns {boolean}
  */
@@ -207,7 +207,7 @@ export function isEffectPlaying () {
 
 
 /**
- * Check if an audio element is playing.
+ * Checks if an audio element is playing.
  *
  * @param {string|object} audioElement  DOM element, jQuery object or jQuery
  *      selector of the audio element
@@ -221,7 +221,7 @@ export function isElementPlaying( audioElement ) {
 
 
 /**
- * Check if music is playing. Returns true if music is actually playing
+ * Checks if music is playing. Returns true if music is actually playing
  * and it isn't fading out at the moment.
  *
  * @returns {boolean}
@@ -255,16 +255,15 @@ export function isMusicPlaying() {
 
 
 /**
- * Start playing music. If the same music file is already playing, do nothing
- * except set the looping property. If another music file is playing,
- * fade out the old one before playing the new one.
- *
- * Options:
- *  - looping: rewind & replay when the track ends
- *  - restart: always play from the start, even when this track is already playing
+ * Starts playing music. If the same music file is already playing, does nothing
+ * except sets the looping property. If another music file is playing,
+ * fades out the old one before playing the new one.
  *
  * @param {string} url
- * @param {object} options
+ * @param {object} [options={}]
+ * @param {boolean} [options.looping=false]  If true, the track keeps repeating
+ * @param {boolean} [options.restart=false]  If true, always starts playing from
+ *   the start, even when this track is already playing
  */
 export function playMusic( url, options = {} ) {
     const $music = $( '.vorple-music' );
@@ -300,10 +299,11 @@ export function playMusic( url, options = {} ) {
 
 
 /**
- * Start playing a sound effect.
+ * Starts playing a sound effect.
  *
  * @param {string} url
- * @param {object} options  If options.looping is true, the sound effect keeps repeating
+ * @param {object} [options={}]
+ * @param {boolean} [options.looping=false]  If true, the sound effect keeps repeating
  */
 export function playSound( url, options = {} ) {
     const looping = !!options.looping;
@@ -334,18 +334,18 @@ function shuffleArray( a ) {
 
 
 /**
- * Set a playlist and start playing it.
+ * Sets a playlist and starts playing it.
  *
  * @param {string[]} list  An array of music file URLs
- * @param {object} options
- * @param {boolean} options.looping  If true, the playlist starts playing again
+ * @param {object} [options={}]
+ * @param {boolean} [options.looping=false]  If true, the playlist starts playing again
  *      from the start when it ends
- * @param {boolean} options.restart  If true, always play from the start even
+ * @param {boolean} [options.restart=false]  If true, always play from the start even
  *      when a track in the playlist is already playing
- * @param {boolean} options.shuffle  If true, shuffles the playlist in random
+ * @param {boolean} [options.shuffle=false]  If true, shuffles the playlist in random
  *      order before playing it
  */
-export function setPlaylist( list, options ) {
+export function setPlaylist( list, options = {} ) {
     if( list.length === 0 ) {
         musicQueue = [];
         playlist = [];
@@ -389,7 +389,7 @@ export function setPlaylist( list, options ) {
 
 
 /**
- * Stop playing music. Clears the music queue and the playlist.
+ * Stops playing music. Clears the music queue and the playlist.
  *
  * @param {number} [fadeoutDuration=1000] The duration of the fadeout. Set to 0
  *      to stop immediately.
