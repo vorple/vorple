@@ -1,7 +1,7 @@
 {
   "name": "vorple",
   "version": "3.1.0",
-  "description": "Vorple",
+  "description": "Vorple Interactive Fiction User Interface Library",
   "scripts": {
     "compile": "(cd cheapglk && exec emmake make); (cd Git && exec npm run compile)",
     "lint": "jshint src/*.js",
@@ -13,10 +13,7 @@
     "test:safari": "BROWSER=safari wdio wdio.conf.js",
     "test:all": "npm run test:chrome && npm run test:firefox && npm run test:safari"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vorple/vorple.git"
-  },
+  "repository": "github:vorple/vorple",
   "author": "Juhana Leinonen",
   "license": "MIT",
   "bugs": {
