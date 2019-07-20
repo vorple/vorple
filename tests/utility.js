@@ -4,13 +4,13 @@
  * @param flagName
  * @return {boolean}
  */
-module.exports.flagValue = flagName => browser.execute( flagName => !!window.testFlags[ flagName ], flagName ).value;
+module.exports.flagValue = flagName => browser.execute( flagName => !!window.testFlags[ flagName ], flagName );
 
 
 /**
  * Returns the vorple object. Note that methods are returned as empty objects.
  */
-module.exports.getVorple = () => browser.execute( () => window.vorple ).value;
+module.exports.getVorple = () => browser.execute( () => window.vorple );
 
 
 /**
@@ -28,11 +28,11 @@ module.exports.getVorple = () => browser.execute( () => window.vorple ).value;
  * @return {*}
  */
 module.exports.vorple = ( module, method, ...params ) => {
-    return browser.execute( ( module, method, ...params ) => {
+    return browser.execute( ( module, method, params ) => {
         if( module ) {
             return window.vorple[ module ][ method ]( ...params );
         }
 
         return window.vorple[ method ]( ...params );
-    }, module, method, ...params ).value;
+    }, module || undefined, method, params );
 };

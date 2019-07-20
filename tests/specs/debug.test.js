@@ -22,11 +22,11 @@ before( () => browser.execute( function() {
 
 const getLastError = () => browser.execute( function() {
     return window.getLastError();
-}).value;
+});
 
 const getLastLog = () => browser.execute( function() {
     return window.getLastLog();
-}).value;
+});
 
 const setDebugging = state => vorple( "debug", state ? "on" : "off" );
 

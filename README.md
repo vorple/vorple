@@ -59,10 +59,9 @@ Tests for the JavaScript library are in the `tests/specs` directory. The test ru
 
 To run the tests:
 
-1. `npm install` packages if you haven't already. This will download and install WebDriver, Mocha and Chai. 
-2. Using steps 2-4 of [these instructions](http://webdriver.io/guide.html) install Selenium and geckodriver
-3. While Selenium is running in another window or in the background, `npm start` to start the development server
-4. In yet another window run `npm test` to start the tests. 
+1. `npm install` packages if you haven't already. This will download and install required test software. 
+2. `npm start` to start the development server
+3. In another window run `npm test` to start the tests
 
 You should now see a bunch of browser windows pop up, load Vorple, and close soon after. The terminal where you ran `npm test` should show whether the tests pass or fail.
 

@@ -4,9 +4,19 @@ See also the changelog of the Inform 7 extensions
 The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
-
-Release 3.1
+Release 3.2
 ===========
+
+
+Project
+-------
+
+- Updated to latest version of Webdriver.io which greatly simplifies the test
+  setup required. Npm handles all testing software installation.
+
+
+Release 3.1 (2018-11-03)
+========================
 
 - BREAKING CHANGE: JavaScript evaluation no longer writes the implicit value of
   the last expression to the return value file. Code must explicitly return a

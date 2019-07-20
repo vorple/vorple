@@ -1,5 +1,12 @@
 exports.config = {
-    
+    //
+    // ====================
+    // Runner Configuration
+    // ====================
+    //
+    // WebdriverIO allows it to run your tests in arbitrary locations (e.g. locally or
+    // on a remote machine).
+    runner: 'local',
     //
     // ==================
     // Specify Test Files
@@ -111,11 +118,8 @@ exports.config = {
     // Services take over a specific job you don't want to take care of. They enhance
     // your test setup with almost no effort. Unlike plugins, they don't add new
     // commands. Instead, they hook themselves up into the test process.
-    // port: "9515",
-    // path: "/",
-    // services: [
-       // "chromedriver"
-    // ],
+    // port: 4723,
+    services: [ 'selenium-standalone' ],
     //
     // Framework you want to run your specs with.
     // The following are supported: Mocha, Jasmine, and Cucumber
@@ -128,13 +132,13 @@ exports.config = {
     // Test reporter for stdout.
     // The only one supported by default is 'dot'
     // see also: http://webdriver.io/guide/reporters/dot.html
-    reporters: ['spec'],
-    
+    reporters: ['dot'],
     //
     // Options to be passed to Mocha.
     // See the full list at http://mochajs.org/
     mochaOpts: {
-        ui: 'bdd'
+        ui: 'bdd',
+        timeout: 60000
     },
     //
     // =====
@@ -173,7 +177,7 @@ exports.config = {
         browser.url( `/?story=stories/js-tests.i${INFORM_VERSION}.ulx` );
 
         // wait for the game to have loaded (prompt exists)
-        browser.waitForExist( "#lineinput", 30000 );
+        $( "#lineinput" ).waitForExist( 30000 );
     },
     /**
      * Runs before a WebdriverIO command gets executed.
@@ -257,7 +261,9 @@ exports.config = {
 };
 
 if( exports.config.capabilities[0].browserName === "chrome" ) {
-    exports.config.port = "9515";
+    exports.config.port = 9515;
+    //
+    // Override default path ('/wd/hub') for chromedriver service.
     exports.config.path = "/";
     exports.config.services = [ "chromedriver" ];
 }

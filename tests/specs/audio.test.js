@@ -10,7 +10,7 @@ const getVolume = id => {
         let $audio = $( "audio#" + id ).get( 0 );
 
         return $audio ? $audio.volume : 0;
-    }, id ).value;
+    }, id );
 };
 
 // the test sound files are silent on purpose
@@ -30,12 +30,10 @@ const stopSound = ( id ) => {
     }, id );
 };
 
-browser.timeouts( "pageLoad", 20000 );
-
 describe( "Audio methods", () => {
     // Chrome doesn't play sounds before user has interacted with the page
     before( () => {
-        browser.click( "body" );
+        $( "body" ).click();
     });
 
     describe( "checking audio playing status", () => {

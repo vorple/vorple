@@ -5,7 +5,7 @@ chai.use( chaiWebdriver( browser ) );
 const expect = chai.expect;
 const { flagValue, vorple } = require( "../utility" );
 
-const waitForLineInput = () => browser.waitForExist( "#lineinput", 5000 );
+const waitForLineInput = () => $( "#lineinput" ).waitForExist( 10000 );
 
 describe( "Prompt", () => {
     describe( "command queue", () => {
@@ -89,14 +89,14 @@ describe( "Prompt", () => {
         describe( ".hide()", () => {
             it( "hides the prompt", () => {
                 vorple( "prompt", "hide" );
-                expect( '#lineinput' ).to.not.be.visible();
+                expect( '#lineinput' ).to.not.be.displayed();
             });
         });
 
         describe( ".unhide()", () => {
             it( "re-shows the prompt", () => {
                 vorple( "prompt", "unhide" );
-                expect( '#lineinput' ).to.be.visible();
+                expect( '#lineinput' ).to.be.displayed();
             });
         });
     });

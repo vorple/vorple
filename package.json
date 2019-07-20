@@ -19,26 +19,34 @@
   "bugs": {
     "url": "https://github.com/vorple/vorple/issues"
   },
+  "browser": "./dist/interpreter/vorple.min.js",
   "homepage": "https://vorple-if.com",
   "devDependencies": {
-    "chai": "^4.1.2",
-    "chai-webdriverio": "^0.4.3",
-    "chromedriver": "^2.41.0",
-    "copy-webpack-plugin": "^4.5.2",
-    "jshint": "^2.9.6",
-    "wdio-chromedriver-service": "^0.1.3",
-    "wdio-mocha-framework": "^0.6.3",
-    "wdio-spec-reporter": "^0.1.5",
-    "webdriverio": "^4.13.2",
-    "webpack": "^4.17.1",
-    "webpack-cli": "^3.1.0",
-    "webpack-dev-server": "^3.1.6"
+    "@wdio/dot-reporter": "^5.11.0",
+    "@wdio/local-runner": "^5.11.6",
+    "@wdio/mocha-framework": "^5.11.0",
+    "@wdio/selenium-standalone-service": "^5.11.2",
+    "@wdio/sync": "^5.11.0",
+    "chai": "^4.2.0",
+    "chai-webdriverio": "^1.0.0",
+    "chromedriver": "^75.1.0",
+    "copy-webpack-plugin": "^5.0.3",
+    "jshint": "^2.10.2",
+    "wdio-chromedriver-service": "^5.0.2",
+    "webpack": "^4.36.1",
+    "webpack-cli": "^3.3.6",
+    "webpack-dev-server": "^3.7.2"
   },
   "dependencies": {
-    "jquery": "^3.3.1",
+    "@wdio/cli": "^5.11.6",
+    "jquery": "^3.4.1",
     "jquery-powertip": "^1.3.1",
     "toastr": "^2.1.4",
     "vex-dialog": "^1.1.0",
     "vex-js": "^4.1.0"
+  },
+  "resolutions": {
+    "**/**/fibers": "^4",
+    "**/**/fsevents": "^1.2.9"
   }
 }

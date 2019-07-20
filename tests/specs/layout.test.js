@@ -9,11 +9,11 @@ describe( "layout", () => {
     describe( "UI blocking", () => {
         it( "blocks typing", () => {
             vorple( "layout", "block" );
-            browser.setValue( "#lineinput-field", "abc" );
-            expect( browser.getValue( "#lineinput-field" ) ).to.equal( "" );
+            $( "#lineinput-field" ).setValue( "abc" );
+            expect( $( "#lineinput-field" ).getValue() ).to.equal( "" );
             vorple( "layout", "unblock" );
-            browser.setValue( "#lineinput-field", "def" );
-            expect( browser.getValue( "#lineinput-field" ) ).to.equal( "def" );
+            $( "#lineinput-field" ).setValue( "def" );
+            expect( $( "#lineinput-field" ).getValue() ).to.equal( "def" );
         });
 
         it( "blocks clicks", () => {
@@ -25,7 +25,7 @@ describe( "layout", () => {
             // Selenium throws an error if the element is not clickable,
             // catch and ignore
             try {
-                browser.click( ".link-click" );
+                $( ".link-click" ).click();
             }
             catch( e ) {}
 
