@@ -2,7 +2,6 @@
  * @private
  * @module index
  */
-
 import "../haven/bootstrap";
 import vex from "vex-js";
 import { version } from "../package.json";
@@ -17,9 +16,6 @@ window.vorple = {
     options: {},
     version
 };
-
-// expose jQuery
-window.jQuery = window.$ = require( "jquery" );
 
 // initialize Vex modal windows
 vex.registerPlugin( require( "vex-dialog" ) );

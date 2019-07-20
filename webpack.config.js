@@ -1,4 +1,5 @@
 const CopyWebpackPlugin = require( "copy-webpack-plugin" );
+const webpack = require( "webpack" );
 const path = require( "path" );
 
 module.exports = {
@@ -20,6 +21,13 @@ module.exports = {
     performance: {
         hints: false    // Git files are big – don't warn about them
     },
+    externals: {
+      jquery: 'jQuery'  // Webpack tends to include jQuery multiple times, we'll handle it separately
+    },
+    entry: [
+      'jquery/src/jquery',
+      './src/index.js'
+    ],
     plugins: [
         new CopyWebpackPlugin(
             [

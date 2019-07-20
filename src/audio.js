@@ -1,7 +1,6 @@
 /**
  * @module audio
  */
-import $ from "jquery";
 
 /**
  * @private

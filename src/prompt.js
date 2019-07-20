@@ -1,7 +1,6 @@
 /**
  * @module prompt
  */
-import $ from "jquery";
 
 import {
     get as getHavenPrompt,

@@ -1,8 +1,6 @@
 /**
  * @module layout
  */
-import $ from "jquery";
-
 import { flush } from "../haven/buffer";
 import { container } from "../haven/window";
 
