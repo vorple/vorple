@@ -4,11 +4,10 @@ chai.use( chaiWebdriver( browser ) );
 const expect = chai.expect;
 
 const VERSION = require( "../../package.json" ).version;
-const getVorple = require( "../utility" ).getVorple;
-const vorple = require( "../utility" ).vorple;
+const { getVorple, vorple, waitForLineInput } = require( "../utility" );
 
 describe( "Core library", () => {
-    describe( "version", () => {
+    describe( "Vorple version", () => {
         it( "is exposed", () => {
             expect( getVorple().version ).to.equal( VERSION );
         });
@@ -55,6 +54,13 @@ describe( "Core library", () => {
                 }
                 catch( e ) {}
             });
+        });
+    });
+
+    describe( "Inform version", () => {
+        it( "is set after handshake", () => {
+            waitForLineInput();
+            expect( vorple( null, "getInformVersion" ) ).to.equal( 7 );
         });
     });
 });

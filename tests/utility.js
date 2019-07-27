@@ -14,6 +14,12 @@ module.exports.getVorple = () => browser.execute( () => window.vorple );
 
 
 /**
+ * Sends a command to the prompt.
+ */
+module.exports.sendCommand = ( command, silent ) => vorple( "prompt", "queueCommand", command, silent );
+
+
+/**
  * Executes a Vorple method in the game.
  *
  * For example, vorple( "prompt", "queueCommand", "undo", true )
@@ -27,7 +33,7 @@ module.exports.getVorple = () => browser.execute( () => window.vorple );
  * @param params
  * @return {*}
  */
-module.exports.vorple = ( module, method, ...params ) => {
+function vorple( module, method, ...params ) {
     return browser.execute( ( module, method, params ) => {
         if( module ) {
             return window.vorple[ module ][ method ]( ...params );
@@ -36,3 +42,11 @@ module.exports.vorple = ( module, method, ...params ) => {
         return window.vorple[ method ]( ...params );
     }, module || undefined, method, params );
 };
+
+module.exports.vorple = vorple;
+
+
+/**
+ * Wait for the line input prompt to appear (game has loaded or turn has ended)
+ */
+module.exports.waitForLineInput = () => $( "#lineinput" ).waitForExist( 10000 );

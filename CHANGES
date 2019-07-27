@@ -1,11 +1,20 @@
-See also the changelog of the Inform 7 extensions
-(https://github.com/vorple/inform7/CHANGES).
+See also the changelog of the Inform extensions
+(https://github.com/vorple/inform6/CHANGES and
+https://github.com/vorple/inform7/CHANGES).
 
 The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 Release 3.2
 ===========
+
+- Added a module to access the virtual filesystem. This allows for exchanging
+  files between JavaScript and the Inform story.
+- Files passed between Inform 7 and Vorple now include the correct headers.
+  Inform seemed to ignore the header when the project wasn't named in the
+  header so it didn't have any visible negative effects.
+- Added vorple.getInformVersion() which returns either 6 or 7 depending on
+  which version compiled the story file.
 
 
 Project
