@@ -2,7 +2,6 @@
  * @private
  * @module index
  */
-import "../haven/bootstrap";
 import vex from "vex-js";
 import { version } from "../package.json";
 
@@ -10,6 +9,7 @@ window.vorple = {
     ...require( "./vorple" ),
     audio: require( "./audio" ),
     debug: require( "./debug" ),
+    file: require( "./file" ),
     haven: require( "./haven" ),
     layout: require( "./layout" ),
     prompt: require( "./prompt" ),

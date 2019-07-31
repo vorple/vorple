@@ -3,22 +3,33 @@ const chaiWebdriver = require( "chai-webdriverio" ).default;
 chai.use( chaiWebdriver( browser ) );
 
 const expect = chai.expect;
-const { flagValue, vorple } = require( "../utility" );
+const { flagValue, sendCommand, vorple } = require( "../utility" );
 
+const sendEnter = () => browser.execute( () => vorple.prompt.queueKeypress('\n') );
 const waitForLineInput = () => $( "#lineinput" ).waitForExist( 10000 );
 
 describe( "Prompt", () => {
+    describe( "character request", () => {
+        it( "waits for keypress", () => {
+            waitForLineInput();
+            sendCommand( "pause" );
+            expect( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
+            sendEnter();
+            $( '.pause-over' ).waitForExist( 1000 );
+        })
+    });
+
     describe( "command queue", () => {
         describe( ".queueCommand()", () => {
             it( "adds a command to the queue and runs it", () => {
-                vorple( "prompt", "queueCommand", "set flag queueCommandSingle" );
+                sendCommand( "set flag queueCommandSingle" );
                 waitForLineInput();
                 expect( flagValue( "queueCommandSingle" ) ).to.be.true;
             });
 
             it( "queues two commands, runs both", () => {
-                vorple( "prompt", "queueCommand", "set flag queueTwoCommands1" );
-                vorple( "prompt", "queueCommand", "set flag queueTwoCommands2" );
+                sendCommand( "set flag queueTwoCommands1" );
+                sendCommand( "set flag queueTwoCommands2" );
                 waitForLineInput();
                 expect( flagValue( "queueTwoCommands1" ) ).to.be.true;
                 expect( flagValue( "queueTwoCommands2" ) ).to.be.true;
@@ -31,11 +42,33 @@ describe( "Prompt", () => {
             it( "silently run commands are not shown in the transcript", () => {
                 const silentCommand = "set flag silentCommand";
 
-                vorple( "prompt", "queueCommand", silentCommand, true );
+                sendCommand( silentCommand, true );
                 waitForLineInput();
                 expect( flagValue( "silentCommand" ) ).to.be.true;
                 expect( ".prompt-input*=" + silentCommand ).to.have.count( 0 );
             });
+        });
+    });
+
+    describe( "keypress listeners", () => {
+        describe( "haven.input.keypress.addListener", () => {
+            it( "triggers when keypress is expected", () => {
+                browser.execute( () => {
+                    window.listenerCalled = false;
+                    window.testRemover = haven.input.keypress.addListener( function() { window.listenerCalled = true; } )
+                });
+                sendCommand( "pause" );
+                browser.pause(100);
+                expect( browser.execute( () => window.listenerCalled ) ).to.be.true;
+                sendEnter();
+            });
+
+            it( "removes the listener when return value is called", () => {
+                browser.execute( () => { window.listenerCalled = false; window.testRemover(); });
+                sendCommand( "pause" );
+                expect( browser.execute( () => window.listenerCalled ) ).to.be.false;
+                sendEnter();
+            })
         });
     });
 
@@ -64,7 +97,7 @@ describe( "Prompt", () => {
 
             const uniquePrefix = "uniquePrefixNotSeenElsewhere";
             const wait = () => {
-                vorple( "prompt", "queueCommand", "z" );
+                sendCommand( "z" );
                 waitForLineInput();
             };
 

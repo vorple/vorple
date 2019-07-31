@@ -2,13 +2,20 @@
  * @module prompt
  */
 
+import { 
+    getMode,
+    keypress
+} from "../haven/input";
 import {
     get as getHavenPrompt,
+    isReady,
     prefix as havenPrefix,
-    resizeInput
+    resizeInput,
+    sendCommand
 } from "../haven/prompt";
 
 const commandQueue = [];
+const keyQueue = [];
 
 
 /**
@@ -17,10 +24,28 @@ const commandQueue = [];
  */
 function runCommandQueue() {
     if( commandQueue.length > 0 ) {
-        const command = commandQueue.shift();
+        // must let engine finish with the previous task
+        setTimeout( () => {
+            const command = commandQueue.shift();
 
-        setValue( command.cmd );
-        submit( command.silent );
+            setValue( command.cmd );
+            submit( command.silent );
+        }, 0 );
+    }
+}
+
+
+/**
+ * If there is a keypress waiting in the queue, send it to the parser.
+ * The key is then removed from the queue.
+ */
+function runKeyQueue() {
+    if( keyQueue.length > 0 ) {
+        // must let engine finish with the previous task
+        setTimeout( () => {
+            const key = keyQueue.shift();
+            keypress.send({ keyCode: key.charCodeAt(0) });
+        }, 0 );
     }
 }
 
@@ -34,10 +59,14 @@ export function hide() {
 
 
 /**
- * Hook into the lineinput's ready event for passing commands from the queue.
+ * Hook into Haven's input listeners
  */
 export function init() {
+    // Hook into the lineinput's ready event for passing commands from the queue.
     getHavenPrompt().addEventListener( 'lineinputReady', runCommandQueue );
+
+    // Run the key queue when the engine expects a keypress
+    keypress.addListener( runKeyQueue );
 }
 
 
@@ -55,8 +84,23 @@ export function queueCommand( cmd, silent = false ) {
         silent: !!silent
     } );
 
-    if( haven.prompt.isReady() ) {
+    if( isReady() ) {
         runCommandQueue();
+    }
+}
+
+
+/**
+ * Add a keypress to the command queue. If the engine is waiting for a keypress,
+ * send it immediately.
+ *
+ * @param {string} key A one-character string containing the pressed character
+ */
+export function queueKeypress( key ) {
+    keyQueue.push( key );
+
+    if( getMode() === 'getkey' ) {
+        runKeyQueue();
     }
 }
 
@@ -104,7 +148,7 @@ export function setValue( value ) {
  *      screen. The result of the command will still print normally.
  */
 export function submit( silent = false ) {
-    getHavenPrompt().dispatchEvent( new CustomEvent( 'submit', { detail: { silent: !!silent } } ) );
+    sendCommand( new CustomEvent( 'submit', { detail: { silent: !!silent } } ) );
 }
 
 

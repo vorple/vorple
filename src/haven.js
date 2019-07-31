@@ -5,7 +5,10 @@
  * Helper functions and monkey patches to the Haven engine
  */
 
+import "./glk";
 import { set as setHavenStyle } from "../haven/style";
+import error from "../haven/error";
+import { get } from "../haven/options";
 
 const stylehints = [];
 
@@ -38,6 +41,63 @@ stylehints[ 4 ] = {
 };
 
 
+/**
+ * @private
+ * Start Quixe.
+ */
+export function initQuixe( storyfile ) {
+    if( !window.Quixe ) {
+        error( "Can't find Quixe" );
+    }
+
+    if( !window.GiDispa ) {
+        error( "Can't find GiDispa" );
+    }
+
+    window.GlkOte = {
+        log: () => {}
+    };
+
+    GiLoad.load_run( null, storyfile );
+}
+
+
+/**
+ * @private
+ * Load the story file.
+ */
+export function loadStoryFile() {
+    const url = get( 'story' );
+
+    return new Promise( ( resolve, reject ) => {
+        const httpRequest = new XMLHttpRequest();
+    
+        httpRequest.onreadystatechange = function() {
+        if( httpRequest.readyState == XMLHttpRequest.DONE ) {
+            switch( httpRequest.status ) {
+                case 200:
+                    resolve( Array.from( new Uint8Array( httpRequest.response ) ) );
+                    break;
+    
+                default:
+                    reject( error( "Error loading game file. Server returned status code " + httpRequest.status + " (" + httpRequest.statusText + ")" ) );
+                    break;
+            }
+        }
+        };
+    
+        httpRequest.open( "GET", url, true );
+        httpRequest.responseType = "arraybuffer";   // this must be exactly here, otherwise IE11 breaks
+        httpRequest.send();
+    });
+}
+
+
+/**
+ * Based on Glulx style code, set the basic style of the text being printed.
+ * 
+ * @param {number} style 
+ */
 export function setStyle( style ) {
     /*
      #define style_Normal (0)
@@ -97,11 +157,3 @@ export function setStyleHint( style, hint, value ) {
             break;
     }
 }
-
-
-// Set Emscripten's command line arguments that load the story file
-window.Module.arguments = [
-    '-q',   // quiet (don't print interpreter info)
-    '-u',   // with unicode support
-    '/storyfile.gblorb'
-];

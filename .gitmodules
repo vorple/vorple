@@ -1,9 +1,6 @@
-[submodule "Git"]
-	path = Git
-	url = https://github.com/vorple/Git
-[submodule "cheapglk"]
-	path = cheapglk
-	url = https://github.com/vorple/cheapglk
 [submodule "haven"]
 	path = haven
 	url = https://github.com/vorple/haven
+[submodule "quixe"]
+	path = quixe
+	url = https://github.com/erkyrath/quixe.git

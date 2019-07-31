@@ -8,11 +8,22 @@ number xx in the Inform extensions/libraries repositories.
 Release 3.2
 ===========
 
+- Due to various technical and convenience reasons, replaced the Git engine
+  with Quixe for the Glulx interpreter. The overall performance takes a minor
+  hit but JavaScript evaluation time gets about 75% reduction, which has
+  significant impact especially when evaluating several blocks of code
+  consecutively.
 - Added a module to access the virtual filesystem. This allows for exchanging
   files between JavaScript and the Inform story.
+- Proper modal prompts when the engine asks for filenames, and restoring a
+  game shows a list of savefiles to choose from
 - Files passed between Inform 7 and Vorple now include the correct headers.
   Inform seemed to ignore the header when the project wasn't named in the
   header so it didn't have any visible negative effects.
+- Added a keypress queue (vorple.prompt.queueKeypress) for programmatically
+  reacting when the Inform story is waiting for a keypress. Related to this,
+  haven.input.keypress.addListener and haven.input.keypress.removeListener
+  added for hooking into the interpreter when it starts to wait for a keypress.
 - Added vorple.getInformVersion() which returns either 6 or 7 depending on
   which version compiled the story file.
 
@@ -20,8 +31,13 @@ Release 3.2
 Project
 -------
 
+- Replacing the Emscripten-powered Git engine with Quixe, mentioned above,
+  removes the need to compile Git with Emscripten which was not a very
+  user-friendly experience. The project's development environment is now much
+  easier to get up and running.
 - Updated to latest version of Webdriver.io which greatly simplifies the test
   setup required. Npm handles all testing software installation.
+- Added a script to automatically build the unit test game
 
 
 Release 3.1 (2018-11-03)

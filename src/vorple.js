@@ -1,20 +1,22 @@
 /**
  * @module vorple
  */
-import { addCallback } from "../haven/assets";
 import { start } from "../haven/haven";
 
 import { error, log } from "./debug";
 import { init as initPrompt } from "./prompt";
+import { loadStoryFile, initQuixe } from "./haven";
 
 import { version } from "../package.json";
+import {
+    JS_RETURN_VALUE_FILENAME,
+    JS_RETURN_VALUE_TYPE_FILENAME,
+    VORPLE_PATH,
+    init as initFilesystem,
+    write
+} from "./file";
 
-const HANDSHAKE_FILENAME = 'VpHndshk';
-const JS_EVAL_FILENAME = 'VpJSEval';
-const JS_RETURN_VALUE_FILENAME = 'VpJSRtrn';
-const JS_RETURN_VALUE_TYPE_FILENAME = 'VpJSType';
-const FILE_EXTENSION = '.glkdata';
-
+let informVersion;
 
 /**
  * @private
@@ -66,53 +68,27 @@ function getHeader( content ) {
 
 
 /**
- * @private
- * Receive a handshake from the game and write our response.
- * The game should write "Callooh!" to the handshake file
- * and we respond with "Callay!" (yes, it's cheesy)
- *
- * @param {string} filename
+ * Returns the Inform version, detected at handshake.
+ * Before the handshake the value is undefined.
+ * 
+ * @returns {number|undefined} 6 or 7
  */
-function handshake( filename ) {
-    const gameHandshake = FS.readFile( filename, {encoding: 'utf8'} );
-    const header = getHeader( gameHandshake );
-    const content = gameHandshake.substr( header.length );
-
-    if( content === "Callooh!" ) {
-        log( 'Handshake passed, Vorple story confirmed' );
-
-        FS.unlink( filename );
-        FS.writeFile( filename, header + "Callay!", {encoding: 'utf8'} );
-
-        return true;
-    }
-    else {
-        log( 'Handshake failed, expected "Callooh!" but received "' + content + '" instead' );
-
-        return false;
-    }
+export function getInformVersion() {
+    return informVersion;
 }
 
 
 /**
- * The story file has closed a file. If it's a handshake file, initiate
- * handshake. If it's the eval file, evaluate the JavaScript it contains.
- *
- * This method is called by the interpreter engine and is unlikely to be useful
- * for other purposes.
+ * 
  *
  * @param {string} filename
  */
-export function fileClosed( filename ) {
-    if( filename.indexOf( HANDSHAKE_FILENAME + FILE_EXTENSION ) !== -1 ) {
-        handshake( filename );
-        return;
-    }
-
+export function evaluate( code ) {
     /**
+     * @private
      * Stringify a value, or return null if the value can't be stringified
      */
-    const safe_stringify = function( value ) {
+    const safeStringify = function( value ) {
         try {
             return JSON.stringify( value );
         }
@@ -121,146 +97,131 @@ export function fileClosed( filename ) {
         }
     };
 
-    if( filename.indexOf( JS_EVAL_FILENAME + FILE_EXTENSION ) !== -1 ) {
-        let code = FS.readFile( filename, { encoding: 'utf8' });
-        let retval;
+    let retval;
 
-        const header = getHeader( code );
+    const header = getHeader( code );
 
-        code = code.substr( header.length );
+    code = code.substr( header.length );
 
-        log( 'Evaluating: ' + code );
+    log( 'Evaluating: ' + code );
 
-        let i7type = "nothing";
+    let i7type = "nothing";
 
-        // Evaluate the JavaScript code.
-        try {
-            retval = new Function( "'use strict';\n" + code )();
-        }
-        catch(e) {
-            error( 'JavaScript code from story file threw an error: ' + e.message + '\n\n' + code );
-        }
+    // Evaluate the JavaScript code.
+    try {
+        retval = new Function( "'use strict';\n" + code )();
+    }
+    catch(e) {
+        error( 'JavaScript code from story file threw an error: ' + e.message + '\n\n' + code );
+    }
 
-        const type = typeof retval;
+    const type = typeof retval;
 
-        // build the return value
-        if( type === 'undefined' ) {
-            log( 'The code did not return anything' );
-            return;
-        }
-        else if( type === 'string' ) {
-            retval = '"' + retval + '"';
-            i7type = "text";
-        }
-        else if( type === 'function' || type === 'symbol' ) {
-            retval = retval.toString();
-            i7type = "function";
-        }
-        else if( typeof Set !== 'undefined' && retval instanceof Set ) {
-            retval = safe_stringify( Array.from( retval ) );
-            i7type = "list";
-        }
-        else if( retval === Infinity ) {
-            retval = 'Infinity';
-            i7type = "infinity";
-        }
-        else if( retval === -Infinity ) {
-            retval = '-Infinity';
-            i7type = "infinity";
-        }
-        else if( retval !== retval ) {   // NaN !== NaN
-            retval = 'NaN';
-            i7type = "NaN";
-        }
-        else if( type === "boolean" ) {
-            retval = String( retval );
-            i7type = "truth state";
-        }
-        else if( type === 'number' ) {
-            if( Math.abs( retval ) > 1e20 ) {   // more than 20 digits are displayed in scientific notation
-                retval = eToInt( retval );
-            }
-            else {
-                retval = "" + retval;
-            }
-            i7type = "number";
+    // build the return value
+    if( type === 'undefined' ) {
+        log( 'The code did not return anything' );
+        return;
+    }
+    else if( type === 'string' ) {
+        retval = '"' + retval + '"';
+        i7type = "text";
+    }
+    else if( type === 'function' || type === 'symbol' ) {
+        retval = retval.toString();
+        i7type = "function";
+    }
+    else if( typeof Set !== 'undefined' && retval instanceof Set ) {
+        retval = safeStringify( Array.from( retval ) );
+        i7type = "list";
+    }
+    else if( retval === Infinity ) {
+        retval = 'Infinity';
+        i7type = "infinity";
+    }
+    else if( retval === -Infinity ) {
+        retval = '-Infinity';
+        i7type = "infinity";
+    }
+    else if( retval !== retval ) {   // NaN !== NaN
+        retval = 'NaN';
+        i7type = "NaN";
+    }
+    else if( type === "boolean" ) {
+        retval = String( retval );
+        i7type = "truth state";
+    }
+    else if( type === 'number' ) {
+        if( Math.abs( retval ) > 1e20 ) {   // more than 20 digits are displayed in scientific notation
+            retval = eToInt( retval );
         }
         else {
-            retval = safe_stringify( retval );
+            retval = "" + retval;
+        }
+        i7type = "number";
+    }
+    else {
+        retval = safeStringify( retval );
 
-            if( retval ) {
-                const firstChar = retval.charAt( 0 );
+        if( retval ) {
+            const firstChar = retval.charAt( 0 );
 
-                if( firstChar === "[" ) {
-                    i7type = "list";
-                }
-                else if( firstChar === "{" ) {
-                    i7type = "object";
-                }
+            if( firstChar === "[" ) {
+                i7type = "list";
+            }
+            else if( firstChar === "{" ) {
+                i7type = "object";
             }
         }
-
-        log( `Return value (${i7type}): ${retval}` );
-
-        FS.writeFile(
-            JS_RETURN_VALUE_FILENAME + FILE_EXTENSION,
-            header + retval,
-            { encoding: 'utf8' }
-        );
-
-        FS.writeFile(
-            JS_RETURN_VALUE_TYPE_FILENAME + FILE_EXTENSION,
-            header + i7type,
-            { encoding: 'utf8' }
-        );
     }
+
+    log( `Return value (${i7type}): ${retval}` );
+
+    write(
+        JS_RETURN_VALUE_TYPE_FILENAME,
+        i7type,
+        {
+            cwd: VORPLE_PATH
+        }
+    );
+
+    write(
+        JS_RETURN_VALUE_FILENAME,
+        retval,
+        {
+            cwd: VORPLE_PATH
+        }
+    );
 }
 
 
 /**
  * Initializes and starts Vorple.
  */
-export function init() {
+export async function init() {
     // initialize submodules
     initPrompt();
+    await initFilesystem();
 
     // start up Haven
-    start( {
+    start({
         // we use Vorple's custom prompt, not what the engine provides
         enginePrompt: false,
 
         // ignore font family
         engineFontFamily: false,
 
+        // the function that loads the story file
+        loadStoryFile, 
+
         // user-provided options
         options: vorple.options,
 
+        // the callback that starts the interpreter after assets have loaded
+        startEngine: initQuixe,
+
         // Glulx has Unicode support
-        unicode: true,
-
-        // the name of the story file in the virtual filesystem
-        virtualStoryfile: 'storyfile.gblorb'
-    } );
-
-    // create the handshake file when the interpreter has loaded
-    // and delete any old control files
-    addCallback( function( done ) {
-        FS.syncfs( true, function() {
-            FS.writeFile( '/gamedata/' + HANDSHAKE_FILENAME + FILE_EXTENSION, "" );
-
-            try {
-                FS.unlink( '/gamedata/' + JS_EVAL_FILENAME + FILE_EXTENSION );
-            } catch(e) {
-            }
-
-            try {
-                FS.unlink( '/gamedata/' + JS_RETURN_VALUE_FILENAME + FILE_EXTENSION );
-            } catch(e) {
-            }
-
-            FS.syncfs( false, done );
-        } );
-    } );
+        unicode: true
+    });
 }
 
 
@@ -315,4 +276,15 @@ export function requireVersion( requiredVersion, callback ) {
 
     cb( true );
     return true;
+}
+
+
+/**
+ * @private
+ * Sets the Inform version.
+ * 
+ * @param {number} version 
+ */
+export function setInformVersion( version ) {
+    informVersion = version;
 }

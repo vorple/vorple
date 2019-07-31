@@ -22,11 +22,14 @@ module.exports = {
         hints: false    // Git files are big – don't warn about them
     },
     externals: {
-      jquery: 'jQuery'  // Webpack tends to include jQuery multiple times, we'll handle it separately
+      jquery: "jQuery"  // Webpack tends to include jQuery multiple times, we'll handle it separately
     },
     entry: [
-      'jquery/src/jquery',
-      './src/index.js'
+      "jquery/src/jquery",
+      "./quixe/src/quixe/quixe.js",
+      "./quixe/src/quixe/gi_dispa.js",
+      "./quixe/src/quixe/gi_load.js",
+      "./src/index.js"
     ],
     plugins: [
         new CopyWebpackPlugin(

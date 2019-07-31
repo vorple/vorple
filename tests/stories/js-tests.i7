@@ -12,6 +12,31 @@ Understand "set flag [text]" as setting a flag.
 Carry out setting a flag:
 	execute JavaScript command "window.testFlags[bracket]'[escaped topic understood]'[close bracket] = true".
 
+Pausing is an action out of world applying to nothing.
+Understand "pause" as pausing.
+
+Carry out pausing:
+	wait for keypress;
+	place a block level element called "pause-over". [unit tests will detect that this element has appeared]
+	
+
+To wait for keypress:
+	(- KeyPause(); -).
+	
+Include (-
+	[ KeyPause key; 
+		while ( 1 )
+		{
+			key = VM_KeyChar();
+			if ( key == -4 or -5 or -10 or -11 or -12 or -13 )
+			{
+				continue;
+			}
+			rfalse;
+		}
+	];
+-).
+
 First when play begins (this is the create the flag object rule):
 	execute JavaScript command "window.testFlags = {}".
 

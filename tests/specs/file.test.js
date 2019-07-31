@@ -123,7 +123,8 @@ describe( "Virtual filesystem", () => {
 
     describe( "init", () => {
         it( "creates the basic directory structure", () => {
-            expect( vorple( "file", "readdir", "/" ) ).to.include.members([ "inform", "savegames", "transcripts", "vorple" ]);
+            const dirs = [ "inform", "tmp", "vorple" ];
+            expect( vorple( "file", "readdir", "/" ) ).to.include.members( dirs );
         });
 
         it( "can be called multiple times", () => {

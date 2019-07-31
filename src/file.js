@@ -17,20 +17,67 @@ import { getInformVersion, setInformVersion } from "./vorple";
 const BrowserFS = require( "browserfs" );
 const { basename, dirname, resolve } = require( "path" );
 
-const HANDSHAKE_FILENAME = 'VpHndshk';
+export const HANDSHAKE_FILENAME = 'VpHndshk';
+export const JS_EVAL_FILENAME = 'VpJSEval';
+export const JS_RETURN_VALUE_FILENAME = 'VpJSRtrn';
+export const JS_RETURN_VALUE_TYPE_FILENAME = 'VpJSType';
+
 const HANDSHAKE_INIT = "Callooh!";
 const HANDSHAKE_RESPONSE = "Callay!";
-const INFORM_PATH = '/inform';        // The directory where Inform reads files
-const VORPLE_PATH = '/vorple';        // The directory Vorple uses for its own files
+
+const SYNC_FS_ROOT = '/';
+
+/**
+ * The directory root for the extended filesystem which has more space (IndexedDB)
+ * and uses asynchronous access.
+ * 
+ * @type {string}
+ */
+export const ASYNC_FS_ROOT = '/extended';
+
+/**
+ *  The directory where Inform reads author-provided files (not saves or transcripts).
+ * 
+ * @type {string}
+ */
+export const INFORM_PATH = SYNC_FS_ROOT + '/inform';        
+
+/**
+ *  The directory Vorple uses for its own files for communication between the interpreter and the game file.
+ * 
+ * @type {string}
+ */
+export const VORPLE_PATH = SYNC_FS_ROOT + '/vorple';
+
+/**
+ * Save file directory in the extended filesystem.
+ * 
+ * @type {string}
+ */
+export const SAVEFILE_PATH = ASYNC_FS_ROOT + '/savefiles';
+
+/**
+ * Transcripts directory in the extended filesystem.
+ * 
+ * @type {string}
+ */
+export const TRANSCRIPT_PATH = ASYNC_FS_ROOT + '/transcripts';
+
+/**
+ * The directory for temporary files. The temporary directory is emptied after leaving the page.
+ * 
+ * @type {string}
+ */
+export const TMP_PATH = '/tmp';
 const DEFAULT_PATH = INFORM_PATH;
 
 let fs = null;
 
 
 /**
- * @private
  * Check if file contents start with an Inform 7 header.
  * 
+ * @private
  * @param {string} contents 
  */
 function hasHeader( contents ) {
@@ -44,7 +91,7 @@ function hasHeader( contents ) {
  * @param {*} source File to copy
  * @param {*} target Target directory or the new name
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place. Applies to both source and target parameters.
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place. Applies to both source and target parameters.
  * @param {boolean} [options.replace=true] If true, any existing file of the same name will be replaced.
  *   If false, the operation will not continue if the file already exists.
  * @returns {boolean} True on success, false otherwise
@@ -104,7 +151,7 @@ export function copy( source, target, options = {} ) {
  * 
  * @param {string} filename 
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @returns {boolean} True if the file/directory exists, false otherwise
  */
 export function exists( filename, options = {} ) {
@@ -125,6 +172,20 @@ export function exists( filename, options = {} ) {
 export function getFS() {
     return fs;
 }
+
+
+/**
+ * Check if a file is in a filesystem that requires asynchronous access.
+ * 
+ * (Asynchronous file access isn't officially supported so this is for internal use only.)
+ * 
+ * @private
+ * @param {string} fullPath Path to the file. Must be a full path, not relative.
+ */
+export function inAsyncFS( fullPath ) {
+    return fullPath.startsWith( ASYNC_FS_ROOT );
+}
+
 
 /**
  * Returns an object with information about a file or directory:
@@ -147,7 +208,7 @@ export function getFS() {
  * 
  * @param {string} filename 
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @returns {object|null}
  */
 export function info( filename, options ) {
@@ -192,6 +253,7 @@ export function info( filename, options ) {
         return null;
     }
 }
+
 
 /**
  * Creates a header for Inform 7 files. If the story is Inform 6, returns an empty string.
@@ -240,8 +302,12 @@ export function init() {
         }
 
         BrowserFS.configure({
-            fs: 'LocalStorage',
-            options: {}
+            fs: 'MountableFileSystem',
+            options: {
+                [ SYNC_FS_ROOT ]: { fs: "LocalStorage", options: {} },
+                [ ASYNC_FS_ROOT ]: { fs: "IndexedDB", options: {} },
+                [ TMP_PATH ]: { fs: "InMemory", options: {} }
+            }
         }, error => {
             if( error ) {
                 return reject( error );
@@ -250,7 +316,7 @@ export function init() {
             fs = BrowserFS.BFSRequire('fs');
 
             // create the necessary directories if they don't exist
-            [ '/inform', '/savegames', '/transcripts', '/vorple' ].forEach( dir => {
+            [ VORPLE_PATH, INFORM_PATH ].forEach( dir => {
                 if( !exists( dir ) ) {
                     mkdir( dir );
                 }
@@ -276,7 +342,7 @@ export function init() {
  * 
  * @param {string} filename 
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @returns {boolean} True if file is ready, false on error or not ready
  */
 export function isReady( filename, options = {} ) {
@@ -306,6 +372,23 @@ export function isReady( filename, options = {} ) {
     return contents.charAt( 0 ) === "*";
 }
 
+
+/**
+ * Marks a file ready to read (or not ready to read) for Inform 7.
+ * This is equivalent of the phrases "mark (external file) as ready to read"
+ * and "mark (external file) as not ready to read" in Inform 7.
+ * 
+ * If the file doesn't have an Inform 7 header the method does nothing and returns false.
+ * 
+ * In Inform 6 this method does nothing and always returns false.
+ * 
+ * @param {string} filename 
+ * @param {boolean} [ready=true] If true, marks the file ready. Otherwise marks the file not ready.
+ * @param {object} [options={}]
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
+ * @returns {boolean} True if operation was successful, false otherwise.
+ *  Returns true even if no change was made to the file (was already marked ready.)
+ */
 
 export function markReady( filename, ready = true, options = {} ) {
     const opt = {
@@ -346,7 +429,7 @@ export function markReady( filename, ready = true, options = {} ) {
  * 
  * @param {string} dirname 
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @returns {boolean} True if directory was created, false otherwise
  */
 export function mkdir( dirname, options = {} ) {
@@ -354,9 +437,14 @@ export function mkdir( dirname, options = {} ) {
         cwd: DEFAULT_PATH,
         ...options
     };
+    const fullPath = path( dirname, opt.cwd );
+
+    if( inAsyncFS( fullPath ) ) {
+        return fs.mkdir( fullPath );
+    }
 
     try {
-        fs.mkdirSync( path( dirname, opt.cwd ) );
+        fs.mkdirSync( fullPath );
         return true;
     }
     catch( e ) {
@@ -372,7 +460,7 @@ export function mkdir( dirname, options = {} ) {
  * @param {*} source File/directory to move
  * @param {*} target Target directory or the new name
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place. Applies to both source and target parameters.
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place. Applies to both source and target parameters.
  * @param {boolean} [options.replace=true] If true, any existing file of the same name will be replaced.
  *   If false, the operation will not continue if the file already exists.
  *   This option is ignored if the source is a directory (a directory will never overwrite a file.)
@@ -456,16 +544,20 @@ export function path( filename, path = '.' ) {
  * 
  * @param {string} filename
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {boolean} [options.binary=false] Is it a binary file?
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @param {boolean} [options.header=false] If true, return value contains the Inform 7 header if present. Otherwise the header is not included in the return value.
  * @returns {string|null} The contents of the file, or null file could not be read
  */
 export function read( filename, options = {} ) {
     const opt = {
+        binary: false,
         cwd: DEFAULT_PATH,
         header: false,
         ...options
     };
+
+    const encoding = opt.binary ? {} : 'utf8';
     
     // Regardless of what the file actually contains, 
     // the handshake response is returned when the story file
@@ -476,7 +568,7 @@ export function read( filename, options = {} ) {
     }
 
     try {
-        const contents = fs.readFileSync( path( filename, opt.cwd ), 'utf8', 'r' );
+        const contents = fs.readFileSync( path( filename, opt.cwd ), encoding, 'r' );
 
         if( !opt.header && hasHeader( contents ) ) {
             // header not wanted - remove it from the return value
@@ -497,7 +589,7 @@ export function read( filename, options = {} ) {
  * 
  * @param {string} dirname 
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @return {array|null} The list of files in the directory, or null on error
  */
 export function readdir( dirname, options = {} ) {
@@ -520,7 +612,7 @@ export function readdir( dirname, options = {} ) {
  * 
  * @param {string} dirname 
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @returns {boolean} True if directory was removed, false otherwise
  */
 export function rmdir( dirname, options = {} ) {
@@ -545,7 +637,7 @@ export function rmdir( dirname, options = {} ) {
  * 
  * @param {string} filename 
  * @param {object} [options={}]
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @returns {boolean} True if file was removed, false otherwise
  */
 export function unlink( filename, options = {} ) {
@@ -571,18 +663,20 @@ export function unlink( filename, options = {} ) {
  * @param {string|array} contents Contents of what to write to the file, either a string or a byte array
  * @param {object} [options={}]
  * @param {boolean} [options.append=false] If true, contents are appended to the file, otherwise the file is overwritten with the new content
- * @param {string} [options.cwd="/inform"] The directory where the operation takes place
+ * @param {boolean} [options.binary=false] If true, writes a binary file instead of a text file
+ * @param {string} [options.cwd=/inform] The directory where the operation takes place
  * @param {boolean} [options.header=true] If true, an Inform 7 header is added to the start of the file. On Inform 6 this option does nothing.
- * @param {string} [options.project="VORPLE"] The project name that's used in the Inform 7 header.
- *  Does nothing on Inform 6 or if options.header is false.
- * @param {boolean} [options.ready=true] If true, the header gets a "ready" mark ("*") to signal Inform 7 that the file can be read.
- *  Otherwise the header is marked not ready ("-").
- *  Does nothing on Inform 6 or if options.header is false.
+ * @param {string} [options.project=VORPLE] The project name that's used in the Inform 7 header.
+ *  Does nothing on Inform 6 or if `options.header` is false.
+ * @param {boolean} [options.ready=true] If true, the header gets a "ready" mark (`*`) to signal Inform 7 that the file can be read.
+ *  Otherwise the header is marked not ready (`-`).
+ *  Does nothing on Inform 6 or if `options.header` is false.
  * @returns {boolean} True on success, false otherwise
  */
 export function write( filename, contents, options = {} ) {
     const opt = {
         append: false,
+        binary: false,
         cwd: DEFAULT_PATH,
         header: true,
         project: "VORPLE",
@@ -592,13 +686,17 @@ export function write( filename, contents, options = {} ) {
 
     const fullPath = path( filename, opt.cwd );
     const informVersion = getInformVersion();
+    const encoding = opt.binary ? {} : 'utf8';
     let header = "";
 
-    if( Array.isArray( contents ) ) {
+    if( opt.binary ) {
+        contents = Buffer.from( contents );
+    }
+    else if( Array.isArray( contents ) ) {
         contents = contents.map( code => String.fromCharCode( code ) ).join( '' );
     }
 
-    if( opt.header ) {
+    if( opt.header && !opt.binary ) {
         header = informHeader( opt.project, filename, opt.ready );
     }
 
@@ -619,16 +717,35 @@ export function write( filename, contents, options = {} ) {
     }
 
     try {
+        if( inAsyncFS( fullPath ) ) {
+            // This handles the "special case" of writing savefiles and transcripts - not guaranteed to work in the general case!
+            if( contents.length === 0 ) {
+                return;
+            }
+            if( opt.append ) {
+                fs.appendFile( fullPath, contents, encoding, err => console.log( err ) );
+            }
+            else {
+                fs.writeFile( fullPath, contents, encoding, err => console.log( err ) );
+            }
+            return true;
+        }
+        
         if( opt.append ) {
             // append the I7 header only if the file doesn't exist
             if( header && !exists( fullPath ) ) {
-                fs.writeFileSync( fullPath, header, 'utf8' );                
+                fs.writeFileSync( fullPath, header, encoding );                
             }
 
-            fs.appendFileSync( fullPath, contents, 'utf8' );
+            fs.appendFileSync( fullPath, contents, encoding );
         }
         else {
-            fs.writeFileSync( fullPath, header + contents, 'utf8' );
+            if( header ) {
+                fs.writeFileSync( fullPath, header + contents, encoding );
+            }
+            else {
+                fs.writeFileSync( fullPath, contents, encoding );
+            }
         }
 
         return true;
