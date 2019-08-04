@@ -63,4 +63,27 @@ describe( "Core library", () => {
             expect( vorple( null, "getInformVersion" ) ).to.equal( 7 );
         });
     });
+
+    describe( "Title", () => {
+        it( "handles Unicode characters", () => {
+            expect( browser.execute( () => document.title ) ).to.equal( "Vorple Integration Tests - αβγ - абв" );
+        });
+    });
+});
+
+describe( "Event listeners", () => {
+    /*
+    describe( "init", () => {
+        it( "triggers correctly", () => {
+            expect( browser.execute( () => window.initEventConfirmed ) ).to.be.true;
+        });
+    });
+
+    /*
+    describe( "quit", () => {
+        it( "triggers correctly", () => {
+
+        });
+    });
+    */
 });

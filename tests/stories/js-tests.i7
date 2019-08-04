@@ -1,4 +1,5 @@
-"Vorple Integration Tests"
+[The title tests Unicode characters in browser document title]
+The story title is "Vorple Integration Tests - αβγ - абв".
 
 Include Vorple by Juhana Leinonen.
 Include Vorple Hyperlinks by Juhana Leinonen.
@@ -18,7 +19,6 @@ Understand "pause" as pausing.
 Carry out pausing:
 	wait for keypress;
 	place a block level element called "pause-over". [unit tests will detect that this element has appeared]
-	
 
 To wait for keypress:
 	(- KeyPause(); -).
