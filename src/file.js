@@ -33,35 +33,35 @@ const SYNC_FS_ROOT = '/';
  * 
  * @type {string}
  */
-export const ASYNC_FS_ROOT = '/extended';
+export const ASYNC_FS_ROOT = '/extended/';
 
 /**
  *  The directory where Inform reads author-provided files (not saves or transcripts).
  * 
  * @type {string}
  */
-export const INFORM_PATH = SYNC_FS_ROOT + '/inform';        
+export const INFORM_PATH = SYNC_FS_ROOT + 'inform';        
 
 /**
  *  The directory Vorple uses for its own files for communication between the interpreter and the game file.
  * 
  * @type {string}
  */
-export const VORPLE_PATH = SYNC_FS_ROOT + '/vorple';
+export const VORPLE_PATH = SYNC_FS_ROOT + 'vorple';
 
 /**
  * Save file directory in the extended filesystem.
  * 
  * @type {string}
  */
-export const SAVEFILE_PATH = ASYNC_FS_ROOT + '/savefiles';
+export const SAVEFILE_PATH = ASYNC_FS_ROOT + 'savefiles';
 
 /**
  * Transcripts directory in the extended filesystem.
  * 
  * @type {string}
  */
-export const TRANSCRIPT_PATH = ASYNC_FS_ROOT + '/transcripts';
+export const TRANSCRIPT_PATH = ASYNC_FS_ROOT + 'transcripts';
 
 /**
  * The directory for temporary files. The temporary directory is emptied after leaving the page.
@@ -690,9 +690,14 @@ export function write( filename, contents, options = {} ) {
     let header = "";
 
     if( opt.binary ) {
+        // convert binary files to a Buffer
         contents = Buffer.from( contents );
     }
+    else if( contents instanceof Uint8Array ) {
+        contents = contents.toString();
+    }
     else if( Array.isArray( contents ) ) {
+        // convert normal arrays to a string
         contents = contents.map( code => String.fromCharCode( code ) ).join( '' );
     }
 
