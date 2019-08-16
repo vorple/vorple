@@ -34,7 +34,7 @@ module.exports = {
     plugins: [
         new CopyWebpackPlugin(
             [
-                { from: "assets/index.html", flatten: true },
+                { from: process.env.NODE_ENV === "unittest" ? "assets/index.test.html" : "assets/index.html", to: "index.html", flatten: true },
                 { from: "assets/vorple.css", to: "interpreter/", flatten: true },
                 { from: "haven/haven.css", to: "interpreter/", flatten: true },
                 { from: "Git/build/engine.*", to: "interpreter/", flatten: true },

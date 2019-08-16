@@ -49,7 +49,7 @@ exports.config = {
         // maxInstances can get overwritten per capability. So if you have an in-house Selenium
         // grid with only 5 firefox instances available you can make sure that not more than
         // 5 instances get started at a time.
-        maxInstances: 6,
+        maxInstances: process.env.BROWSER === "safari" ? 1 : 6,
         //
         browserName: process.env.BROWSER || "firefox"
     }],
@@ -64,7 +64,7 @@ exports.config = {
     // e.g. using promises you can set the sync option to false.
     sync: true,
     //
-    // Level of logging verbosity: silent | verbose | command | data | result | error
+    // Level of logging verbosity:  trace | debug | info | warn | error | silent
     logLevel: 'silent',
     //
     // Enables colors for log output.

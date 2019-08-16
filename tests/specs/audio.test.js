@@ -3,7 +3,7 @@ const chaiWebdriver = require( "chai-webdriverio" ).default;
 chai.use( chaiWebdriver( browser ) );
 
 const expect = chai.expect;
-const vorple = require( "../utility" ).vorple;
+const { vorple, waitForLineInput } = require( "../utility" );
 
 const getVolume = id => {
     return browser.execute( function( id ) {

@@ -3,10 +3,11 @@ const chaiWebdriver = require( "chai-webdriverio" ).default;
 chai.use( chaiWebdriver( browser ) );
 
 const expect = chai.expect;
-const vorple = require( "../utility" ).vorple;
+const { vorple, waitForLineInput } = require( "../utility" );
 
 // Mock the console and store what would have been printed there
-before( () => browser.execute( function() {
+before( () => {
+    browser.execute( function() {
         const errors = [];
         const logs = [];
 
@@ -17,8 +18,11 @@ before( () => browser.execute( function() {
 
         window.getLastError = () => errors[ errors.length - 1 ];
         window.getLastLog = () => logs[ logs.length - 1 ];
-    })
-);
+
+    });
+    
+    waitForLineInput();
+});
 
 const getLastError = () => browser.execute( function() {
     return window.getLastError();

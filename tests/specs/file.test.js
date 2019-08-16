@@ -68,7 +68,8 @@ describe( "Virtual filesystem", () => {
 
     describe( "getFS", () => {
         it( "returns the fs object", () => {
-            expect( vorple( "file", "getFS" ).FS ).to.exist;
+            waitForLineInput();
+            expect( browser.execute( () => typeof vorple.file.getFS().FS ) ).to.equal( "function" );
         })
     });
 

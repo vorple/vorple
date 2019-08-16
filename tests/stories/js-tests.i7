@@ -13,6 +13,13 @@ Understand "set flag [text]" as setting a flag.
 Carry out setting a flag:
 	execute JavaScript command "window.testFlags[bracket]'[escaped topic understood]'[close bracket] = true".
 
+Setting a value is an action out of world applying to a topic.
+
+Understand "set value [text]" as setting a value.
+
+Carry out setting a value:
+	execute JavaScript command "window.testValue='[escaped topic understood]'".
+
 Pausing is an action out of world applying to nothing.
 Understand "pause" as pausing.
 
@@ -37,6 +44,16 @@ Include (-
 	];
 -).
 
+[quit without prompting the player]
+Forcefully quitting is an action out of world applying to nothing.
+Understand "force quit" as forcefully quitting.
+
+Carry out forcefully quitting:
+	stop the game abruptly.
+
+To stop the/-- game abruptly:
+	(- quit; -).
+
 First when play begins (this is the create the flag object rule):
 	execute JavaScript command "window.testFlags = {}".
 
@@ -44,3 +61,7 @@ First when play begins (this is the create the flag object rule):
 When play begins:
 	say "Command hyperlink: ";
 	place a link to the command "set flag link clicked" called "link-click".
+
+[Copy a variable that should have been set at a custom init event, for checking that it's been set correctly]
+When play begins:
+	execute JavaScript command "window.initEventConfirmed = window.initEventHasRun".

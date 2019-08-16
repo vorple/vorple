@@ -16,12 +16,12 @@
     <link rel="stylesheet" type="text/css" href="interpreter/vorple.css">
 </head>
 <body>
-<main id="haven">
-    <div id="loader">
-        <h2 id="loader-message">Loading scripts</h2>
-        <div id="spinner">V</div>
-    </div>
-</main>
+
+<!--
+    This file is used only for testing. It doesn't include the HTML structure
+    (for testing that Haven creates it) and it delays the startup of Vorple
+    (for testing things that need to be done before Vorple initializes.)
+-->
 
 <script src="interpreter/vorple.min.js"></script>
 
@@ -39,7 +39,7 @@
     };
     
     vorple.debug.off();
-    vorple.init();
+    setTimeout( vorple.init, 500 );
 </script>
 </body>
 </html>
