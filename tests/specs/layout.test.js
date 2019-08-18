@@ -35,4 +35,16 @@ describe( "layout", () => {
             vorple( "layout", "unblock" );
         });
     });
+
+    describe( "scrolling", () => {
+        it( "resolves a promise when scrolling ends", () => {
+            browser.execute( () => {
+                window.scrollEnded = false;
+                vorple.layout.scrollToEnd( 500 ).then( () => window.scrollEnded = true );
+            });
+            expect( browser.execute( () => window.scrollEnded ) ).to.be.false;
+            browser.pause( 600 );
+            expect( browser.execute( () => window.scrollEnded ) ).to.be.true;
+        });
+    });
 });

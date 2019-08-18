@@ -110,15 +110,18 @@ export function openTag( tagName, classes, targetWindow = 0 ) {
  * If the element doesn't exist, the function doesn't do anything.
  *
  * @param {string|object} target  The target element
+ * @param {number} [speed=500]  The duration of the scroll animation in milliseconds 
  *
- * @return {boolean} True if scrolling was needed, false otherwise
+ * @returns {promise} A promise that resolves to true when the scroll animation
+ *   ends, or resolves to false if no scrolling was needed (element doesn't
+ *   exist or is already in view.)
  */
-export function scrollTo( target ) {
+export function scrollTo( target, speed = 500 ) {
     const $target = $( target );
 
     // if the element doesn't exist, do nothing
     if( $target.length === 0 ) {
-        return false;
+        return Promise.resolve( false );
     }
 
     const pagePosition = $( 'body' ).scrollTop();
@@ -133,24 +136,25 @@ export function scrollTo( target ) {
     // and it fits into the page completely
     if( targetPosition >= pagePosition + offset && targetPosition <= halfway &&
         targetPosition + targetHeight <= pagePosition + windowHeight ) {
-        return false;
+        return Promise.resolve( false );
     }
 
-    $( 'html, body' ).stop().animate( {
+    return $( 'html, body' ).stop().animate( {
         scrollTop: Math.min( Math.max( targetPosition - offset, 0 ), pageBottom )
-    }, 500 );
-
-    return true;
+    }, speed ).promise().then( () => true );
 }
 
 
 /**
  * Scroll to the end of the document.
+ * 
+ * @param {number} [speed=500]  The duration of the scroll animation in milliseconds
+ * @returns {promise} A promise that resolves when the scroll animation ends
  */
-export function scrollToEnd() {
-    $( 'html, body' ).stop().animate( {
+export function scrollToEnd( speed = 500 ) {
+    return $( 'html, body' ).stop().animate( {
         scrollTop: $( document ).height() - $( window ).height()
-    }, 500 );
+    }, speed ).promise();
 }
 
 
