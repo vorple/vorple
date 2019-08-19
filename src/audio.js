@@ -302,7 +302,9 @@ export function playMusic( url, options = {} ) {
  *
  * @param {string} url
  * @param {object} [options={}]
+ * @param {string} [options.id=""]  The id to attach to the audio element
  * @param {boolean} [options.looping=false]  If true, the sound effect keeps repeating
+ * @returns {object} The audio DOM element
  */
 export function playSound( url, options = {} ) {
     const looping = !!options.looping;
@@ -310,8 +312,14 @@ export function playSound( url, options = {} ) {
     const $audio = $( '<audio class="vorple-audio vorple-music">' )
         .attr( 'src', url )
         .prop( 'loop', looping )
-        .appendTo( 'body' )
-        .get( 0 ).play();
+        .appendTo( 'body' );
+
+    if( options.id ) {
+        $audio.attr( 'id', options.id );
+    }
+
+    const audioElement = $audio.get( 0 );
+    audioElement.play();
 
     // if the sound is not looping, remove the element from the DOM when it finishes playing
     if( !looping ) {
@@ -319,6 +327,8 @@ export function playSound( url, options = {} ) {
             this.remove();
         });
     }
+
+    return audioElement;
 }
 
 
