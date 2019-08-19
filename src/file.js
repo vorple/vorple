@@ -590,7 +590,7 @@ export function read( filename, options = {} ) {
  * @param {string} dirname 
  * @param {object} [options={}]
  * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @return {array|null} The list of files in the directory, or null on error
+ * @returns {array|null} The list of files in the directory, or null on error
  */
 export function readdir( dirname, options = {} ) {
     const opt = {

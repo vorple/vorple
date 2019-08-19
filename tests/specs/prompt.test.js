@@ -9,16 +9,6 @@ const sendEnter = () => browser.execute( () => vorple.prompt.queueKeypress('\n')
 const waitForLineInput = () => $( "#lineinput" ).waitForExist( 10000 );
 
 describe( "Prompt", () => {
-    describe( "character request", () => {
-        it( "waits for keypress", () => {
-            waitForLineInput();
-            sendCommand( "pause" );
-            expect( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
-            sendEnter();
-            $( '.pause-over' ).waitForExist( 1000 );
-        })
-    });
-
     describe( "command queue", () => {
         describe( ".queueCommand()", () => {
             it( "adds a command to the queue and runs it", () => {
@@ -50,25 +40,28 @@ describe( "Prompt", () => {
         });
     });
 
-    describe( "keypress listeners", () => {
-        describe( "haven.input.keypress.addListener", () => {
-            it( "triggers when keypress is expected", () => {
-                browser.execute( () => {
-                    window.listenerCalled = false;
-                    window.testRemover = haven.input.keypress.addListener( function() { window.listenerCalled = true; } )
-                });
+    describe( "keypress queue", () => {
+        describe( ".queueKeypress()", () => {
+            it( "adds a keypress to the queue and runs it", () => {
                 sendCommand( "pause" );
-                browser.pause(100);
-                expect( browser.execute( () => window.listenerCalled ) ).to.be.true;
+                expect( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
                 sendEnter();
+                waitForLineInput();
             });
 
-            it( "removes the listener when return value is called", () => {
-                browser.execute( () => { window.listenerCalled = false; window.testRemover(); });
-                sendCommand( "pause" );
-                expect( browser.execute( () => window.listenerCalled ) ).to.be.false;
+            it( "queues a keypress before keypress is requested", () => {
                 sendEnter();
-            })
+                sendCommand( "pause" );
+                waitForLineInput();
+            });
+
+            it( "queues two keypresses, runs both", () => {
+                sendEnter();
+                sendEnter();
+                sendCommand( "pause" );
+                sendCommand( "pause" );
+                waitForLineInput();
+            });
         });
     });
 
@@ -132,5 +125,153 @@ describe( "Prompt", () => {
                 expect( '#lineinput' ).to.be.displayed();
             });
         });
+    });
+});
+
+describe( "Input filters", () => {
+    const filterCleanup = () => browser.execute( () => window.filterCleanup.forEach( remover => remover() ) );
+
+    it( "register and change input", () => {
+        browser.execute( () => {
+            window.basicInputFilter = ( input, meta ) => {
+                window.basicInputMeta = meta;
+                return input.replace( "foo", "bar" );
+            };
+
+            window.basicInputFilterRemover = vorple.prompt.addInputFilter( window.basicInputFilter );
+        });
+
+        sendCommand( "set value foo" );
+        expect( browser.execute( () => window.testValue ) ).to.equal( "bar" );
+    });
+
+    it( "don't change what's printed on the screen", () => {
+        expect( ".lineinput.last .prompt-input" ).to.have.text( "set value foo" );
+    });
+
+    it( "have the correct meta object", () => {
+        expect( browser.execute( () => window.basicInputMeta) ).to.include({
+            input: "set value foo",
+            original: "set value foo",
+            type: "line",
+            userAction: false,
+            silent: false
+        });
+    });
+
+    it( "calling the return value removes filter", () => {
+        browser.execute( () => window.basicInputFilterRemover() );
+        sendCommand( "set value foo" );
+        expect( browser.execute( () => window.testValue ) ).to.equal( "foo" );
+    });
+
+    it( "input parameter is chained", () => {
+        browser.execute( () => {
+            window.chainInput = [];
+            window.chainOriginal = [];
+            window.filterCleanup = [];
+
+            window.chainInputFilter = index => ( input, meta ) => {
+                window.chainInput.push( input );
+                window.chainOriginal.push( meta.original );
+                return index;
+            };
+
+            window.filterCleanup.push( vorple.prompt.addInputFilter( window.chainInputFilter( "one" ) ) );
+            window.filterCleanup.push( vorple.prompt.addInputFilter( window.chainInputFilter( "two" ) ) );
+            window.filterCleanup.push( vorple.prompt.addInputFilter( window.chainInputFilter( "three" ) ) );
+        });
+
+        sendCommand( "zero" );
+        expect( browser.execute( () => window.chainInput ) ).to.deep.equal( [ "zero", "one", "two" ] );
+        filterCleanup();
+    });
+
+    it( "original input never changes", () => {
+        expect( browser.execute( () => window.chainOriginal ) ).to.deep.equal( [ "zero", "zero", "zero" ] );
+    });
+
+    it( "returning nothing, null or true ignores filter", () => {
+        browser.execute( () => {
+            window.filterCleanup.push( vorple.prompt.addInputFilter( () => {} ) );
+            window.filterCleanup.push( vorple.prompt.addInputFilter( () => null ) );
+            window.filterCleanup.push( vorple.prompt.addInputFilter( () => true ) );
+        });
+
+        sendCommand( "set flag ignoredfilters" );
+        expect( flagValue( "ignoredfilters" ) ).to.be.true;
+        filterCleanup();
+    });
+
+    const cancelCommand = "set flag cancelledfilter";
+
+    it( "canceling done by returning false", () => {
+        browser.execute( () => {
+            window.filterCleanup.push( vorple.prompt.addInputFilter( () => false ) );
+        });
+
+        sendCommand( cancelCommand );
+        waitForLineInput();
+        expect( flagValue( "cancelledfilter" ) ).to.be.false;
+        filterCleanup();
+    });
+
+    it( "canceling doesn't clear prompt value", () => {
+        expect( $( "#lineinput-field" ).getValue() ).to.equal( cancelCommand );
+    });
+
+    it( "canceling doesn't append the prompt to the output", () => {
+        expect( ".lineinput.last .prompt-input" ).to.not.have.text( cancelCommand );
+    });
+
+    it( "wait for promise to resolve", () => {
+        browser.execute( () => {
+            const promiseInputFilter = input => new Promise( ( resolve, reject ) => {
+                if( input === "throw" ) {
+                    return reject();
+                }
+
+                setTimeout( resolve, 1000 );
+            });
+
+            window.filterCleanup.push( vorple.prompt.addInputFilter( promiseInputFilter ) );
+        });
+
+        sendCommand( "set flag promisefilter" );
+        browser.pause( 600 );
+        expect( flagValue( "promisefilter" ) ).to.be.false;
+        browser.pause( 600 );
+        expect( flagValue( "promisefilter" ) ).to.be.true;
+    });
+    
+    it( "block the UI while the filters resolve", () => {
+        sendCommand( "z" );
+        browser.pause( 600 );
+        browser.keys( "y" );
+        expect( $( "#lineinput-field" ).getValue() ).to.equal( "z" );
+        browser.pause( 600 );
+        browser.keys( "x" );
+        expect( $( "#lineinput-field" ).getValue() ).to.equal( "x" );
+    });
+    
+    it( "cancel the event when a promise rejects", () => {
+        sendCommand( "throw" );
+        waitForLineInput();
+        expect( $( "#lineinput-field" ).getValue() ).to.equal( "throw" );
+        expect( ".lineinput.last .prompt-input" ).to.not.have.text( "throw" );
+        browser.keys( "x" );    // make sure the UI is unblocked
+        expect( $( "#lineinput-field" ).getValue() ).to.equal( "throwx" );
+        filterCleanup();
+    });
+
+    it( "changing the prompt will show the changed prompt on screen", () => {
+        browser.execute( () => {
+            window.filterCleanup.push( vorple.prompt.addInputFilter( () => vorple.prompt.setValue( "changed" ) ) );
+        });
+
+        sendCommand( "foo" );
+        waitForLineInput();
+        expect( ".lineinput.last .prompt-input" ).to.have.text( "changed" );
+        filterCleanup();
     });
 });

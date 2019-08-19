@@ -2,9 +2,10 @@
  * @module vorple
  */
 import { start } from "../haven/haven";
+import { addCallback } from "../haven/assets";
 
 import { error, log } from "./debug";
-import { init as initPrompt } from "./prompt";
+import { init as initPrompt, applyInputFilters } from "./prompt";
 import { loadStoryFile, initQuixe } from "./haven";
 
 import { version } from "../package.json";
@@ -15,18 +16,69 @@ import {
     init as initFilesystem,
     write
 } from "./file";
+import { applyOutputFilters } from "./output";
 
 let informVersion;
 
+
 /**
+ * Containers for the custom event listeners.
  * @private
- * Converts a number in scientific notation (e.g. 1e+30)
- * to a decimal string.
+ */
+const eventListeners = {
+    init: [],
+    expectCommand: [],
+    submitCommand: [],
+    expectKeypress: [],
+    submitKeypress: [],
+    quit: []
+};
+
+
+/**
+ * Adds or removes one listener from one event.
+ * 
+ * @returns {boolean} False if trying to remove a listener that hasn't been registered, true otherwise 
+ * @private
+ */
+function addOrRemoveListener( eventName, listener, action ) {
+    if( !eventName || typeof eventName === "function" ) {
+        return error( `Event name missing when trying to ${action} an event listener` );
+    }
+  
+    if( !eventListeners[ eventName ] ) {
+        return error( `Tried to ${action} a listener to an unknown event ${eventName}` );
+    }
+
+    if( typeof listener !== "function" ) {
+        return error( `Missing callback function when trying to ${action} listener for event ${eventName}` );
+    }
+
+    if( action === "add" ) {
+        eventListeners[ eventName ].push( listener );
+        return true;
+    }
+    else {
+        const index = eventListeners[ eventName ].indexOf( listener );
+
+        if( index === -1 ) {
+            return false;
+        }
+
+        eventListeners[ eventName ].splice( index, 1 );
+        return true;
+    }
+}
+
+
+/**
+ * Converts a number in scientific notation (e.g. 1e+30) to a decimal string.
  *
  * From http://stackoverflow.com/a/1685917
  *
  * @param {number} x
  * @returns {string}
+ * @private
  */
 function eToInt( x ) {
     let e;
@@ -51,35 +103,26 @@ function eToInt( x ) {
 
 
 /**
- * @private
- * Inform 7 adds the game's IFID to the text file which we must remove
- * before evaluating the actual content. We'll use the same header
- * to build the response file to make Inform think it's its own file.
- *
- * @param {string} content  The contents of the file
+ * Registers a listener for an event. See "Filters and event listeners" in the documentation for details.
+ * 
+ * @param {string|string[]} eventNames The event name or an array of event names where to add the listener
+ * @param {function} listener The listener to register
+ * @returns {function} A function that can be called to remove the listeners
  */
-function getHeader( content ) {
-    if( content.charAt( 0 ) === '*' ) {
-        return content.substr( 0, content.indexOf( '\n' ) + 1 );
+export function addEventListener( eventNames, listener ) {
+    if( !Array.isArray( eventNames ) ) {
+        eventNames = [ eventNames ];
     }
 
-    return "";
+    eventNames.forEach( name => addOrRemoveListener( name, listener, "add" ) );
+
+    return () => removeEventListener( eventNames, listener );
 }
 
 
 /**
- * Returns the Inform version, detected at handshake.
- * Before the handshake the value is undefined.
- * 
- * @returns {number|undefined} 6 or 7
- */
-export function getInformVersion() {
-    return informVersion;
-}
-
-
-/**
- * 
+ * Evaluates JavaScript code and writes the return value and its type to the
+ * virtual filesystem for the story file to read.
  *
  * @param {string} filename
  */
@@ -195,9 +238,43 @@ export function evaluate( code ) {
 
 
 /**
+ * Inform 7 adds the game's IFID to the text file which we must remove
+ * before evaluating the actual content. We'll use the same header
+ * to build the response file to make Inform think it's its own file.
+ *
+ * @param {string} content  The contents of the file
+ * @private
+ */
+function getHeader( content ) {
+    if( content.charAt( 0 ) === '*' ) {
+        return content.substr( 0, content.indexOf( '\n' ) + 1 );
+    }
+
+    return "";
+}
+
+
+/**
+ * Returns the Inform version, detected at handshake.
+ * Before the handshake the value is undefined.
+ * 
+ * @returns {number|undefined} 6 or 7
+ */
+export function getInformVersion() {
+    return informVersion;
+}
+
+
+/**
  * Initializes and starts Vorple.
  */
 export async function init() {
+    // use Haven's init listeners to trigger our own listeners
+    addCallback( async cb => { 
+        await triggerEvent( 'init' );
+        cb();
+    });
+
     // initialize submodules
     initPrompt();
     await initFilesystem();
@@ -209,6 +286,20 @@ export async function init() {
 
         // ignore font family
         engineFontFamily: false,
+
+        filters: {
+            input: applyInputFilters,
+            output: applyOutputFilters
+        },
+
+        // have Haven trigger listeners
+        hooks: {
+            expectCommand: () => { triggerEvent( 'expectCommand' ); },
+            expectKeypress: () => { triggerEvent( 'expectKeypress' ); },
+            quit: () => { triggerEvent( 'quit' ); },
+            submitCommand: meta => triggerEvent( 'submitCommand', meta ),
+            submitKeypress: meta => triggerEvent( 'submitKeypress', meta )
+        },
 
         // the function that loads the story file
         loadStoryFile, 
@@ -226,6 +317,35 @@ export async function init() {
 
 
 /**
+ * Removes a registered event listener.
+ * 
+ * @param {string|string[]} [eventNames] The event name or an array of event names from where to remove the listener.
+ * Leaving this parameter out completely (i.e. passing the listener function as the first and only parameter)
+ * removes the listener from all events where it's been registered.
+ * @param {function} listener The listener to remove
+ * @returns {boolean} True if the listener was removed from at least one event
+ */
+export function removeEventListener( eventNames, listener ) {
+    // if the first parameter is a function, remove all listeners
+    if( typeof eventNames === "function" ) {
+        listener = eventNames;
+        eventNames = Object.keys( eventListeners );
+    }
+    else if( !Array.isArray( eventNames ) ) {
+        eventNames = [ eventNames ];
+    }
+
+    // if an empty array was passed, the operation is still successful even though there's nothing to do
+    if( eventNames.length === 0 ) {
+        return true;
+    }
+
+    // return true if at least one of the events was removed
+    return eventNames.map( name => addOrRemoveListener( name, listener, "remove" ) ).includes( true );
+}
+
+
+/**
  * Require a minimum version of Vorple. Minor updates are accepted if
  * they're not specified in the request. In other words, if version "3.1"
  * is requested, then any Vorple version below 3.2 (3.1, 3.1.1, 3.1.2 etc)
@@ -237,7 +357,7 @@ export async function init() {
  *
  * @param {string} requiredVersion  The minimum version of Vorple that's required.
  * @param {function} [callback]  A custom callback
- * @return {boolean} True if version matches
+ * @returns {boolean} True if version matches
  */
 export function requireVersion( requiredVersion, callback ) {
     const thisVer = version.split( '.' ).map( str => Number( str ) );
@@ -280,11 +400,25 @@ export function requireVersion( requiredVersion, callback ) {
 
 
 /**
- * @private
  * Sets the Inform version.
  * 
  * @param {number} version 
+ * @private
  */
 export function setInformVersion( version ) {
     informVersion = version;
+}
+
+
+/**
+ * Runs all custom event listeners for the given event.
+ * 
+ * @param {string} eventName 
+ * @param {object} [meta={}]
+ * @private
+ */
+export async function triggerEvent( eventName, meta = {} ) {
+    for( let i = 0; i < eventListeners[ eventName ].length; ++i ) {
+        await eventListeners[ eventName ][ i ]({ ...meta, type: eventName });
+    }
 }

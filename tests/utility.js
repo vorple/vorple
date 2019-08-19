@@ -2,7 +2,7 @@
  * Retrieves the value of a flag set by the test story.
  *
  * @param flagName
- * @return {boolean}
+ * @returns {boolean}
  */
 module.exports.flagValue = flagName => browser.execute( flagName => !!window.testFlags[ flagName ], flagName );
 
@@ -31,7 +31,7 @@ module.exports.sendCommand = ( command, silent ) => vorple( "prompt", "queueComm
  * @param module
  * @param method
  * @param params
- * @return {*}
+ * @returns {*}
  */
 function vorple( module, method, ...params ) {
     return browser.execute( ( module, method, params ) => {

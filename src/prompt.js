@@ -13,10 +13,21 @@ import {
     resizeInput,
     sendCommand
 } from "../haven/prompt";
+import { addEventListener } from "./vorple";
+import { error } from "./debug";
+import { block, unblock } from "./layout";
 
+const inputFilters = [];
 const commandQueue = [];
 const keyQueue = [];
 
+export function clearCommandQueue() {
+    commandQueue.length = 0;
+}
+
+export function clearKeyQueue() {
+    keyQueue.length = 0;
+}
 
 /**
  * If there is a command waiting in the queue, submit it to the parser.
@@ -24,13 +35,11 @@ const keyQueue = [];
  */
 function runCommandQueue() {
     if( commandQueue.length > 0 ) {
-        // must let engine finish with the previous task
-        setTimeout( () => {
-            const command = commandQueue.shift();
+        const command = commandQueue.shift();
 
-            setValue( command.cmd );
-            submit( command.silent );
-        }, 0 );
+        setValue( command.cmd );
+        submit( command.silent );
+        return false;
     }
 }
 
@@ -41,12 +50,90 @@ function runCommandQueue() {
  */
 function runKeyQueue() {
     if( keyQueue.length > 0 ) {
-        // must let engine finish with the previous task
-        setTimeout( () => {
-            const key = keyQueue.shift();
-            keypress.send({ keyCode: key.charCodeAt(0) });
-        }, 0 );
+        const key = keyQueue.shift();
+        keypress.send({ keyCode: key.charCodeAt(0), force: true });
+        return false;
     }
+
+    return true;
+}
+
+
+/**
+ * Registers a new input filter.
+ * 
+ * @param {function} filter 
+ * @returns {function} A function that can be called to remove the filter
+ */
+export function addInputFilter( filter ) {
+    inputFilters.push( filter );
+    return () => removeInputFilter( filter );
+}
+
+
+/**
+ * Runs input through all input filters.
+ * 
+ * @param {string} originalInput 
+ * @private
+ */
+export async function applyInputFilters( originalInput, meta ) {
+    let finalInput = originalInput;
+
+    // block the UI while filters run, to prevent the player from typing before the previous command has resolved
+    block();
+
+    for( let i = 0; i < inputFilters.length; ++i ) {
+        let filtered = inputFilters[ i ]( finalInput, {
+            ...meta,
+            input: finalInput,
+            original: originalInput,
+            type: "line"
+        });
+
+        // resolve the value if the return value was a promise,
+        // this leaves other values untouched
+        try {
+            filtered = await Promise.resolve( filtered );
+        }
+        catch( e ) {
+            throw e;
+        }
+        finally {
+            unblock();
+        }
+
+        switch( filtered ) {
+            case undefined:
+            case null:
+            case true:
+                // do nothing
+                break;
+
+            case false:
+                // event cancelled!
+                return false;
+
+            default:
+                const type = typeof filtered;
+
+                if( type === "object" && filtered.then ) {
+                    error( "Input filter promise resolved into another promise, which is not allowed" );
+                }
+
+                if( type === "string" ) {
+                    finalInput = filtered;
+                }
+                else {
+                    error( "Input filter returned a value of type " + type );
+                }
+                break;
+        }
+    }
+
+    unblock();
+    
+    return finalInput;
 }
 
 
@@ -63,10 +150,10 @@ export function hide() {
  */
 export function init() {
     // Hook into the lineinput's ready event for passing commands from the queue.
-    getHavenPrompt().addEventListener( 'lineinputReady', runCommandQueue );
+    addEventListener( 'expectCommand', runCommandQueue );
 
     // Run the key queue when the engine expects a keypress
-    keypress.addListener( runKeyQueue );
+    addEventListener( "expectKeypress", runKeyQueue );
 }
 
 
@@ -106,6 +193,23 @@ export function queueKeypress( key ) {
 
 
 /**
+ * Removes a filter from the registered input filters.
+ * 
+ * @param {function} filter The filter to remove
+ */
+export function removeInputFilter( filter ) {
+    const index = inputFilters.indexOf( filter );
+
+    if( index === -1 ) {
+        return false;
+    }
+
+    inputFilters.splice( index, 1 );
+    return true;
+}
+
+
+/**
  * Set the prefix of the command prompt. The prefix is usually a greater-than
  * character (>) at the start of the command prompt.
  *
@@ -116,7 +220,7 @@ export function queueKeypress( key ) {
  * @param {boolean} [html=false]  If true, the prefix is inserted into the DOM
  *   as HTML. Otherwise HTML is escaped and shown as-is.
  *
- *  @return {string} The new prefix.
+ *  @returns {string} The new prefix.
  */
 export function setPrefix( prefix, html = false ) {
     let newPrefix = prefix;
@@ -148,7 +252,12 @@ export function setValue( value ) {
  *      screen. The result of the command will still print normally.
  */
 export function submit( silent = false ) {
-    sendCommand( new CustomEvent( 'submit', { detail: { silent: !!silent } } ) );
+    sendCommand( new CustomEvent( 'submit', { 
+        detail: { 
+            silent: !!silent,
+            userAction: false
+        }
+    } ) );
 }
 
 

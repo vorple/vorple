@@ -10,6 +10,9 @@
  */
 
 import { append, flush } from "../haven/buffer";
+import { keypress } from "../haven/input";
+import { expectInput } from "../haven/prompt";
+import { engineStops } from "../haven/haven";
 import {
     HANDSHAKE_FILENAME,
     INFORM_PATH,
@@ -92,6 +95,7 @@ let option_extevent_hook;
 let option_glk_gestalt_hook;
 
 /* Library display state. */
+let has_exited = false;
 let ui_disabled = false;
 let ui_specialinput = null;
 let ui_specialcallback = null;
@@ -1648,6 +1652,7 @@ function glk_exit() {   // modified
     has_exited = true;
     ui_disabled = true;
     gli_selectref = null;
+    engineStops();
     return DidNotReturn;
 }
 
@@ -2299,7 +2304,7 @@ function glk_request_line_event(_win, buf, initlen) {   // modified
         GiDispa.retain_array(buf);
 
     flush();
-    haven.prompt.show();
+    expectInput();
 }
 
 function glk_request_char_event(_win) { // modified
@@ -2312,7 +2317,8 @@ function glk_request_char_event(_win) { // modified
     win.char_request_uni = false;
     win.input_generation = event_generation;
 
-    haven.input.keypress.wait();
+    flush();
+    keypress.wait();
 }
 
 function glk_cancel_char_event(win) {

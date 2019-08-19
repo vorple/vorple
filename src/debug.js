@@ -15,7 +15,7 @@ let debugState = false;
  * Show an error in the console and on the screen.
  *
  * @param {string} text  Error message
- * @return {boolean} Always returns true, for consistency with log()
+ * @returns {boolean} Always returns true, for consistency with log()
  */
 export function error( text ) {
     console.error( text );

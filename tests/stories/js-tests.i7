@@ -6,19 +6,40 @@ Include Vorple Hyperlinks by Juhana Leinonen.
 
 There is a room.
 
-Setting a flag is an action out of world applying to a topic.
 
+Book 1 - Verbs
+
+Chapter 1 - Echoing
+
+Echoing is an action out of world applying to a topic.
+Understand "echo [text]" as echoing.
+
+Carry out echoing:
+	say the topic understood.
+
+
+Chapter 2 - Setting a flag
+
+Setting a flag is an action out of world applying to a topic.
 Understand "set flag [text]" as setting a flag.
 
 Carry out setting a flag:
 	execute JavaScript command "window.testFlags[bracket]'[escaped topic understood]'[close bracket] = true".
 
-Setting a value is an action out of world applying to a topic.
+First when play begins (this is the create the flag object rule):
+	execute JavaScript command "window.testFlags = {}".
 
+
+Chapter 3 - Setting a value
+
+Setting a value is an action out of world applying to a topic.
 Understand "set value [text]" as setting a value.
 
 Carry out setting a value:
 	execute JavaScript command "window.testValue='[escaped topic understood]'".
+
+
+Chapter 4 - Pausing
 
 Pausing is an action out of world applying to nothing.
 Understand "pause" as pausing.
@@ -44,6 +65,9 @@ Include (-
 	];
 -).
 
+
+Chapter 5 - Forcefully quitting
+
 [quit without prompting the player]
 Forcefully quitting is an action out of world applying to nothing.
 Understand "force quit" as forcefully quitting.
@@ -54,8 +78,6 @@ Carry out forcefully quitting:
 To stop the/-- game abruptly:
 	(- quit; -).
 
-First when play begins (this is the create the flag object rule):
-	execute JavaScript command "window.testFlags = {}".
 
 [The link is used to verity that disabling the UI disables the links as well]
 When play begins:

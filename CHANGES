@@ -8,24 +8,44 @@ number xx in the Inform extensions/libraries repositories.
 Release 3.2
 ===========
 
-- Due to various technical and convenience reasons, replaced the Git engine
-  with Quixe for the Glulx interpreter. The overall performance takes a minor
-  hit but JavaScript evaluation time gets about 75% reduction, which has
-  significant impact especially when evaluating several blocks of code
-  consecutively.
+Due to various technical and convenience reasons, this release replaces the Git
+engine with Quixe for the Glulx interpreter. The overall performance takes a
+minor hit but JavaScript evaluation time gets about 75% reduction, which has
+significant impact especially when evaluating several blocks of code
+consecutively.
+
+- BREAKING CHANGE: vorple.layout.scrollTo() now returns a promise that resolves
+  when the scroll animation ends, instead of true/false to indicate if scrolling
+  was needed
 - Added a module to access the virtual filesystem. This allows for exchanging
   files between JavaScript and the Inform story.
 - Proper modal prompts when the engine asks for filenames, and restoring a
   game shows a list of savefiles to choose from
+- Added input/output filters and event listeners
+- Added a keypress queue (vorple.prompt.queueKeypress) for programmatically
+  sending a keypress when the Inform story is waiting for one
+- Turn content is now wrapped in named HTML elements which makes it easier to
+  target specific turn content with JavaScript (class "turn" for each turn, plus
+  classes "current" for the currently happening turn and "previous" for the one
+  that has just ended)
+- Added vorple.getInformVersion() which returns either 6 or 7 depending on
+  which version compiled the story file.
+- Fixed a bug that caused the interpreter to not scroll new content into view
+  when Inform paused to wait for a keypress
+- Fixed a bug that caused the interpreter to not respond to keypresses when
+  Inform was waiting for a keypress and the screen wasn't scrolled all the way
+  to the end
 - Files passed between Inform 7 and Vorple now include the correct headers.
   Inform seemed to ignore the header when the project wasn't named in the
   header so it didn't have any visible negative effects.
-- Added a keypress queue (vorple.prompt.queueKeypress) for programmatically
-  reacting when the Inform story is waiting for a keypress. Related to this,
-  haven.input.keypress.addListener and haven.input.keypress.removeListener
-  added for hooking into the interpreter when it starts to wait for a keypress.
-- Added vorple.getInformVersion() which returns either 6 or 7 depending on
-  which version compiled the story file.
+- If the interpreter's HTML file doesn't contain the required HTML elements,
+  they are now created automatically
+- vorple.audio.playSound() accepts an id option that will be attached to the 
+  created audio element, and the method returns the audio element
+- vorple.layout.scrollTo() and vorple.layout.scrollToEnd() accept a parameter
+  that tells how fast the scroll animation should be, or 0 for no animation 
+  (default 0.5 seconds), and returns a promise that resolves when the animation
+  ends
 
 
 Project
@@ -38,6 +58,12 @@ Project
 - Updated to latest version of Webdriver.io which greatly simplifies the test
   setup required. Npm handles all testing software installation.
 - Added a script to automatically build the unit test game
+
+
+Libraries
+---------
+
+- Updated jQuery to 3.4.1 and other libraries to their latest versions
 
 
 Release 3.1 (2018-11-03)

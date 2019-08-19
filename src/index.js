@@ -12,6 +12,7 @@ window.vorple = {
     file: require( "./file" ),
     haven: require( "./haven" ),
     layout: require( "./layout" ),
+    output: require( "./output" ),
     prompt: require( "./prompt" ),
     options: {},
     version
