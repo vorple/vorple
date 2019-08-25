@@ -72,7 +72,8 @@ export function initQuixe( storyfile ) {
  * @private
  */
 export function loadStoryFile() {
-    const url = get( 'story' );
+    // use "storyfile" parameter if it exists, to bypass the Quixe file loader
+    const url = get( 'storyfile' ) || get( 'story' );
 
     if( base64StoryFile ) {
         const storydata = base64StoryFile;
