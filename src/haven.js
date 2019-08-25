@@ -10,6 +10,9 @@ import { set as setHavenStyle } from "../haven/style";
 import error from "../haven/error";
 import { get } from "../haven/options";
 
+// Inform 7 creates a file that puts the story file in this variable
+let base64StoryFile = null;
+
 const stylehints = [];
 
 // default
@@ -42,8 +45,10 @@ stylehints[ 4 ] = {
 
 
 /**
+ * Start Quixe. Uses the base64StoryFile data (from Inform 7)
+ * if a file hasn't been specified
+ * 
  * @private
- * Start Quixe.
  */
 export function initQuixe( storyfile ) {
     if( !window.Quixe ) {
@@ -57,17 +62,23 @@ export function initQuixe( storyfile ) {
     window.GlkOte = {
         log: () => {}
     };
-
-    GiLoad.load_run( null, storyfile );
+    
+    GiLoad.load_run( null, storyfile, typeof storyfile === 'string' ? 'base64' : undefined );
 }
 
 
 /**
- * @private
  * Load the story file.
+ * @private
  */
 export function loadStoryFile() {
     const url = get( 'story' );
+
+    if( base64StoryFile ) {
+        const storydata = base64StoryFile;
+        base64StoryFile = null;   // no need to keep the original data, free the memory
+        return storydata;
+    }
 
     return new Promise( ( resolve, reject ) => {
         const httpRequest = new XMLHttpRequest();
@@ -90,6 +101,15 @@ export function loadStoryFile() {
         httpRequest.responseType = "arraybuffer";   // this must be exactly here, otherwise IE11 breaks
         httpRequest.send();
     });
+}
+
+
+/**
+ * Inform 7 interpreter template calls this to set the story file data
+ * @private
+ */
+export function setBase64StoryFile( data ) {
+    base64StoryFile = data;
 }
 
 
