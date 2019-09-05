@@ -46,6 +46,9 @@ consecutively.
   that tells how fast the scroll animation should be, or 0 for no animation 
   (default 0.5 seconds), and returns a promise that resolves when the animation
   ends
+- Added a CSS rule that prevents overflowing of words that are too long to fit
+  inside the interpreter output area
+- Tweaked the status line CSS to cover the entire width of the output (#30)
 
 
 Project

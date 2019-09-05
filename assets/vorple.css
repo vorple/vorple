@@ -265,11 +265,12 @@ body.play > div.interpretercredit {
     display: flex;
     background-color: #fff;
     border-bottom: 3px double #ccc;
-    position: fixed;
+    position: -webkit-sticky;
+    position: sticky;   /* same as "fixed" in this case but positions it relative to parent element */
     top: 0;
     white-space: pre-wrap;
     max-width: inherit;
-    width: 100%;
+    width: calc(100% + 30px);
 }
 
 #output > .status-line-container {
