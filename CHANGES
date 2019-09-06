@@ -14,6 +14,10 @@ minor hit but JavaScript evaluation time gets about 75% reduction, which has
 significant impact especially when evaluating several blocks of code
 consecutively.
 
+- BREAKING CHANGE: Sending commands programmatically with 
+  vorple.prompt.queueCommand() will no longer clear the prompt automatically,
+  so whatever the player had typed there will be untouched. Clear the prompt
+  manually if necessary with vorple.prompt.setValue(""). (#36)
 - BREAKING CHANGE: vorple.layout.scrollTo() now returns a promise that resolves
   when the scroll animation ends, instead of true/false to indicate if scrolling
   was needed
@@ -49,6 +53,10 @@ consecutively.
 - Added a CSS rule that prevents overflowing of words that are too long to fit
   inside the interpreter output area
 - Tweaked the status line CSS to cover the entire width of the output (#30)
+- Changed the prompt line CSS to calculate the input field's width automatically
+  without having to do it via JS
+- Set the autocomplete="off" and autocapitalize="none" attributes to the prompt
+  to disable unwanted browser features
 
 
 Project
