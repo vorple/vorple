@@ -6,6 +6,7 @@
  * updates in official Quixe.
  * 
  * @module glk
+ * @since 3.2.0
  * @private
  */
 
@@ -21,15 +22,13 @@ import {
     JS_RETURN_VALUE_TYPE_FILENAME,
     VORPLE_PATH,
     exists,
-    read,
-    write
-} from "./file";
-import { 
     filePrompt,
+    read,
     restoreFilePrompt,
     saveFilePrompt,
-    transcriptFilePrompt
-} from "./ui";
+    transcriptFilePrompt,
+    write
+} from "./file";
 import { evaluate } from "./vorple";
 import { setStyle } from "./haven";
 import error from "../haven/error";

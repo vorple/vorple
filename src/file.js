@@ -10,12 +10,14 @@
  * (readFileSync, writeFileSync etc.)
  * 
  * @module file
+ * @since 3.2.0
  */
 
 import { getInformVersion, setInformVersion } from "./vorple";
 
 const BrowserFS = require( "browserfs" );
 const { basename, dirname, resolve } = require( "path" );
+const vex = require( "vex-js" );
 
 export const HANDSHAKE_FILENAME = 'VpHndshk';
 export const JS_EVAL_FILENAME = 'VpJSEval';
@@ -165,6 +167,102 @@ export function exists( filename, options = {} ) {
 
 
 /**
+ * Show a modal asking the user to provide a filename.
+ * 
+ * @param {function} callback The function to call with the filename as the parameter
+ *   after the user has selected the filename, or null if action was canceled
+ * @param {string} [filepath=/inform] The root path of the file
+ */
+export function filePrompt( callback, filepath = INFORM_PATH ) {
+    const needsAsync = inAsyncFS( filepath );
+    const fs = getFS();
+
+    const asyncExists = async function( filename ) {
+        return new Promise( resolve => {
+            try {
+                fs.exists( filename, status => resolve( status ) );
+            }
+            catch( e ) {
+                resolve( false );
+            }
+        });
+    };
+
+    const askForFilename = function() {
+        vex.dialog.open({
+            message: 'Enter filename:',
+            input: [
+                '<input name="filename" type="text" required />',
+            ].join(''),
+            buttons: [
+                $.extend({}, vex.dialog.buttons.YES, { text: 'Save' }),
+                $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+            ],
+            callback: async function (data) {
+                if (!data) {
+                    callback( null );
+                } else {
+                    const finalPath = path( data.filename, filepath );
+
+                    if( needsAsync ) {
+                        if( await asyncExists( finalPath ) ) {
+                            askToOverwrite( finalPath );
+                        }
+                        else {
+                            callback( finalPath );
+                        }
+                    }
+                    else {
+                        if( exists( finalPath ) ) {
+                            askToOverwrite( finalPath );
+                        }
+                        else {
+                            callback( finalPath );
+                        }
+                    }
+                }
+            }
+        });
+    };
+
+    const askToOverwrite = function( finalPath ) {
+        vex.dialog.open({
+            message: 'File already exists. Overwrite?',
+            buttons: [
+                $.extend({}, vex.dialog.buttons.YES, { text: 'Overwrite' }),
+                $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+            ],
+            callback: function( overwrite ) {
+                if( overwrite ) {
+                    callback( finalPath );
+                }
+                else {
+                    callback( null );
+                }
+            }
+        });
+    };
+
+    if( needsAsync ) {
+        (async function() {
+            if( !await asyncExists( filepath ) ) {
+                mkdir( filepath, askForFilename );
+            }
+
+            askForFilename();
+        })();
+    }
+    else {
+        if( !exists( filepath ) ) {
+            mkdir( filepath );
+        }
+
+        askForFilename();
+    }
+}
+
+
+/**
  * Returns the BrowserFS object for direct access to the BrowserFS API.
  * 
  * @returns {object|null} The FS object or null if the filesystem hasn't been initialized yet
@@ -308,11 +406,12 @@ export function init() {
                 [ ASYNC_FS_ROOT ]: { fs: "IndexedDB", options: {} },
                 [ TMP_PATH ]: { fs: "InMemory", options: {} }
             }
-        }, error => {
+        }, async error => {
             if( error ) {
                 return reject( error );
             }
 
+            // save a reference to BrowserFS methods
             fs = BrowserFS.BFSRequire('fs');
 
             // create the necessary directories if they don't exist
@@ -321,6 +420,18 @@ export function init() {
                     mkdir( dir );
                 }
             });
+
+            // the same thing for paths that need async operations
+            await Promise.all( [ SAVEFILE_PATH, TRANSCRIPT_PATH ].map( dir => new Promise( resolve => {
+                fs.exists( dir, alreadyExists => {
+                    if( !alreadyExists ) {
+                        fs.mkdir( dir, resolve );
+                    }
+                    else {
+                        resolve();
+                    }
+                });
+            }) ) );
 
             // Create the handshake file. This file must "really" exist for the interpreter to pick it up.
             fs.writeFileSync( path( HANDSHAKE_FILENAME, VORPLE_PATH ), '', 'utf8' );
@@ -628,6 +739,95 @@ export function rmdir( dirname, options = {} ) {
     catch( e ) {
         return false;
     }
+}
+
+
+/**
+ * Ask the user to choose a save file to restore.
+ * 
+ * @param {string} gameid The IFID of the game
+ * @param {function} callback The function to call with the filename as the parameter
+ *   after the user has selected the filename, or null if action was canceled
+ * @private
+ */
+export async function restoreFilePrompt( gameid, callback ) {
+    const fullPath = path( gameid, SAVEFILE_PATH );
+    const fs = getFS();
+    const savefiles = await new Promise( resolve => fs.readdir( fullPath, ( err, result ) => resolve( result ) ) );
+
+    if( !savefiles ) {
+        vex.dialog.open({
+            message: 'There are no save files yet.',
+            buttons: [
+                $.extend({}, vex.dialog.buttons.YES, { text: 'OK' }),
+            ],
+            callback: function () {
+                callback( null );
+            }
+        });
+        return;
+    }
+
+    vex.dialog.open({
+        message: 'Choose save file to restore:',
+        input: '<ul style="list-style-type:none">' + 
+            savefiles.map( ( file, index ) => `<li>
+                <label>
+                    <input type="radio" value="${index}" name="fileindex" required>
+                    ${file}
+                </label>
+            </li>` ).join('') +
+        '</ul>',
+        buttons: [
+            $.extend({}, vex.dialog.buttons.YES, { text: 'Restore' }),
+            $.extend({}, vex.dialog.buttons.NO, { text: 'Cancel' })
+        ],
+        callback: function (data) {
+            if (!data) {
+                return callback( null );
+            } else {
+                const source = path( savefiles[ data.fileindex ], fullPath );
+                const dest = path( savefiles[ data.fileindex ], TMP_PATH );
+
+                // We need to do this "hack" and copy the save file to the synchronous
+                // filesystem so that the engine can read it synchronously
+                fs.readFile( source, {}, ( err, contents ) => {
+                    write( dest, contents, { binary: true } );
+                    callback( dest);
+                });
+            }
+        }
+    });
+}
+
+
+/**
+ * Ask the user to provide a filename for saving the transcript.
+ * 
+ * @param {function} callback The function to call with the filename as the parameter
+ *   after the user has selected the filename, or null if action was canceled
+ * @private
+ */
+export function saveFilePrompt( gameid, callback ) {
+    filePrompt( callback, path( gameid, SAVEFILE_PATH ) );
+}
+
+
+/**
+ * Ask the user to provide a filename for saving the transcript.
+ * 
+ * @param {function} callback The function to call with the filename as the parameter
+ *   after the user has selected the filename, or null if action was canceled
+ * @private
+ */
+export function transcriptFilePrompt( callback ) {
+    const choice = prompt( 'Enter filename' );
+    
+    if( !choice ) {
+        return callback( null );
+    }
+
+    callback( path( choice, TRANSCRIPT_PATH ) );
 }
 
 
