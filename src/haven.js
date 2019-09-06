@@ -48,6 +48,7 @@ stylehints[ 4 ] = {
  * Start Quixe. Uses the base64StoryFile data (from Inform 7)
  * if a file hasn't been specified
  * 
+ * @since 3.2.0
  * @private
  */
 export function initQuixe( storyfile ) {
@@ -69,6 +70,8 @@ export function initQuixe( storyfile ) {
 
 /**
  * Load the story file.
+ *  
+ * @since 3.2.0
  * @private
  */
 export function loadStoryFile() {
@@ -106,7 +109,9 @@ export function loadStoryFile() {
 
 
 /**
- * Inform 7 interpreter template calls this to set the story file data
+ * Inform 7 interpreter template calls this to set the story file data.
+ * 
+ * @since 3.2.0
  * @private
  */
 export function setBase64StoryFile( data ) {

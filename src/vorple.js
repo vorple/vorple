@@ -39,6 +39,7 @@ const eventListeners = {
  * Adds or removes one listener from one event.
  * 
  * @returns {boolean} False if trying to remove a listener that hasn't been registered, true otherwise 
+ * @since 3.2.0
  * @private
  */
 function addOrRemoveListener( eventName, listener, action ) {
@@ -108,6 +109,7 @@ function eToInt( x ) {
  * @param {string|string[]} eventNames The event name or an array of event names where to add the listener
  * @param {function} listener The listener to register
  * @returns {function} A function that can be called to remove the listeners
+ * @since 3.2.0
  */
 export function addEventListener( eventNames, listener ) {
     if( !Array.isArray( eventNames ) ) {
@@ -259,6 +261,7 @@ function getHeader( content ) {
  * Before the handshake the value is undefined.
  * 
  * @returns {number|undefined} 6 or 7
+ * @since 3.2.0
  */
 export function getInformVersion() {
     return informVersion;
@@ -324,6 +327,7 @@ export async function init() {
  * removes the listener from all events where it's been registered.
  * @param {function} listener The listener to remove
  * @returns {boolean} True if the listener was removed from at least one event
+ * @since 3.2.0
  */
 export function removeEventListener( eventNames, listener ) {
     // if the first parameter is a function, remove all listeners
@@ -403,6 +407,7 @@ export function requireVersion( requiredVersion, callback ) {
  * Sets the Inform version.
  * 
  * @param {number} version 
+ * @since 3.2.0
  * @private
  */
 export function setInformVersion( version ) {
@@ -415,6 +420,7 @@ export function setInformVersion( version ) {
  * 
  * @param {string} eventName 
  * @param {object} [meta={}]
+ * @since 3.2.0
  * @private
  */
 export async function triggerEvent( eventName, meta = {} ) {

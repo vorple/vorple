@@ -1,5 +1,8 @@
 /**
+ * Output filter methods.
+ * 
  * @module output
+ * @since 3.2.0
  */
 
 const outputFilters = [];
