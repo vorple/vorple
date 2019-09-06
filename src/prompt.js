@@ -10,7 +10,6 @@ import {
     get as getHavenPrompt,
     isReady,
     prefix as havenPrefix,
-    resizeInput,
     sendCommand
 } from "../haven/prompt";
 import { addEventListener } from "./vorple";
@@ -21,13 +20,6 @@ const inputFilters = [];
 const commandQueue = [];
 const keyQueue = [];
 
-export function clearCommandQueue() {
-    commandQueue.length = 0;
-}
-
-export function clearKeyQueue() {
-    keyQueue.length = 0;
-}
 
 /**
  * If there is a command waiting in the queue, submit it to the parser.
@@ -37,8 +29,7 @@ function runCommandQueue() {
     if( commandQueue.length > 0 ) {
         const command = commandQueue.shift();
 
-        setValue( command.cmd );
-        submit( command.silent );
+        submit( command.cmd, command.silent );
         return false;
     }
 }
@@ -47,6 +38,8 @@ function runCommandQueue() {
 /**
  * If there is a keypress waiting in the queue, send it to the parser.
  * The key is then removed from the queue.
+ * 
+ * @since 3.2.0
  */
 function runKeyQueue() {
     if( keyQueue.length > 0 ) {
@@ -64,6 +57,7 @@ function runKeyQueue() {
  * 
  * @param {function} filter 
  * @returns {function} A function that can be called to remove the filter
+ * @since 3.2.0
  */
 export function addInputFilter( filter ) {
     inputFilters.push( filter );
@@ -75,6 +69,7 @@ export function addInputFilter( filter ) {
  * Runs input through all input filters.
  * 
  * @param {string} originalInput 
+ * @since 3.2.0
  * @private
  */
 export async function applyInputFilters( originalInput, meta ) {
@@ -138,6 +133,26 @@ export async function applyInputFilters( originalInput, meta ) {
 
 
 /**
+ * Clear the command queue.
+ * 
+ * @since 3.2.0
+ */
+export function clearCommandQueue() {
+    commandQueue.length = 0;
+}
+
+
+/**
+ * Clear the keypress queue.
+ * 
+ * @since 3.2.0
+ */
+export function clearKeyQueue() {
+    keyQueue.length = 0;
+}
+
+
+/**
  * Manually hide the prompt. It won't be shown until unhide() is called.
  */
 export function hide() {
@@ -182,6 +197,7 @@ export function queueCommand( cmd, silent = false ) {
  * send it immediately.
  *
  * @param {string} key A one-character string containing the pressed character
+ * @since 3.2.0
  */
 export function queueKeypress( key ) {
     keyQueue.push( key );
@@ -196,6 +212,7 @@ export function queueKeypress( key ) {
  * Removes a filter from the registered input filters.
  * 
  * @param {function} filter The filter to remove
+ * @since 3.2.0
  */
 export function removeInputFilter( filter ) {
     const index = inputFilters.indexOf( filter );
@@ -248,16 +265,18 @@ export function setValue( value ) {
 /**
  * Trigger the submit event of the lineinput.
  *
+ * @param {string|null} [command] The command to send, if null or left out
+ *      the lineinput field's value is used.
  * @param {boolean} [silent=false]  If true, the command isn't shown on the
  *      screen. The result of the command will still print normally.
  */
-export function submit( silent = false ) {
+export function submit( command, silent = false ) {
     sendCommand( new CustomEvent( 'submit', { 
         detail: { 
             silent: !!silent,
             userAction: false
         }
-    } ) );
+    } ), command );
 }
 
 
@@ -269,7 +288,4 @@ export function submit( silent = false ) {
  */
 export function unhide() {
     $( getHavenPrompt() ).removeClass( 'force-hidden' );
-
-    // trigger input field resize so that it fits on the line
-    resizeInput();
 }

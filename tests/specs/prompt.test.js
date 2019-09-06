@@ -8,6 +8,12 @@ const { flagValue, sendCommand, vorple } = require( "../utility" );
 const sendEnter = () => browser.execute( () => vorple.prompt.queueKeypress('\n') );
 const waitForLineInput = () => $( "#lineinput" ).waitForExist( 10000 );
 
+// send the command by typing on the prompt instead of using the command queue
+const sendCommandManually = cmd => {
+    $( "#lineinput-field" ).setValue( cmd );
+    browser.keys("\uE007");    // press enter
+};
+
 describe( "Prompt", () => {
     describe( "command queue", () => {
         describe( ".queueCommand()", () => {
@@ -36,6 +42,26 @@ describe( "Prompt", () => {
                 waitForLineInput();
                 expect( flagValue( "silentCommand" ) ).to.be.true;
                 expect( ".prompt-input*=" + silentCommand ).to.have.count( 0 );
+            });
+
+            it( "doesn't clear the prompt text that the player has already typed", () => {
+                const existingCommand = "test";
+
+                // confirm that the test setup works correctly
+                $( "#lineinput-field" ).setValue( existingCommand );
+                expect( $( "#lineinput-field" ).getValue() ).to.equal( existingCommand );
+
+                // visible
+                $( "#lineinput-field" ).setValue( existingCommand );
+                sendCommand( "z" );
+                waitForLineInput();
+                expect( $( "#lineinput-field" ).getValue() ).to.equal( existingCommand );
+
+                // silent
+                $( "#lineinput-field" ).setValue( existingCommand );
+                sendCommand( "z", true );
+                waitForLineInput();
+                expect( $( "#lineinput-field" ).getValue() ).to.equal( existingCommand );
             });
         });
     });
@@ -210,7 +236,7 @@ describe( "Input filters", () => {
             window.filterCleanup.push( vorple.prompt.addInputFilter( () => false ) );
         });
 
-        sendCommand( cancelCommand );
+        sendCommandManually( cancelCommand );
         waitForLineInput();
         expect( flagValue( "cancelledfilter" ) ).to.be.false;
         filterCleanup();
@@ -245,7 +271,7 @@ describe( "Input filters", () => {
     });
     
     it( "block the UI while the filters resolve", () => {
-        sendCommand( "z" );
+        sendCommandManually( "z" );
         browser.pause( 600 );
         browser.keys( "y" );
         expect( $( "#lineinput-field" ).getValue() ).to.equal( "z" );
@@ -255,7 +281,7 @@ describe( "Input filters", () => {
     });
     
     it( "cancel the event when a promise rejects", () => {
-        sendCommand( "throw" );
+        sendCommandManually( "throw" );
         waitForLineInput();
         expect( $( "#lineinput-field" ).getValue() ).to.equal( "throw" );
         expect( ".lineinput.last .prompt-input" ).to.not.have.text( "throw" );
@@ -269,7 +295,7 @@ describe( "Input filters", () => {
             window.filterCleanup.push( vorple.prompt.addInputFilter( () => vorple.prompt.setValue( "changed" ) ) );
         });
 
-        sendCommand( "foo" );
+        sendCommandManually( "foo" );
         waitForLineInput();
         expect( ".lineinput.last .prompt-input" ).to.have.text( "changed" );
         filterCleanup();
