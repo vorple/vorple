@@ -1474,6 +1474,83 @@ function gli_get_char(str, want_unicode) {
     }
 }
 
+function gli_get_line(str, buf, want_unicode) {
+    if (!str || !str.readable)
+        return 0;
+
+    var lx, ch;
+    var len = buf.length;
+    var gotnewline;
+
+    switch (str.type) {
+    case strtype_File:
+        if (str.streaming) {
+            if (len == 0)
+                return 0;
+            len -= 1; /* for the terminal null */
+            gotnewline = false;
+            for (lx=0; lx<len && !gotnewline; lx++) {
+                ch = gli_get_char(str, want_unicode);
+                if (ch == -1)
+                    break;
+                buf[lx] = ch;
+                gotnewline = (ch == 10);
+            }
+            return lx;
+        }
+        /* non-streaming, fall through to resource... */
+    case strtype_Resource:
+        if (str.unicode) {
+            if (len == 0)
+                return 0;
+            len -= 1; /* for the terminal null */
+            gotnewline = false;
+            for (lx=0; lx<len && !gotnewline; lx++) {
+                ch = gli_get_char(str, want_unicode);
+                if (ch == -1)
+                    break;
+                buf[lx] = ch;
+                gotnewline = (ch == 10);
+            }
+            return lx;
+        }
+        /* non-unicode file/resource, fall through to memory... */
+    case strtype_Memory:
+        if (len == 0)
+            return 0;
+        len -= 1; /* for the terminal null */
+        if (str.bufpos >= str.bufeof) {
+            len = 0;
+        }
+        else {
+            if (str.bufpos + len > str.bufeof) {
+                len = str.bufeof - str.bufpos;
+            }
+        }
+        gotnewline = false;
+        if (!want_unicode) {
+            for (lx=0; lx<len && !gotnewline; lx++) {
+                ch = str.buf[str.bufpos++];
+                if (!want_unicode && ch >= 0x100)
+                    ch = 63; // ch = '?'
+                buf[lx] = ch;
+                gotnewline = (ch == 10);
+            }
+        }
+        else {
+            for (lx=0; lx<len && !gotnewline; lx++) {
+                ch = str.buf[str.bufpos++];
+                buf[lx] = ch;
+                gotnewline = (ch == 10);
+            }
+        }
+        str.readcount += lx;
+        return lx;
+    default:
+        return 0;
+    }
+}
+
 function gli_get_buffer(str, buf, want_unicode) {
     if (!str || !str.readable)
         return 0;
@@ -2914,7 +2991,7 @@ const GLK = {
     // glk_window_erase_rect : glk_window_erase_rect,
     // glk_window_fill_rect : glk_window_fill_rect,
     // glk_window_set_background_color : glk_window_set_background_color,
-    // glk_schannel_iterate : glk_schannel_iterate,
+    glk_schannel_iterate: DO_NOTHING,   // JustEnoughGlulx.h uses this before checking for sound support
     // glk_schannel_get_rock : glk_schannel_get_rock,
     // glk_schannel_create : glk_schannel_create,
     // glk_schannel_destroy : glk_schannel_destroy,
