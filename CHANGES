@@ -5,6 +5,7 @@ https://github.com/vorple/inform7/CHANGES).
 The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
+
 Release 3.2.x
 =============
 
@@ -15,6 +16,15 @@ This minor release adds compatibility to the new Borogove editor.
   embedded in Borogove
 
 
+Release 3.2.1
+=============
+
+- Added missing tables in some Glulx-level Unicode functions that caused
+  interpreter crashes
+- Fixed sound effect audio elements getting a vorple-music class meant for
+  background music only
+
+  
 Release 3.2 (2019-09-14)
 ========================
 

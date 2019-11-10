@@ -32,6 +32,18 @@ import {
 import { evaluate } from "./vorple";
 import { setStyle } from "./haven";
 import error from "../haven/error";
+import { 
+    Const,
+    KeystrokeNameMap,
+    StyleNameMap,
+    FileTypeMap,
+    unicode_upper_table,
+    unicode_lower_table,
+    unicode_title_table,
+    unicode_decomp_table,
+    unicode_combin_table,
+    unicode_compo_table
+} from "./glkConstants";
     
 
 
@@ -395,203 +407,6 @@ function update() { // modified
 function fatal_error( err ) {   // modified
     error( err );
 }
-
-const Const = {
-    gestalt_Version : 0,
-    gestalt_CharInput : 1,
-    gestalt_LineInput : 2,
-    gestalt_CharOutput : 3,
-      gestalt_CharOutput_CannotPrint : 0,
-      gestalt_CharOutput_ApproxPrint : 1,
-      gestalt_CharOutput_ExactPrint : 2,
-    gestalt_MouseInput : 4,
-    gestalt_Timer : 5,
-    gestalt_Graphics : 6,
-    gestalt_DrawImage : 7,
-    gestalt_Sound : 8,
-    gestalt_SoundVolume : 9,
-    gestalt_SoundNotify : 10,
-    gestalt_Hyperlinks : 11,
-    gestalt_HyperlinkInput : 12,
-    gestalt_SoundMusic : 13,
-    gestalt_GraphicsTransparency : 14,
-    gestalt_Unicode : 15,
-    gestalt_UnicodeNorm : 16,
-    gestalt_LineInputEcho : 17,
-    gestalt_LineTerminators : 18,
-    gestalt_LineTerminatorKey : 19,
-    gestalt_DateTime : 20,
-    gestalt_Sound2 : 21,
-    gestalt_ResourceStream : 22,
-    gestalt_GraphicsCharInput : 23,
-
-    keycode_Unknown  : 0xffffffff,
-    keycode_Left     : 0xfffffffe,
-    keycode_Right    : 0xfffffffd,
-    keycode_Up       : 0xfffffffc,
-    keycode_Down     : 0xfffffffb,
-    keycode_Return   : 0xfffffffa,
-    keycode_Delete   : 0xfffffff9,
-    keycode_Escape   : 0xfffffff8,
-    keycode_Tab      : 0xfffffff7,
-    keycode_PageUp   : 0xfffffff6,
-    keycode_PageDown : 0xfffffff5,
-    keycode_Home     : 0xfffffff4,
-    keycode_End      : 0xfffffff3,
-    keycode_Func1    : 0xffffffef,
-    keycode_Func2    : 0xffffffee,
-    keycode_Func3    : 0xffffffed,
-    keycode_Func4    : 0xffffffec,
-    keycode_Func5    : 0xffffffeb,
-    keycode_Func6    : 0xffffffea,
-    keycode_Func7    : 0xffffffe9,
-    keycode_Func8    : 0xffffffe8,
-    keycode_Func9    : 0xffffffe7,
-    keycode_Func10   : 0xffffffe6,
-    keycode_Func11   : 0xffffffe5,
-    keycode_Func12   : 0xffffffe4,
-    /* The last keycode is always (0x100000000 - keycode_MAXVAL) */
-    keycode_MAXVAL   : 28,
-
-    evtype_None : 0,
-    evtype_Timer : 1,
-    evtype_CharInput : 2,
-    evtype_LineInput : 3,
-    evtype_MouseInput : 4,
-    evtype_Arrange : 5,
-    evtype_Redraw : 6,
-    evtype_SoundNotify : 7,
-    evtype_Hyperlink : 8,
-    evtype_VolumeNotify : 9,
-
-    style_Normal : 0,
-    style_Emphasized : 1,
-    style_Preformatted : 2,
-    style_Header : 3,
-    style_Subheader : 4,
-    style_Alert : 5,
-    style_Note : 6,
-    style_BlockQuote : 7,
-    style_Input : 8,
-    style_User1 : 9,
-    style_User2 : 10,
-    style_NUMSTYLES : 11,
-
-    wintype_AllTypes : 0,
-    wintype_Pair : 1,
-    wintype_Blank : 2,
-    wintype_TextBuffer : 3,
-    wintype_TextGrid : 4,
-    wintype_Graphics : 5,
-
-    winmethod_Left  : 0x00,
-    winmethod_Right : 0x01,
-    winmethod_Above : 0x02,
-    winmethod_Below : 0x03,
-    winmethod_DirMask : 0x0f,
-
-    winmethod_Fixed : 0x10,
-    winmethod_Proportional : 0x20,
-    winmethod_DivisionMask : 0xf0,
-
-    winmethod_Border : 0x000,
-    winmethod_NoBorder : 0x100,
-    winmethod_BorderMask : 0x100,
-
-    fileusage_Data : 0x00,
-    fileusage_SavedGame : 0x01,
-    fileusage_Transcript : 0x02,
-    fileusage_InputRecord : 0x03,
-    fileusage_TypeMask : 0x0f,
-
-    fileusage_TextMode   : 0x100,
-    fileusage_BinaryMode : 0x000,
-
-    filemode_Write : 0x01,
-    filemode_Read : 0x02,
-    filemode_ReadWrite : 0x03,
-    filemode_WriteAppend : 0x05,
-
-    seekmode_Start : 0,
-    seekmode_Current : 1,
-    seekmode_End : 2,
-
-    stylehint_Indentation : 0,
-    stylehint_ParaIndentation : 1,
-    stylehint_Justification : 2,
-    stylehint_Size : 3,
-    stylehint_Weight : 4,
-    stylehint_Oblique : 5,
-    stylehint_Proportional : 6,
-    stylehint_TextColor : 7,
-    stylehint_BackColor : 8,
-    stylehint_ReverseColor : 9,
-    stylehint_NUMHINTS : 10,
-
-    stylehint_just_LeftFlush : 0,
-    stylehint_just_LeftRight : 1,
-    stylehint_just_Centered : 2,
-    stylehint_just_RightFlush : 3,
-
-    imagealign_InlineUp : 1,
-    imagealign_InlineDown : 2,
-    imagealign_InlineCenter : 3,
-    imagealign_MarginLeft : 4,
-    imagealign_MarginRight : 5
-};
-
-const StyleNameMap = {
-    0 : 'normal',
-    1 : 'emphasized',
-    2 : 'preformatted',
-    3 : 'header',
-    4 : 'subheader',
-    5 : 'alert',
-    6 : 'note',
-    7 : 'blockquote',
-    8 : 'input',
-    9 : 'user1',
-    10 : 'user2'
-};
-
-const FileTypeMap = {
-    0: 'data',
-    1: 'save',
-    2: 'transcript',
-    3: 'command'
-};
-
-var KeystrokeNameMap = {
-    /* The key values are taken from GlkOte's "char" event. A couple of them
-       are Javascript keywords, so they're in quotes, but that doesn't affect
-       the final structure. */
-    left : Const.keycode_Left,
-    right : Const.keycode_Right,
-    up : Const.keycode_Up,
-    down : Const.keycode_Down,
-    'return' : Const.keycode_Return,
-    'delete' : Const.keycode_Delete,
-    escape : Const.keycode_Escape,
-    tab : Const.keycode_Tab,
-    pageup : Const.keycode_PageUp,
-    pagedown : Const.keycode_PageDown,
-    home : Const.keycode_Home,
-    end : Const.keycode_End,
-    func1 : Const.keycode_Func1,
-    func2 : Const.keycode_Func2,
-    func3 : Const.keycode_Func3,
-    func4 : Const.keycode_Func4,
-    func5 : Const.keycode_Func5,
-    func6 : Const.keycode_Func6,
-    func7 : Const.keycode_Func7,
-    func8 : Const.keycode_Func8,
-    func9 : Const.keycode_Func9,
-    func10 : Const.keycode_Func10,
-    func11 : Const.keycode_Func11,
-    func12 : Const.keycode_Func12
-};
-
-
 
 function CharToString(val) {
     if (val < 0x10000) {
