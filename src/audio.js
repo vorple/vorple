@@ -309,7 +309,7 @@ export function playMusic( url, options = {} ) {
 export function playSound( url, options = {} ) {
     const looping = !!options.looping;
 
-    const $audio = $( '<audio class="vorple-audio vorple-music">' )
+    const $audio = $( '<audio class="vorple-audio vorple-sound-effect">' )
         .attr( 'src', url )
         .prop( 'loop', looping )
         .appendTo( 'body' );
