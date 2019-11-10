@@ -719,6 +719,36 @@ export function readdir( dirname, options = {} ) {
 
 
 /**
+ * Get the URL to a resource, which can be a normal URL or a data URL containing
+ * the resource itself. This is used to get the resource files from the Borogove
+ * editor.
+ *  
+ * @param {string} url
+ * @returns {string} The URL or a data URL
+ */
+export function resourceUrl( url ) {
+    // don't do anything to non-strings or empty strings
+    if( typeof url !== "string" || !url ) {
+        return url;
+    }
+
+    const lowerCaseUrl = url.toLowerCase();
+
+    // don't do anything to external URLs
+    if( lowerCaseUrl.indexOf( "http://" ) > -1 || lowerCaseUrl.indexOf( "https://" ) > -1 ) {
+        return url;
+    }
+
+    // don't do anything unless we're in a Borogove environment
+    if( !window.borogove || !window.borogove.getFileContents ) {
+        return url;
+    }
+
+    return window.borogove.getFileContents( url );
+}
+
+
+/**
  * Remove a directory from the virtual filesystem. Directory must be empty.
  * 
  * @param {string} dirname 

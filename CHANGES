@@ -5,8 +5,18 @@ https://github.com/vorple/inform7/CHANGES).
 The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
-Release 3.2
-===========
+Release 3.2.x
+=============
+
+This minor release adds compatibility to the new Borogove editor.
+
+- Added vorple.file.resourceUrl() method that gets a resource file's correct URL
+  regardless of where the interpreter is running so that they work when running 
+  embedded in Borogove
+
+
+Release 3.2 (2019-09-14)
+========================
 
 Due to various technical and convenience reasons, this release replaces the Git
 engine with Quixe for the Glulx interpreter. The overall performance takes a

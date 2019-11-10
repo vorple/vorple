@@ -1,3 +1,5 @@
+import { resourceUrl } from "./file";
+
 /**
  * @module audio
  */
@@ -96,7 +98,7 @@ export function currentMusicPlaying() {
         return null;
     }
 
-    return $music.attr( 'src' );
+    return $music.data( 'resourceurl' ) || $music.attr( 'src' );
 }
 
 
@@ -272,7 +274,7 @@ export function playMusic( url, options = {} ) {
 
     // check if this specific track is already playing
     if( !restart && (
-            ( $music.length > 0 && $music.attr( 'src' ) === url ) ||
+            ( $music.length > 0 && ( $music.attr( 'src' ) === url || $music.data( 'resourceurl' ) === url ) ) ||
             ( $music.length === 0 && musicQueue.length > 0 && musicQueue[ 0 ].url === url )
         ) ) {
         // if the music is fading out, stop the fadeout and continue
@@ -288,7 +290,8 @@ export function playMusic( url, options = {} ) {
     else {
         $music.remove();
         $( '<audio class="vorple-audio vorple-music">' )
-            .attr( 'src', url )
+            .attr( 'src', resourceUrl( url ) )
+            .data( 'resourceurl', url ) 
             .prop( 'loop', !!looping )
             .appendTo( 'body' )
             .on( 'ended', timeNextTrack )
@@ -309,8 +312,9 @@ export function playMusic( url, options = {} ) {
 export function playSound( url, options = {} ) {
     const looping = !!options.looping;
 
-    const $audio = $( '<audio class="vorple-audio vorple-music">' )
-        .attr( 'src', url )
+    const $audio = $( '<audio class="vorple-audio vorple-sound-effect">' )
+        .attr( 'src', resourceUrl( url ) )
+        .data( 'resourceurl', url ) 
         .prop( 'loop', looping )
         .appendTo( 'body' );
 
