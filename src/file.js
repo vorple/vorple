@@ -434,7 +434,12 @@ export function init() {
             }) ) );
 
             // Create the handshake file. This file must "really" exist for the interpreter to pick it up.
-            fs.writeFileSync( path( HANDSHAKE_FILENAME, VORPLE_PATH ), '', 'utf8' );
+            try {
+                fs.writeFileSync( path( HANDSHAKE_FILENAME, VORPLE_PATH ), '', 'utf8' );
+            }
+            catch( e ) {
+                // already exists - no need to do anything
+            }
 
             resolve(fs);
         });
