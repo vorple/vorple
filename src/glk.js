@@ -2227,6 +2227,32 @@ function glk_set_echo_line_event(win, val) {
    win.echo_line_input = (val != 0);
 }
 
+let KeystrokeValueMap = null;
+
+function glk_set_terminators_line_event(win, arr) {
+    if (!win)
+         throw('glk_set_terminators_line_event: invalid window');
+ 
+    if (KeystrokeValueMap === null) {
+        /* First, we have to build this map. (It's only used by this
+           function, which is why the constructor code is here. */
+        KeystrokeValueMap = {};
+        for (var val in KeystrokeNameMap) {
+            KeystrokeValueMap[KeystrokeNameMap[val]] = val;
+        }
+    }
+ 
+    var res = [];
+    if (arr) {
+        for (var ix=0; ix<arr.length; ix++) {
+            var val = KeystrokeValueMap[arr[ix]];
+            if (val)
+                res.push(val);
+        }
+    }
+    win.line_input_terminators = res;
+}
+
 function glk_buffer_to_lower_case_uni(arr, numchars) {
     var ix, jx, pos, val, origval;
     var arrlen = arr.length;
@@ -2576,6 +2602,49 @@ function glk_stream_open_memory_uni(buf, fmode, rock) {
     return str;
 }
 
+function glk_request_char_event_uni(win) {
+    if (!win)
+        throw('glk_request_char_event: invalid window');
+    if (win.char_request || win.line_request)
+        throw('glk_request_char_event: window already has keyboard request');
+
+    win.char_request = true;
+    win.char_request_uni = true;
+    win.input_generation = event_generation;
+
+    flush();
+    keypress.wait();
+}
+
+function glk_request_line_event_uni(win, buf, initlen) {
+    console.log('request unicode line')
+    if (!win)
+        throw('glk_request_line_event: invalid window');
+    if (win.char_request || win.line_request)
+        throw('glk_request_line_event: window already has keyboard request');
+
+    if (initlen) {
+        /* This will be copied into the next update. */
+        var ls = buf.slice(0, initlen);
+        if (!current_partial_outputs)
+            current_partial_outputs = {};
+        current_partial_outputs[win.disprock] = UniArrayToString(ls);
+    }
+    win.line_request = true;
+    win.line_request_uni = true;
+    if (win.type == Const.wintype_TextBuffer)
+        win.request_echo_line_input = win.echo_line_input;
+    else
+        win.request_echo_line_input = true;
+    win.input_generation = event_generation;
+    win.linebuf = buf;
+    if (window.GiDispa)
+        GiDispa.retain_array(buf);
+
+    flush();
+    expectInput();
+}
+
 function glk_current_time(timevalref) {
     var now = new Date().getTime();
     var usec;
@@ -2840,12 +2909,12 @@ const GLK = {
     glk_get_line_stream_uni,
     // glk_stream_open_file_uni : glk_stream_open_file_uni,
     glk_stream_open_memory_uni,
-    // glk_request_char_event_uni : glk_request_char_event_uni,
-    // glk_request_line_event_uni : glk_request_line_event_uni,
+    glk_request_char_event_uni,
+    glk_request_line_event_uni,
     glk_set_echo_line_event,
-    // glk_set_terminators_line_event : glk_set_terminators_line_event,
+    glk_set_terminators_line_event,
     glk_current_time,
-    glk_current_simple_time ,
+    glk_current_simple_time,
     glk_time_to_date_utc,
     glk_time_to_date_local,
     glk_simple_time_to_date_utc,
