@@ -434,7 +434,12 @@ export function init() {
             }) ) );
 
             // Create the handshake file. This file must "really" exist for the interpreter to pick it up.
-            fs.writeFileSync( path( HANDSHAKE_FILENAME, VORPLE_PATH ), '', 'utf8' );
+            try {
+                fs.writeFileSync( path( HANDSHAKE_FILENAME, VORPLE_PATH ), '', 'utf8' );
+            }
+            catch( e ) {
+                // already exists - no need to do anything
+            }
 
             resolve(fs);
         });
@@ -938,17 +943,21 @@ export function write( filename, contents, options = {} ) {
     // If the story is writing to the handshake file, detect the Inform version
     // by checking the possible header
     if( filename === HANDSHAKE_FILENAME && contents.length > 0 && !informVersion ) {
-        if( contents === HANDSHAKE_INIT ) {
+        // in case the handshake file is binary, turn it into string
+        const handshake = contents.toString();
+        
+        if( handshake === HANDSHAKE_INIT ) {
             setInformVersion( 6 );
             return true;
         }
 
-        if( hasHeader( contents ) ) {
+        if( hasHeader( handshake ) ) {
             setInformVersion( 7 );
             return true;
         }
 
         console.warn( "Unknown handshake initialization from the story file – can't detect Inform version" );
+        return false;
     }
 
     try {

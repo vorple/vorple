@@ -6,7 +6,7 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
-Release 3.2.x
+Release 3.2.2
 =============
 
 This minor release adds compatibility to the new Borogove editor.
@@ -16,13 +16,20 @@ This minor release adds compatibility to the new Borogove editor.
   embedded in Borogove
 
 
-Release 3.2.1
-=============
+Release 3.2.1 (2019-11-17)
+==========================
+
+This release fixes regression issues after the change of interpreter mainly with
+games and libraries that rely heavily on Unicode input and output.
 
 - Added missing tables in some Glulx-level Unicode functions that caused
-  interpreter crashes
+  interpreter crashes (inform6 #26)
+- Added missing Unicode input methods to the Quixe interpreter interface
+  (inform6 #26)
+- Fixed Inform 6 story file detection
 - Fixed sound effect audio elements getting a vorple-music class meant for
   background music only
+- Removed obsolete build instructions from the readme
 
   
 Release 3.2 (2019-09-14)
