@@ -730,6 +730,7 @@ export function readdir( dirname, options = {} ) {
  *  
  * @param {string} url
  * @returns {string} The URL or a data URL
+ * @since 3.2.2
  */
 export function resourceUrl( url ) {
     // don't do anything to non-strings or empty strings

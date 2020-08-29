@@ -1,0 +1,159 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+<title>Quixe</title>
+
+<meta name="viewport" content="width=device-width, user-scalable=no">
+
+<link rel="stylesheet" href="media/glkote.css" type="text/css">
+<link rel="stylesheet" href="media/dialog.css" type="text/css">
+
+<style type="text/css">
+
+body {
+  margin: 0px;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+  background: #BBB; /* this color fills the left and right margins, next
+    to the gameport */
+}
+
+#header {
+  position: absolute;
+  width: 100%;
+  top: 0px;
+  height: 72px; /* header height */
+  margin: 0px;
+  background: #CCC; /* this color fills the header, all the way across */
+}
+
+#subheader {
+  position: relative;
+  width: 600px; /* column width */
+  height: 100%;
+  margin: auto;
+  /* a background color here will fill the header at a width of 600px */
+}
+
+#footer {
+  position: absolute;
+  width: 100%;
+  bottom: 0px;
+  height: 48px; /* footer height */
+  margin: 0px;
+  background: #CCC; /* this color fills the footer, all the way across */
+}
+
+#subfooter {
+  position: relative;
+  width: 600px; /* column width */
+  height: 100%;
+  margin: auto;
+  /* a background color here will fill the footer at a width of 600px */
+}
+
+.framelabel {
+  /* This class is used for the sample header and footer text. You can
+     replace it with your own CSS classes. */
+  padding-top: 1em;
+  font-size: 14px;
+  font-style: italic;
+}
+
+#column {
+  position: absolute;
+  width: 100%;
+  top: 72px; /* header height */
+  bottom: 48px; /* footer height */
+  margin: 0px;
+}
+
+#subcolumn {
+  position: relative;
+  width: 600px; /* column width */
+  height: 100%;
+  margin: auto;
+}
+
+#gameport {
+  position: absolute;
+  overflow: hidden;
+  background: #888; /* this color shows up only during loading, and 
+    for the space between windows, if the spacing config value is nonzero */
+  margin: auto;
+  top: 0px;
+  bottom: 0px;
+  width: 100%;
+}
+
+@media screen and (max-device-width: 480px) {
+  /* This stanza kicks in on phone-sized mobile browsers (but not tablet-sized
+     ones). It narrows the column, including the header and footer content,
+     to 320px. If you want to support this layout, you'll probably have to
+     add more declarations here to simplify or shrink your header and footer
+     content. */
+  #subcolumn {
+    width: 320px;
+  }
+  #subheader {
+    width: 320px;
+  }
+  #subfooter {
+    width: 320px;
+  }
+  .framelabel {
+    font-size: 12px;
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+}
+
+</style>
+
+<script src="lib/jquery-1.12.4.min.js" type="text/javascript"></script>
+<script src="lib/glkote.min.js" type="text/javascript"></script>
+<script src="lib/quixe.min.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+game_options = {
+  default_story: 'stories/glulxercise.ulx',
+  spacing: 0,
+  use_query_story: true,
+  set_page_title: true
+};
+</script>
+
+</head>
+<body onload="GiLoad.load_run();">
+
+<div id="header"><div id="subheader">
+<div class="framelabel">This is the header. It is fixed at 72 pixels high, 
+in this template. To change the height, edit the two CSS lines labelled 
+"header height" (in this file) from "72px" to whatever value you choose.</div>
+</div></div>
+
+<div id="column"><div id="subcolumn">
+
+<div id="gameport">
+<div id="windowport">
+<noscript><hr>
+<p>You'll need to turn on Javascript in your web browser to play this game.</p>
+<hr></noscript>
+</div>
+<div id="loadingpane">
+<img src="media/waiting.gif" alt="LOADING"><br>
+<em>&nbsp;&nbsp;&nbsp;Loading...</em>
+</div>
+<div id="errorpane" style="display:none;"><div id="errorcontent">...</div></div>
+</div>
+
+</div></div>
+
+<div id="footer"><div id="subfooter">
+<div class="framelabel">This is the footer. It is fixed at 48 pixels high.
+To change it, edit the "footer height" lines.</div>
+</div></div>
+
+</body>
+</html>

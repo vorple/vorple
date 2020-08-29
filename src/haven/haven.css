@@ -1,0 +1,313 @@
+body, html {
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    overflow-y: scroll;
+}
+
+body, input, label, #loader {
+    color: #000;
+    background-color: #fff;
+}
+
+input[type=text] {
+    height: auto;
+    font-size: inherit;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+html.theme-dark body,
+html.theme-dark input,
+html.theme-dark label,
+html.theme-dark #loader {
+    color: #aaa;
+    background-color: #000;
+}
+
+html.monospace body,
+html.monospace input,
+html.monospace label,
+html.monospace #loader {
+    font-family: monospace;
+}
+
+body, input, label {
+    font-size: 17px;
+}
+
+#output {
+    margin: 0 auto;
+    max-width: 751px;
+    overflow-wrap: break-word;
+    padding: 0 15px 10px 15px;
+}
+
+#output span {
+    white-space: pre-wrap;
+}
+
+#lineinput {
+    display: flex;
+}
+
+#lineinput-field {
+    border: 0;
+    box-shadow: none;
+    display: block;
+    flex: 1;
+    outline: 0;
+    padding: 0 0 1px 0;
+}
+
+.hugowindow {
+    position: fixed;
+    overflow: hidden;
+}
+
+.safarifix .hugowindow {
+    position: absolute;
+}
+
+#fatal-error {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    padding: 1em;
+    color: #fff;
+    background-color: #600;
+    white-space: pre-wrap;
+}
+
+#loader {
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+}
+
+#loader-message {
+    margin-top: 90px;
+    text-align: center;
+}
+
+#loader.stopped #loader-message {
+    text-decoration: line-through;
+}
+
+#spinner {
+    position: fixed;
+    font-family: serif;
+    color: #888;
+    top: 180px;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    height: 50px;
+    line-height: 100%;
+    font-size: 50px;
+    animation: spin 2s ease-in-out forwards;
+    animation-iteration-count: infinite;
+}
+
+@-ms-keyframes spin {
+    from {
+        -ms-transform: rotate(0deg);
+    }
+    to {
+        -ms-transform: rotate(360deg);
+    }
+}
+
+@-moz-keyframes spin {
+    from {
+        -moz-transform: rotate(0deg);
+    }
+    to {
+        -moz-transform: rotate(360deg);
+    }
+}
+
+@-webkit-keyframes spin {
+    from {
+        -webkit-transform: rotate(0deg);
+    }
+    to {
+        -webkit-transform: rotate(360deg);
+    }
+}
+
+@keyframes spin {
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* Text colors and font styles */
+
+.font-bold {
+    font-weight: bold;
+}
+
+.font-italic {
+    font-style: italic;
+}
+
+.font-underline {
+    text-decoration: underline;
+}
+
+.font-proportional {
+    font-family: serif;
+    font-size: 17px;
+}
+
+.font-fixed-width {
+    font-family: monospace;
+    font-size: 15px;
+    padding: 2px 0;
+}
+
+.textcolor-0 {               /* black */
+    color: #000;
+}
+
+.textcolor-1 {               /* blue */
+    color: #00a;
+}
+
+.textcolor-2 {               /* green */
+    color: #0a0;
+}
+
+.textcolor-3 {               /* cyan */
+    color: #0aa;
+}
+
+.textcolor-4 {               /* red */
+    color: #a00;
+}
+
+.textcolor-5 {               /* magenta */
+    color: #a0a;
+}
+
+.textcolor-6 {               /* brown */
+    color: #a50;
+}
+
+.textcolor-7 {               /* white */
+    color: #aaa;
+}
+
+.textcolor-8 {               /* dark gray */
+    color: #555;
+}
+
+.textcolor-9 {               /* light blue */
+    color: #55f;
+}
+
+.textcolor-10 {              /* light green */
+    color: #5f5;
+}
+
+.textcolor-11 {              /* light cyan */
+    color: #5ff;
+}
+
+.textcolor-12 {              /* light red */
+    color: #f55;
+}
+
+.textcolor-13 {              /* light magenta */
+    color: #f5f;
+}
+
+.textcolor-14 {              /* yellow */
+    color: #ff5;
+}
+
+.textcolor-15 {              /* bright white */
+    color: #fff;
+}
+
+
+
+.bgcolor-0 {                 /* black */
+    background-color: #000;
+}
+
+.bgcolor-1 {                 /* blue */
+    background-color: #00a;
+}
+
+.bgcolor-2 {                 /* green */
+    background-color: #0a0;
+}
+
+.bgcolor-3 {                 /* cyan */
+    background-color: #0aa;
+}
+
+.bgcolor-4 {                 /* red */
+    background-color: #a00;
+}
+
+.bgcolor-5 {                 /* magenta */
+    background-color: #a0a;
+}
+
+.bgcolor-6 {                 /* brown */
+    background-color: #a50;
+}
+
+.bgcolor-7 {                 /* white */
+    background-color: #aaa;
+}
+
+.bgcolor-8 {                 /* dark gray */
+    background-color: #555;
+}
+
+.bgcolor-9 {                 /* light blue */
+    background-color: #55f;
+}
+
+.bgcolor-10 {                /* light green */
+    background-color: #5f5;
+}
+
+.bgcolor-11 {                /* light cyan */
+    background-color: #5ff;
+}
+
+.bgcolor-12 {                /* light red */
+    background-color: #f55;
+}
+
+.bgcolor-13 {                /* light magenta */
+    background-color: #f5f;
+}
+
+.bgcolor-14 {                /* yellow */
+    background-color: #ff5;
+}
+
+.bgcolor-15 {                /* bright white */
+    background-color: #fff;
+}

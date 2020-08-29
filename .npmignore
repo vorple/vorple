@@ -1,7 +1,6 @@
 .npmignore
 .idea
 .cache
+haven/node_modules
 library
-Git
-haven
-cheapglk
+tests

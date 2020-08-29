@@ -8,7 +8,7 @@ import { error, log } from "./debug";
 import { init as initPrompt, applyInputFilters } from "./prompt";
 import { loadStoryFile, initQuixe } from "./haven";
 
-import { version } from "../package.json";
+import { version } from "../../package.json";
 import {
     JS_RETURN_VALUE_FILENAME,
     JS_RETURN_VALUE_TYPE_FILENAME,

@@ -2,6 +2,7 @@
  * @module prompt
  */
 
+import $ from "jquery";
 import { 
     getMode,
     keypress

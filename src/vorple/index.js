@@ -3,7 +3,7 @@
  * @module index
  */
 import vex from "vex-js";
-import { version } from "../package.json";
+import { version } from "../../package.json";
 
 window.vorple = {
     ...require( "./vorple" ),
@@ -28,3 +28,5 @@ require( "jquery-powertip" );
 
 // expose Toastr notification library
 window.toastr = require( "toastr" );
+
+export default window.vorple;
