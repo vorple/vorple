@@ -6,8 +6,16 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
-Release 3.2.2
+Release 3.2.3
 =============
+
+- Fixed a bug that prevented vorple.audio.isEffectPlaying() from detecting
+  currently playing sound effects
+- Updated jQuery to 3.5.1 and other libraries to their latest versions
+
+
+Release 3.2.2 (2019-11-19)
+==========================
 
 This minor release adds compatibility to the new Borogove editor.
 

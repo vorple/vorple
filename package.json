@@ -1,6 +1,6 @@
 {
   "name": "vorple",
-  "version": "3.2.2",
+  "version": "3.2.3",
   "description": "Vorple Interactive Fiction User Interface Library",
   "scripts": {
     "babel": "babel --presets=@babel/preset-env --plugins=@babel/plugin-transform-runtime -d lib/ src/vorple/ src/haven/*.js",

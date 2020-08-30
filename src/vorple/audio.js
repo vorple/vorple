@@ -196,7 +196,7 @@ export function isAudioPlaying() {
 export function isEffectPlaying () {
     let isEffectPlaying = false;
 
-    $( '.vorple-sound' ).each( function() {
+    $( '.vorple-sound-effect' ).each( function() {
         if( isElementPlaying( this ) ) {
             isEffectPlaying = true;
             return false;
