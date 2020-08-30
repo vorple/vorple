@@ -1,8 +1,5 @@
-const chai = require( "chai" );
-const chaiWebdriver = require( "chai-webdriverio" ).default;
-chai.use( chaiWebdriver( browser ) );
-
-const expect = chai.expect;
+const expectElement = expect;
+const assert = require( "chai" ).expect;
 const { flagValue, sendCommand, vorple } = require( "../utility" );
 
 const sendEnter = () => browser.execute( () => vorple.prompt.queueKeypress('\n') );
@@ -20,19 +17,19 @@ describe( "Prompt", () => {
             it( "adds a command to the queue and runs it", () => {
                 sendCommand( "set flag queueCommandSingle" );
                 waitForLineInput();
-                expect( flagValue( "queueCommandSingle" ) ).to.be.true;
+                assert( flagValue( "queueCommandSingle" ) ).to.be.true;
             });
 
             it( "queues two commands, runs both", () => {
                 sendCommand( "set flag queueTwoCommands1" );
                 sendCommand( "set flag queueTwoCommands2" );
                 waitForLineInput();
-                expect( flagValue( "queueTwoCommands1" ) ).to.be.true;
-                expect( flagValue( "queueTwoCommands2" ) ).to.be.true;
+                assert( flagValue( "queueTwoCommands1" ) ).to.be.true;
+                assert( flagValue( "queueTwoCommands2" ) ).to.be.true;
             });
 
             it( "queued commands are shown in the transcript", () => {
-                expect( ".prompt-input*=set flag queueCommandSingle" ).to.have.count( 1 );
+                expectElement( $( ".prompt-input*=set flag queueCommandSingle" ) ).toExist();
             });
 
             it( "silently run commands are not shown in the transcript", () => {
@@ -40,8 +37,8 @@ describe( "Prompt", () => {
 
                 sendCommand( silentCommand, true );
                 waitForLineInput();
-                expect( flagValue( "silentCommand" ) ).to.be.true;
-                expect( ".prompt-input*=" + silentCommand ).to.have.count( 0 );
+                assert( flagValue( "silentCommand" ) ).to.be.true;
+                assert( $( ".prompt-input*=" + silentCommand ).isExisting() ).to.be.false;
             });
 
             it( "doesn't clear the prompt text that the player has already typed", () => {
@@ -49,19 +46,19 @@ describe( "Prompt", () => {
 
                 // confirm that the test setup works correctly
                 $( "#lineinput-field" ).setValue( existingCommand );
-                expect( $( "#lineinput-field" ).getValue() ).to.equal( existingCommand );
+                expectElement( $( "#lineinput-field" ) ).toHaveValue( existingCommand );
 
                 // visible
                 $( "#lineinput-field" ).setValue( existingCommand );
                 sendCommand( "z" );
                 waitForLineInput();
-                expect( $( "#lineinput-field" ).getValue() ).to.equal( existingCommand );
+                expectElement( $( "#lineinput-field" ) ).toHaveValue( existingCommand );
 
                 // silent
                 $( "#lineinput-field" ).setValue( existingCommand );
                 sendCommand( "z", true );
                 waitForLineInput();
-                expect( $( "#lineinput-field" ).getValue() ).to.equal( existingCommand );
+                expectElement( $( "#lineinput-field" ) ).toHaveValue( existingCommand );
             });
         });
     });
@@ -70,7 +67,7 @@ describe( "Prompt", () => {
         describe( ".queueKeypress()", () => {
             it( "adds a keypress to the queue and runs it", () => {
                 sendCommand( "pause" );
-                expect( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
+                assert( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
                 sendEnter();
                 waitForLineInput();
             });
@@ -97,21 +94,21 @@ describe( "Prompt", () => {
                 const newPrefix = "newprefix";
 
                 vorple( "prompt", "setPrefix", newPrefix );
-                expect( "#lineinput-prefix" ).to.have.text( newPrefix );
+                expectElement( $( "#lineinput-prefix" ) ).toHaveText( newPrefix );
             });
 
             it( "escapes HTML", () => {
                 const newPrefix = "test <strong>prefix</strong>";
 
                 vorple( "prompt", "setPrefix", newPrefix );
-                expect( "#lineinput-prefix" ).to.have.text( newPrefix  );
+                expectElement( $( "#lineinput-prefix" ) ).toHaveText( newPrefix  );
             });
 
             it( "adds HTML", () => {
                 const newPrefix = "test <strong>prefix</strong>";
 
                 vorple( "prompt", "setPrefix", newPrefix, true );
-                expect( "#lineinput-prefix" ).to.have.text( "test prefix" );
+                expectElement( $( "#lineinput-prefix" ) ).toHaveText( "test prefix" );
             });
 
             const uniquePrefix = "uniquePrefixNotSeenElsewhere";
@@ -122,17 +119,17 @@ describe( "Prompt", () => {
 
             it( "changes only the current prompt", () => {
                 vorple( "prompt", "setPrefix", uniquePrefix, true );
-                expect( ".prompt-prefix*=" + uniquePrefix ).to.have.count( 0 );
+                assert( $( ".prompt-prefix*=" + uniquePrefix ).isExisting() ).to.be.false;
             });
 
             it( "persists the change", () => {
                 wait();
-                expect( "#lineinput-prefix" ).to.have.text( uniquePrefix  );
+                expectElement( $( "#lineinput-prefix" ) ).toHaveText( uniquePrefix  );
             });
 
             it( "shows the prefix in prompts in the transcript", () => {
                 wait();
-                expect( ".prompt-prefix*=" + uniquePrefix ).to.have.count( 2 );
+                expectElement( $$( ".prompt-prefix*=" + uniquePrefix ) ).toBeElementsArrayOfSize( 2 );
             });
         });
     });
@@ -141,14 +138,14 @@ describe( "Prompt", () => {
         describe( ".hide()", () => {
             it( "hides the prompt", () => {
                 vorple( "prompt", "hide" );
-                expect( '#lineinput' ).to.not.be.displayed();
+                assert( $( "#lineinput" ).isDisplayed() ).to.be.false;
             });
         });
 
         describe( ".unhide()", () => {
             it( "re-shows the prompt", () => {
                 vorple( "prompt", "unhide" );
-                expect( '#lineinput' ).to.be.displayed();
+                expectElement( $( '#lineinput' ) ).toBeDisplayed();
             });
         });
     });
@@ -168,15 +165,15 @@ describe( "Input filters", () => {
         });
 
         sendCommand( "set value foo" );
-        expect( browser.execute( () => window.testValue ) ).to.equal( "bar" );
+        assert( browser.execute( () => window.testValue ) ).to.equal( "bar" );
     });
 
     it( "don't change what's printed on the screen", () => {
-        expect( ".lineinput.last .prompt-input" ).to.have.text( "set value foo" );
+        expectElement( $( ".lineinput.last .prompt-input" ) ).toHaveText( "set value foo" );
     });
 
     it( "have the correct meta object", () => {
-        expect( browser.execute( () => window.basicInputMeta) ).to.include({
+        assert( browser.execute( () => window.basicInputMeta) ).to.include({
             input: "set value foo",
             original: "set value foo",
             type: "line",
@@ -188,7 +185,7 @@ describe( "Input filters", () => {
     it( "calling the return value removes filter", () => {
         browser.execute( () => window.basicInputFilterRemover() );
         sendCommand( "set value foo" );
-        expect( browser.execute( () => window.testValue ) ).to.equal( "foo" );
+        assert( browser.execute( () => window.testValue ) ).to.equal( "foo" );
     });
 
     it( "input parameter is chained", () => {
@@ -209,12 +206,12 @@ describe( "Input filters", () => {
         });
 
         sendCommand( "zero" );
-        expect( browser.execute( () => window.chainInput ) ).to.deep.equal( [ "zero", "one", "two" ] );
+        assert( browser.execute( () => window.chainInput ) ).to.deep.equal( [ "zero", "one", "two" ] );
         filterCleanup();
     });
 
     it( "original input never changes", () => {
-        expect( browser.execute( () => window.chainOriginal ) ).to.deep.equal( [ "zero", "zero", "zero" ] );
+        assert( browser.execute( () => window.chainOriginal ) ).to.deep.equal( [ "zero", "zero", "zero" ] );
     });
 
     it( "returning nothing, null or true ignores filter", () => {
@@ -225,7 +222,7 @@ describe( "Input filters", () => {
         });
 
         sendCommand( "set flag ignoredfilters" );
-        expect( flagValue( "ignoredfilters" ) ).to.be.true;
+        assert( flagValue( "ignoredfilters" ) ).to.be.true;
         filterCleanup();
     });
 
@@ -238,16 +235,16 @@ describe( "Input filters", () => {
 
         sendCommandManually( cancelCommand );
         waitForLineInput();
-        expect( flagValue( "cancelledfilter" ) ).to.be.false;
+        assert( flagValue( "cancelledfilter" ) ).to.be.false;
         filterCleanup();
     });
 
     it( "canceling doesn't clear prompt value", () => {
-        expect( $( "#lineinput-field" ).getValue() ).to.equal( cancelCommand );
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( cancelCommand );
     });
 
     it( "canceling doesn't append the prompt to the output", () => {
-        expect( ".lineinput.last .prompt-input" ).to.not.have.text( cancelCommand );
+        assert( $( ".lineinput.last .prompt-input" ).getText() ).not.to.equal( cancelCommand );
     });
 
     it( "wait for promise to resolve", () => {
@@ -265,28 +262,28 @@ describe( "Input filters", () => {
 
         sendCommand( "set flag promisefilter" );
         browser.pause( 600 );
-        expect( flagValue( "promisefilter" ) ).to.be.false;
+        assert( flagValue( "promisefilter" ) ).to.be.false;
         browser.pause( 600 );
-        expect( flagValue( "promisefilter" ) ).to.be.true;
+        assert( flagValue( "promisefilter" ) ).to.be.true;
     });
     
     it( "block the UI while the filters resolve", () => {
         sendCommandManually( "z" );
         browser.pause( 600 );
         browser.keys( "y" );
-        expect( $( "#lineinput-field" ).getValue() ).to.equal( "z" );
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "z" );
         browser.pause( 600 );
         browser.keys( "x" );
-        expect( $( "#lineinput-field" ).getValue() ).to.equal( "x" );
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "x" );
     });
     
     it( "cancel the event when a promise rejects", () => {
         sendCommandManually( "throw" );
         waitForLineInput();
-        expect( $( "#lineinput-field" ).getValue() ).to.equal( "throw" );
-        expect( ".lineinput.last .prompt-input" ).to.not.have.text( "throw" );
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "throw" );
+        assert( $( ".lineinput.last .prompt-input" ).getText() ).not.to.include( "throw" );
         browser.keys( "x" );    // make sure the UI is unblocked
-        expect( $( "#lineinput-field" ).getValue() ).to.equal( "throwx" );
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "throwx" );
         filterCleanup();
     });
 
@@ -297,7 +294,7 @@ describe( "Input filters", () => {
 
         sendCommandManually( "foo" );
         waitForLineInput();
-        expect( ".lineinput.last .prompt-input" ).to.have.text( "changed" );
+        expectElement( $( ".lineinput.last .prompt-input" ) ).toHaveText( "changed" );
         filterCleanup();
     });
 });

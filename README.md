@@ -54,7 +54,7 @@ Tests for the JavaScript library are in the `tests/specs` directory. The test ru
 To run the tests:
 
 1. `npm install` packages if you haven't already. This will download and install required test software. 
-2. `npm start` to start the development server
+2. `npm start:test` to start the development server
 3. In another window run `npm test` to start the tests
 
 You should now see a bunch of browser windows pop up, load Vorple, and close soon after. The terminal where you ran `npm test` should show whether the tests pass or fail.

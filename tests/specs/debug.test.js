@@ -1,8 +1,5 @@
-const chai = require( "chai" );
-const chaiWebdriver = require( "chai-webdriverio" ).default;
-chai.use( chaiWebdriver( browser ) );
-
-const expect = chai.expect;
+const expectElement = expect;
+const assert = require( "chai" ).expect;
 const { vorple, waitForLineInput } = require( "../utility" );
 
 // Mock the console and store what would have been printed there
@@ -52,22 +49,22 @@ describe( "debugging", () => {
         });
 
         it( "prints an error message to the console", () => {
-            expect( getLastError() ).to.equal( errorMsg );
+            assert( getLastError() ).to.equal( errorMsg );
         });
 
         it( "prints an error message on the screen", () => {
-            expect( "#fatal-error" ).to.have.text( errorMsg );
+            expectElement( $( "#fatal-error" ) ).toHaveTextContaining( errorMsg );
         });
 
         it( "throws a JavaScript error", () => {
-            expect( throws ).to.be.true;
+            assert( throws ).to.be.true;
         });
 
         it( "throws even when debugging is off", () => {
             setDebugging( false );
 
             try {
-                expect( vorple( "debug", "error", errorMsg ) ).to.throw();
+                assert( vorple( "debug", "error", errorMsg ) ).to.throw();
             }
             catch(e) {
             }
@@ -83,11 +80,11 @@ describe( "debugging", () => {
         });
 
         it( "prints the log message to the console", () => {
-            expect( getLastLog() ).to.equal( logMsg );
+            assert( getLastLog() ).to.equal( logMsg );
         });
 
         it( "prints the log message on the screen", () => {
-            expect( "#output" ).to.have.text( new RegExp( `\\[${logMsg}\\]` ) );
+            expectElement( $( "#output" ) ).toHaveTextContaining( logMsg );
         });
 
         it( "doesn't do anything when debugging is off", () => {
@@ -95,25 +92,25 @@ describe( "debugging", () => {
 
             setDebugging( false );
             vorple( "debug", "log", logMsg );
-            expect( getLastLog() ).to.not.equal( logMsg );
-            expect( "#output" ).to.not.have.text( new RegExp( logMsg ) );
+            assert( getLastLog() ).to.not.equal( logMsg );
+            assert( $( "#output" ).getText() ).to.not.include( logMsg );
         });
 
         it( "returns the state of debugging", () => {
             setDebugging( false );
-            expect( vorple( "debug", "log", logMsg ) ).to.be.false;
+            assert( vorple( "debug", "log", logMsg ) ).to.be.false;
             setDebugging( true );
-            expect( vorple( "debug", "log", logMsg ) ).to.be.true;
+            assert( vorple( "debug", "log", logMsg ) ).to.be.true;
         });
     });
 
     describe( "state change", () => {
         it( "toggles state", () => {
             setDebugging( false );
-            expect( vorple( "debug", "toggle" ) ).to.be.true;
-            expect( vorple( "debug", "status" ) ).to.be.true;
-            expect( vorple( "debug", "toggle" ) ).to.be.false;
-            expect( vorple( "debug", "status" ) ).to.be.false;
+            assert( vorple( "debug", "toggle" ) ).to.be.true;
+            assert( vorple( "debug", "status" ) ).to.be.true;
+            assert( vorple( "debug", "toggle" ) ).to.be.false;
+            assert( vorple( "debug", "status" ) ).to.be.false;
         });
     });
 });

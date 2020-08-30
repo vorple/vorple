@@ -1,8 +1,5 @@
-const chai = require( "chai" );
-const chaiWebdriver = require( "chai-webdriverio" ).default;
-chai.use( chaiWebdriver( browser ) );
-const expect = chai.expect;
-
+const expectElement = expect;
+const assert = require( "chai" ).expect;
 const VERSION = require( "../../package.json" ).version;
 const { getVorple, vorple, waitForLineInput } = require( "../utility" );
 
@@ -19,7 +16,7 @@ Confirm that the server has been started with 'yarn start:test' or skip this tes
 describe( "Core library", () => {
     describe( "Vorple version", () => {
         it( "is exposed", () => {
-            expect( getVorple().version ).to.equal( VERSION );
+            assert( getVorple().version ).to.equal( VERSION );
         });
     });
 
@@ -41,7 +38,7 @@ describe( "Core library", () => {
                 [ major - 1, Math.max( minor - 1, 0 ), Math.max( patch - 1, 0 ) ]
             ];
 
-            lowerVersions.forEach( test => expect( vorple( null, "requireVersion", test.join( "." ) ) ).to.be.true );
+            lowerVersions.forEach( test => assert( vorple( null, "requireVersion", test.join( "." ) ) ).to.be.true );
         });
 
         it( "throws an error for higher versions", () => {
@@ -60,7 +57,7 @@ describe( "Core library", () => {
 
             lowerVersions.forEach( test => {
                 try {
-                    expect( vorple( null, "requireVersion", test.join( "." ) ) ).to.throw();
+                    assert( vorple( null, "requireVersion", test.join( "." ) ) ).to.throw();
                 }
                 catch( e ) {}
             });
@@ -70,13 +67,13 @@ describe( "Core library", () => {
     describe( "Inform version", () => {
         it( "is set after handshake", () => {
             waitForLineInput();
-            expect( vorple( null, "getInformVersion" ) ).to.equal( 7 );
+            assert( vorple( null, "getInformVersion" ) ).to.equal( 7 );
         });
     });
 
     describe( "Title", () => {
         it( "handles Unicode characters", () => {
-            expect( browser.execute( () => document.title ) ).to.equal( "Vorple Integration Tests - αβγ - абв" );
+            expectElement( browser ).toHaveTitle( "Vorple Integration Tests - αβγ - абв" );
         });
     });
 });
@@ -84,40 +81,40 @@ describe( "Core library", () => {
 describe( "Event listeners", () => {
     describe( "addEventListener", () => {
         it( "throws an error if event name is missing", () => {
-            expect( () => vorple( null, "addEventListener" ) ).to.throw( "Event name missing" );
-            expect( () => vorple( null, "addEventListener", () => {} ) ).to.throw( "Event name missing" );
+            assert( () => vorple( null, "addEventListener" ) ).to.throw( "Event name missing" );
+            assert( () => vorple( null, "addEventListener", () => {} ) ).to.throw( "Event name missing" );
         });
 
         it( "throws an error if callback is missing", () => {
-            expect( () => vorple( null, "addEventListener", "init" ) ).to.throw();
+            assert( () => vorple( null, "addEventListener", "init" ) ).to.throw();
         });
 
         it( "throws an error for unknown event name", () => {
-            expect( () => browser.execute( () => vorple.addEventListener( "foo", () => {} ) ) ).to.throw( "unknown event" );
-            expect( () => browser.execute( () => vorple.addEventListener( [ "init", "foo" ], () => {} ) ) ).to.throw( "unknown event" );
+            assert( () => browser.execute( () => vorple.addEventListener( "foo", () => {} ) ) ).to.throw( "unknown event" );
+            assert( () => browser.execute( () => vorple.addEventListener( [ "init", "foo" ], () => {} ) ) ).to.throw( "unknown event" );
         });
 
         it( "returns a function", () => {
-            expect( browser.execute( () => typeof vorple.addEventListener( "init", () => {} ) ) ).to.equal( "function" );
+            assert( browser.execute( () => typeof vorple.addEventListener( "init", () => {} ) ) ).to.equal( "function" );
         });
     });
 
     describe( "removeEventListener", () => {
         it( "doesn't throw an error if event name is missing", () => {
-            expect( () => browser.execute( () => vorple.removeEventListener( () => {} ) ) ).to.not.throw();
+            assert( () => browser.execute( () => vorple.removeEventListener( () => {} ) ) ).to.not.throw();
         });
 
         it( "throws an error if callback is missing", () => {
-            expect( () => vorple( null, "removeEventListener", "init" ) ).to.throw();
+            assert( () => vorple( null, "removeEventListener", "init" ) ).to.throw();
         });
 
         it( "throws an error for unknown event name", () => {
-            expect( () => browser.execute( () => vorple.removeEventListener( "foo", () => {} ) ) ).to.throw( "unknown event" );
-            expect( () => browser.execute( () => vorple.removeEventListener( [ "init", "foo" ], () => {} ) ) ).to.throw( "unknown event" );
+            assert( () => browser.execute( () => vorple.removeEventListener( "foo", () => {} ) ) ).to.throw( "unknown event" );
+            assert( () => browser.execute( () => vorple.removeEventListener( [ "init", "foo" ], () => {} ) ) ).to.throw( "unknown event" );
         });
 
         it( "empty array as parameter returns true", () => {
-            expect( browser.execute( () => vorple.removeEventListener( [], () => {} ) ) ).to.be.true;
+            assert( browser.execute( () => vorple.removeEventListener( [], () => {} ) ) ).to.be.true;
         });
 
         it( "returns true after removing a registered listener", () => {
@@ -126,7 +123,7 @@ describe( "Event listeners", () => {
                 vorple.addEventListener( "init", singleListener );
             });
 
-            expect( browser.execute( () => vorple.removeEventListener( "init", singleListener ) ) ).to.be.true;
+            assert( browser.execute( () => vorple.removeEventListener( "init", singleListener ) ) ).to.be.true;
         });
 
         it( "returns true after removing multiple registered listeners", () => {
@@ -135,11 +132,11 @@ describe( "Event listeners", () => {
                 vorple.addEventListener( [ "init", "quit" ], window.multipleListener );
             });
 
-            expect( browser.execute( () => vorple.removeEventListener( [ "init", "quit" ], window.multipleListener ) ) ).to.be.true;
+            assert( browser.execute( () => vorple.removeEventListener( [ "init", "quit" ], window.multipleListener ) ) ).to.be.true;
         });
 
         it( "returns false if the listener wasn't registered", () => {
-            expect( browser.execute( () => vorple.removeEventListener( "init", () => {} ) ) ).to.be.false;
+            assert( browser.execute( () => vorple.removeEventListener( "init", () => {} ) ) ).to.be.false;
         });
 
         it( "returns true if only some listeners were removed", () => {
@@ -148,7 +145,7 @@ describe( "Event listeners", () => {
                 vorple.addEventListener( [ "init", "expectCommand" ], window.sharedEvent );
             });
 
-            expect( browser.execute( () => vorple.removeEventListener( [ "init", "quit" ], window.sharedEvent ) ) ).to.be.true;
+            assert( browser.execute( () => vorple.removeEventListener( [ "init", "quit" ], window.sharedEvent ) ) ).to.be.true;
         });
     });
 
@@ -160,11 +157,11 @@ describe( "Event listeners", () => {
                 window.initEventMeta = meta;
             }) );
             waitForLineInput();
-            expect( browser.execute( () => window.initEventConfirmed ) ).to.be.true;
+            assert( browser.execute( () => window.initEventConfirmed ) ).to.be.true;
         });
 
         it( "has the correct meta information", () => {
-            expect( browser.execute( () => window.initEventMeta.type ) ).to.equal( "init" );
+            assert( browser.execute( () => window.initEventMeta.type ) ).to.equal( "init" );
         });
 
         it( "promises pause execution", () => {
@@ -177,7 +174,7 @@ describe( "Event listeners", () => {
                 vorple.addEventListener( "init", initPromiseListener );
             });
             browser.pause(1500);
-            expect( $( "#lineinput" ).isExisting() ).to.be.false;
+            assert( $( "#lineinput" ).isExisting() ).to.be.false;
             waitForLineInput();
         });
     });
@@ -200,24 +197,24 @@ describe( "Event listeners", () => {
             });
             vorple( "prompt", "queueKeypress", " " );
             waitForLineInput();
-            expect( browser.execute( () => window.expectCommandCounter ) ).to.equal( 1 );
+            assert( browser.execute( () => window.expectCommandCounter ) ).to.equal( 1 );
         });
 
         it( "has the correct meta information", () => {
-            expect( browser.execute( () => window.expectCommandMeta.type ) ).to.equal( "expectCommand" );
+            assert( browser.execute( () => window.expectCommandMeta.type ) ).to.equal( "expectCommand" );
         });
 
         it( "triggers more than once", () => {
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.expectCommandCounter ) ).to.equal( 2 );
+            assert( browser.execute( () => window.expectCommandCounter ) ).to.equal( 2 );
         });
 
         it( "is removed by calling the return value", () => {
             browser.execute( () => window.expectCommandRemover() );
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.expectCommandCounter ) ).to.equal( 2 ); // no change expected
+            assert( browser.execute( () => window.expectCommandCounter ) ).to.equal( 2 ); // no change expected
         });
 
         it( "only one is removed when two identical listeners are added", () => {
@@ -233,11 +230,11 @@ describe( "Event listeners", () => {
             });
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.doubleCommandCounter ) ).to.equal( 2 );   // triggers twice
-            expect( browser.execute( () => vorple.removeEventListener( window.doubleCommandListener ) ) ).to.be.true;
+            assert( browser.execute( () => window.doubleCommandCounter ) ).to.equal( 2 );   // triggers twice
+            assert( browser.execute( () => vorple.removeEventListener( window.doubleCommandListener ) ) ).to.be.true;
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.doubleCommandCounter ) ).to.equal( 3 );   // triggers only once
+            assert( browser.execute( () => window.doubleCommandCounter ) ).to.equal( 3 );   // triggers only once
         });
     });
 
@@ -254,17 +251,17 @@ describe( "Event listeners", () => {
                 window.submitCommandRemover = vorple.addEventListener( "submitCommand", submitCommandListener );
             });
             waitForLineInput();
-            expect( browser.execute( () => window.submitCommandCounter ) ).to.equal( 0 );
+            assert( browser.execute( () => window.submitCommandCounter ) ).to.equal( 0 );
         });
 
         it( "triggers correctly", () => {
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.submitCommandCounter ) ).to.equal( 1 );
+            assert( browser.execute( () => window.submitCommandCounter ) ).to.equal( 1 );
         });
 
         it( "has the correct meta information", () => {
-            expect( browser.execute( () => window.submitCommandMeta ) ).to.include(
+            assert( browser.execute( () => window.submitCommandMeta ) ).to.include(
                 { 
                     type: "submitCommand",
                     input: "z",               
@@ -278,18 +275,18 @@ describe( "Event listeners", () => {
         it( "triggers more than once", () => {
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.submitCommandCounter ) ).to.equal( 2 );
+            assert( browser.execute( () => window.submitCommandCounter ) ).to.equal( 2 );
         });
 
         it( "triggers for manual submit", () => {
             $( "#lineinput-field" ).setValue( "z" );
             browser.keys( "Enter" );
             waitForLineInput();
-            expect( browser.execute( () => window.submitCommandCounter ) ).to.equal( 3 );
+            assert( browser.execute( () => window.submitCommandCounter ) ).to.equal( 3 );
         });
 
         it( "user action is marked correctly", () => {
-            expect( browser.execute( () => window.submitCommandMeta ) ).to.include(
+            assert( browser.execute( () => window.submitCommandMeta ) ).to.include(
                 { 
                     userAction: true,
                     silent: false
@@ -300,11 +297,11 @@ describe( "Event listeners", () => {
         it( "triggers for silent actions", () => {
             vorple( "prompt", "queueCommand", "z", { silent: true } );
             waitForLineInput();
-            expect( browser.execute( () => window.submitCommandCounter ) ).to.equal( 4 );
+            assert( browser.execute( () => window.submitCommandCounter ) ).to.equal( 4 );
         });
 
         it( "silent action is marked correctly", () => {
-            expect( browser.execute( () => window.submitCommandMeta ) ).to.include(
+            assert( browser.execute( () => window.submitCommandMeta ) ).to.include(
                 { 
                     userAction: false,
                     silent: true
@@ -316,7 +313,7 @@ describe( "Event listeners", () => {
             browser.execute( () => window.submitCommandRemover() );
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.submitCommandCounter ) ).to.equal( 4 ); // no change expected
+            assert( browser.execute( () => window.submitCommandCounter ) ).to.equal( 4 ); // no change expected
         });
 
         it( "is removed by calling removeEventListener with only the function", () => {
@@ -331,11 +328,11 @@ describe( "Event listeners", () => {
             });
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.lineinputCounter ) ).to.equal( 2 );   // expect + submit
-            expect( browser.execute( () => vorple.removeEventListener( window.lineinputListener ) ) ).to.be.true;
+            assert( browser.execute( () => window.lineinputCounter ) ).to.equal( 2 );   // expect + submit
+            assert( browser.execute( () => vorple.removeEventListener( window.lineinputListener ) ) ).to.be.true;
             vorple( "prompt", "queueCommand", "z" );
             waitForLineInput();
-            expect( browser.execute( () => window.lineinputCounter ) ).to.equal( 2 ); // no change expected
+            assert( browser.execute( () => window.lineinputCounter ) ).to.equal( 2 ); // no change expected
         });
 
         it( "promises pause execution", () => {
@@ -352,9 +349,9 @@ describe( "Event listeners", () => {
             });
             vorple( "prompt", "queueCommand", "z" );
             browser.pause(500);
-            expect( $( "#lineinput" ).isExisting() ).to.be.false;
+            assert( $( "#lineinput" ).isExisting() ).to.be.false;
             browser.pause(600);
-            expect( $( "#lineinput" ).isExisting() ).to.be.true;
+            assert( $( "#lineinput" ).isExisting() ).to.be.true;
         });
     });
 
@@ -370,13 +367,13 @@ describe( "Event listeners", () => {
                 window.expectKeypressRemover = vorple.addEventListener( "expectKeypress", expectKeypressListener );
             });
             waitForLineInput();
-            expect( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 0 );
+            assert( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 0 );
         });
 
         it( "triggers correctly", () => {
             vorple( "prompt", "queueCommand", "pause" );
             browser.pause( 200 );
-            expect( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 1 );
+            assert( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 1 );
             vorple( "prompt", "queueKeypress", " " );
             waitForLineInput();
         });
@@ -384,7 +381,7 @@ describe( "Event listeners", () => {
         it( "triggers more than once", () => {
             vorple( "prompt", "queueCommand", "pause" );
             browser.pause( 200 );
-            expect( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 2 );
+            assert( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 2 );
             vorple( "prompt", "queueKeypress", " " );
             waitForLineInput();
         });
@@ -392,7 +389,7 @@ describe( "Event listeners", () => {
         it( "is removed by calling the return value", () => {
             browser.execute( () => window.expectKeypressRemover() );
             vorple( "prompt", "queueCommand", "pause" );
-            expect( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 2 ); // no change expected
+            assert( browser.execute( () => window.expectKeypressCounter ) ).to.equal( 2 ); // no change expected
             vorple( "prompt", "queueKeypress", " " );
             waitForLineInput();
         });
@@ -411,18 +408,18 @@ describe( "Event listeners", () => {
                 window.submitKeypressRemover = vorple.addEventListener( "submitKeypress", submitKeypressListener );
             });
             waitForLineInput();
-            expect( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 0 );
+            assert( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 0 );
         });
 
         it( "triggers correctly", () => {
             vorple( "prompt", "queueCommand", "pause" );
             vorple( "prompt", "queueKeypress", " " );
             waitForLineInput();
-            expect( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 1 );
+            assert( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 1 );
         });
 
         it( "has the correct meta information", () => {
-            expect( browser.execute( () => window.submitKeypressMeta ) ).to.include(
+            assert( browser.execute( () => window.submitKeypressMeta ) ).to.include(
                 { 
                     type: "submitKeypress",
                     input: 32,       
@@ -437,10 +434,10 @@ describe( "Event listeners", () => {
         it( "triggers more than once", () => {
             vorple( "prompt", "queueCommand", "pause" );
             browser.pause( 100 );
-            expect( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
+            assert( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
             vorple( "prompt", "queueKeypress", " " );
             waitForLineInput();
-            expect( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 2 );
+            assert( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 2 );
         });
 
         it( "triggers for manual submit", () => {
@@ -449,11 +446,11 @@ describe( "Event listeners", () => {
             browser.pause( 50 );
             browser.keys( "Enter" );
             waitForLineInput();
-            expect( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 3 );
+            assert( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 3 );
         });
 
         it( "user action is marked correctly", () => {
-            expect( browser.execute( () => window.submitKeypressMeta.userAction ) ).to.be.true;
+            assert( browser.execute( () => window.submitKeypressMeta.userAction ) ).to.be.true;
         });
 
         it( "triggers for mouse clicks", () => {
@@ -462,12 +459,12 @@ describe( "Event listeners", () => {
             browser.pause( 50 );
             $( ".lineinput.last" ).click();
             waitForLineInput();
-            expect( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 4 );
+            assert( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 4 );
         });
 
         it( "mouse clicks have the correct meta information", () => {
             // must remove the event object, otherwise the test complains about cyclic object value
-            expect( browser.execute( () => ({ ...window.submitKeypressMeta, event: null }) ) ).to.include(
+            assert( browser.execute( () => ({ ...window.submitKeypressMeta, event: null }) ) ).to.include(
                 { 
                     type: "submitKeypress",
                     input: null,       
@@ -477,7 +474,7 @@ describe( "Event listeners", () => {
                 }
             );
 
-            expect( browser.execute( () => window.submitKeypressMeta.event instanceof MouseEvent ) ).to.be.true;
+            assert( browser.execute( () => window.submitKeypressMeta.event instanceof MouseEvent ) ).to.be.true;
         });
 
         it( "is removed by calling the return value", () => {
@@ -485,7 +482,7 @@ describe( "Event listeners", () => {
             vorple( "prompt", "queueCommand", "pause" );
             vorple( "prompt", "queueKeypress", " " );
             waitForLineInput();
-            expect( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 4 ); // no change expected
+            assert( browser.execute( () => window.submitKeypressCounter ) ).to.equal( 4 ); // no change expected
         });
 
         it( "promises pause execution", () => {
@@ -503,9 +500,9 @@ describe( "Event listeners", () => {
             vorple( "prompt", "queueCommand", "pause" );
             vorple( "prompt", "queueKeypress", " " );
             browser.pause(500);
-            expect( $( "#lineinput" ).isExisting() ).to.be.false;
+            assert( $( "#lineinput" ).isExisting() ).to.be.false;
             browser.pause(600);
-            expect( $( "#lineinput" ).isExisting() ).to.be.true;
+            assert( $( "#lineinput" ).isExisting() ).to.be.true;
         });
     });
 
@@ -523,7 +520,7 @@ describe( "Event listeners", () => {
             waitForLineInput();
             vorple( "prompt", "queueCommand", "force quit" );
             browser.pause(100);
-            expect( browser.execute( () => window.quitEventTriggered ) ).to.be.true;
+            assert( browser.execute( () => window.quitEventTriggered ) ).to.be.true;
 
             // reset for later tests
             browser.refresh();
