@@ -3,11 +3,10 @@
   "version": "3.2.3",
   "description": "Vorple Interactive Fiction User Interface Library",
   "scripts": {
-    "babel": "babel --presets=@babel/preset-env --plugins=@babel/plugin-transform-runtime -d lib/ src/vorple/ src/haven/*.js",
     "lint": "jshint src/*.js",
     "start": "webpack-dev-server",
     "start:test": "NODE_ENV=unittest webpack-dev-server",
-    "build": "webpack",
+    "build": "webpack && babel --presets=@babel/preset-env -d lib/ src/index.js && babel --presets=@babel/preset-env -d lib/vorple/ src/vorple/*.js && babel --presets=@babel/preset-env -d lib/haven/ src/haven/*.js && cp -r src/quixe lib && mkdir -p lib/css && cat dist/interpreter/roboto.css dist/interpreter/jquery.powertip.css dist/interpreter/toastr.css dist/interpreter/vex.css dist/interpreter/vex-theme-plain.css dist/interpreter/haven.css dist/interpreter/vorple.css > lib/css/vorple.css && cp dist/interpreter/roboto-*.woff* lib/css/",
     "build:test": "./tests/stories/compile.sh",
     "test": "wdio wdio.conf.js",
     "test:chrome": "BROWSER=chrome wdio wdio.conf.js",
@@ -21,9 +20,17 @@
   "bugs": {
     "url": "https://github.com/vorple/vorple/issues"
   },
-  "browser": "./dist/interpreter/vorple.min.js",
-  "main": "./lib/vorple/index.js",
   "homepage": "https://vorple-if.com",
+  "main": "./lib/index.js",
+  "files": [
+    "assets",
+    "dist",
+    "lib",
+    "src/haven/*.js",
+    "src/quixe",
+    "src/vorple",
+    "src/index.js"
+  ],
   "devDependencies": {
     "@babel/cli": "7.10.5",
     "@babel/core": "7.11.4",

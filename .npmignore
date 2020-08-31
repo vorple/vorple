@@ -1,6 +1,0 @@
-.npmignore
-.idea
-.cache
-haven/node_modules
-library
-tests

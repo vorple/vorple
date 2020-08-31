@@ -26,10 +26,7 @@ module.exports = {
     },
     entry: [
       "jquery/src/jquery",
-      "./src/quixe/src/quixe/quixe.js",
-      "./src/quixe/src/quixe/gi_dispa.js",
-      "./src/quixe/src/quixe/gi_load.js",
-      "./src/vorple/index.js"
+      "./src/index.js"
     ],
     plugins: [
         new CopyWebpackPlugin(

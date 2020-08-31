@@ -308,7 +308,11 @@ export async function init() {
         loadStoryFile, 
 
         // user-provided options
-        options: vorple.options,
+        options: {
+            ...vorple.options,
+            autosave: false,
+            engineColors: false
+        },
 
         // the callback that starts the interpreter after assets have loaded
         startEngine: initQuixe,

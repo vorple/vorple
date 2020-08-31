@@ -6,7 +6,6 @@ import { init as initOptions } from "./options";
 import { init as initPrompt } from "./prompt";
 import { init as initStyle } from "./style";
 import { init as initWindow } from "./window";
-import FastClick from "./vendor/fastclick";
 
 // hook that's called when the game ends (engine stops)
 let quitHook = null;
@@ -148,15 +147,6 @@ export async function start( opt ) {
 
     // start the engine
     finalCallback( () => opt.startEngine( storyFile ) );
-
-    /**
-     * fastclick.js initializer - fixes tapping issues in mobile browsers
-     */
-    if( 'addEventListener' in document ) {
-        document.addEventListener( 'DOMContentLoaded', function() {
-            FastClick.attach( document.body );
-        }, false );
-    }
 
     finished( 'storyfile' );
 }

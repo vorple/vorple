@@ -9,8 +9,12 @@ number xx in the Inform extensions/libraries repositories.
 Release 3.2.3
 =============
 
+- Modified the source file structure so that it's easier to include Vorple in
+  JavaScript projects with npm
 - Fixed a bug that prevented vorple.audio.isEffectPlaying() from detecting
   currently playing sound effects
+- It's no longer necessary to manually specify autosave and engineColors options
+  when initializing Vorple
 - Updated jQuery to 3.5.1 and other libraries to their latest versions
 
 
