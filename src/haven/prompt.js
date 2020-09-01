@@ -773,8 +773,6 @@ export function scrollOrFocus( e ) {
     if( !e || !e.target || ( e.target.nodeName !== 'INPUT' && selection().toString() === '' ) ) {
         // If the input box is close to the viewport then focus it
         if( promptHidden || scrolltop + window.innerHeight > document.body.clientHeight - 60 ) {
-            setTimeout( () => window.scrollTo( 0, 9e9 ), 1 );
-
             if( promptElem.parentNode ) {
                 // Manually reset the target in case focus/trigger don't - we don't want the trigger to recurse
                 inputElem.focus();
@@ -784,6 +782,7 @@ export function scrollOrFocus( e ) {
                     e.stopPropagation();
                 }
             }
+            window.scrollTo( 0, (document.scrollingElement || document.body).scrollHeight );
         }
         else {
             // if there's no prompt, scroll down one pageful

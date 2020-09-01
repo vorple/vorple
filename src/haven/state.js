@@ -172,6 +172,6 @@ export function restoreUI() {
     history.set( savedState.cmdHistory || [] );
 
     // scroll to the bottom
-    window.scrollTo( 0, 9e9 );
+    window.scrollTo( 0, (document.scrollingElement || document.body).scrollHeight );
     setDoScroll();
 }
