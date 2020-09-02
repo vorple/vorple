@@ -9,14 +9,19 @@ number xx in the Inform extensions/libraries repositories.
 Release 3.2.3
 =============
 
-- Fixed a bug that caused Firefox to sometimes scroll the page to the top when
-  clicking links
 - Modified the source file structure so that it's easier to include Vorple in
   JavaScript projects with npm
-- Fixed a bug that prevented vorple.audio.isEffectPlaying() from detecting
-  currently playing sound effects
+- Command history API is now accessible through vorple.prompt.history in 
+  addition to Haven's haven.prompt.history
+- Silent or repeating commands are no longer added to the command history
 - It's no longer necessary to manually specify autosave and engineColors options
   when initializing Vorple
+- Fixed a bug that caused Firefox to sometimes scroll the page to the top when
+  clicking links
+- Fixed a bug that prevented vorple.audio.isEffectPlaying() from detecting
+  currently playing sound effects
+- Fixed a bug that caused some commands from not being saved to the command
+  history
 - Updated jQuery to 3.5.1 and other libraries to their latest versions
 
 

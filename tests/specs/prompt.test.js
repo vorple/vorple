@@ -298,3 +298,172 @@ describe( "Input filters", () => {
         filterCleanup();
     });
 });
+
+describe( "Command history", () => {
+    const clear = () => browser.execute( () => vorple.prompt.history.clear() );
+    const history = () => browser.execute( () => vorple.prompt.history.get() );
+
+    before( () => browser.refresh() );
+
+    it( "is empty at the start of game", () => {
+        assert( history() ).to.be.empty;
+    });
+
+    it( "contains typed commands", () => {
+        clear();
+        sendCommandManually( "a" );
+        sendCommandManually( "b" );
+        assert( history() ).to.deep.equal( [ "a", "b" ] );
+
+        sendCommandManually( "c" );
+        assert( history() ).to.deep.equal( [ "a", "b", "c" ] );
+    });
+
+    it( "won't add identical repeating commands", () => {
+        clear();
+        sendCommandManually( "a" );
+        sendCommandManually( "b" );
+        sendCommandManually( "b" ); // identical and consecutive, not stored
+        sendCommandManually( "a" ); // identical but not consecutive, should be stored
+
+        assert( history() ).to.deep.equal( [ "a", "b", "a" ] );
+    });
+
+    it( "adds commands programmatically", () => {
+        clear();
+        sendCommandManually( "a" );
+        browser.execute( () => vorple.prompt.history.add( "b" ) );
+        sendCommandManually( "c" );
+        assert( history() ).to.deep.equal( [ "a", "b", "c" ] );
+    });
+
+    it( "can be cleared", () => {
+        sendCommandManually( "a" );
+        clear();
+        assert( history() ).to.be.empty;
+    });
+
+    it( "can remove commands by index", () => {
+        clear();
+        sendCommandManually( "a" );
+        sendCommandManually( "b" );
+        sendCommandManually( "c" );
+
+        const result = browser.execute( () => vorple.prompt.history.remove( 1 ) );
+        assert( history() ).to.deep.equal( [ "a", "c" ] );
+        assert( result ).to.be.true;
+    });
+
+    it( "won't remove when index is out of bounds", () => {
+        clear();
+        sendCommandManually( "a" );
+
+        const result1 = browser.execute( () => vorple.prompt.history.remove( 1 ) ) 
+        assert( history() ).to.deep.equal( [ "a" ] );
+        assert( result1 ).to.be.false;
+
+        const result2 = browser.execute( () => vorple.prompt.history.remove( -1 ) ) 
+        assert( history() ).to.deep.equal( [ "a" ] );
+        assert( result2 ).to.be.false;
+    });
+
+    it( "removes the last command", () => {
+        clear();
+        sendCommandManually( "a" );
+        sendCommandManually( "b" );
+        sendCommandManually( "c" );
+
+        const result = browser.execute( () => vorple.prompt.history.remove() );
+        assert( history() ).to.deep.equal( [ "a", "b" ] );
+        assert( result ).to.be.true;
+    });
+
+    it( "can be replaced entirely", () => {
+        clear();
+        sendCommandManually( "a" );
+        sendCommandManually( "b" );
+        sendCommandManually( "c" );
+        browser.execute( () => vorple.prompt.history.set([ "d", "e", "f" ]) );
+        assert( history() ).to.deep.equal( [ "d", "e", "f" ] );
+    });
+
+    it( "can be browsed with arrow keys", () => {
+        clear();
+        sendCommandManually( "a" );
+        sendCommandManually( "b" );
+
+        browser.keys("ArrowUp");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "b" );
+        browser.keys("ArrowUp");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "a" );
+        browser.keys("ArrowUp");    // at the start of history, won't do anything
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "a" );
+
+        browser.keys("ArrowDown");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "b" );
+        browser.keys("ArrowDown");    // at the end of history, clears field
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "" );
+        browser.keys("ArrowDown");    // not browsing, pressing down does nothing
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "" );
+    });
+
+    it( "remembers currently typed command", () => {
+        clear();
+        sendCommandManually( "a" );
+        $( "#lineinput-field" ).setValue( "typing" );
+
+        // up key goes to previous command
+        browser.keys("ArrowUp");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "a" );
+
+        // pressing down brings back what the player was in the middle of typing
+        browser.keys("ArrowDown");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "typing" );
+
+        // pressing down again does nothing
+        browser.keys("ArrowDown");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "typing" );
+    });
+
+    it( "is unaffected when sending commands programmatically", () => {
+        clear();
+        sendCommandManually( "a" );
+        $( "#lineinput-field" ).setValue( "typing" );
+        sendCommand( "b" );
+        sendCommand( "c", true );   // silent
+
+        // won't clear the field
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "typing" );
+
+        // up key goes to latest visible command
+        browser.keys("ArrowUp");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "b" );
+    });
+
+    it( "doesn't interrupt the player's browsing when commands are sent programmatically", () => {
+        clear();
+        sendCommandManually( "a" );
+        sendCommandManually( "b" );
+        sendCommandManually( "c" );
+        browser.keys("ArrowUp");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "c" );
+        sendCommand( "d", true );   // silent
+        sendCommand( "e" );
+
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "c" );
+        browser.keys("ArrowUp");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "b" );
+        browser.keys("ArrowDown");
+        browser.keys("ArrowDown");  // should skip the silent command
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "e" );
+        browser.keys("ArrowDown");
+        expectElement( $( "#lineinput-field" ) ).toHaveValue( "" );
+    });
+
+    it( "won't store hidden commands", () => {
+        clear();
+        sendCommand( "a" );
+        sendCommand( "b", true );
+        assert( history() ).to.deep.equal( [ "a" ] );
+    });
+});

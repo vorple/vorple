@@ -93,7 +93,7 @@ function appendPrompt( caret, inputText, targetContainer ) {
  */
 function getCmdFromHistory( delta ) {
     const current = currentCmdIndex;
-    const new_current = current - delta;
+    const newCurrent = current + delta;
     const historyLength = cmdHistory.length;
 
     if( current === historyLength ) {
@@ -101,13 +101,13 @@ function getCmdFromHistory( delta ) {
     }
 
     // Check it's within range
-    if( new_current < historyLength && new_current >= 0 ) {
-        inputElem.value = cmdHistory[ new_current ];
-        currentCmdIndex = new_current;
+    if( newCurrent < historyLength && newCurrent >= 0 ) {
+        inputElem.value = cmdHistory[ newCurrent ];
+        currentCmdIndex = newCurrent;
     }
-    else if( new_current === historyLength ) {
+    else if( newCurrent === historyLength ) {
         inputElem.value = currentCmdText;
-        currentCmdIndex = new_current;
+        currentCmdIndex = newCurrent;
     }
 }
 
@@ -227,6 +227,13 @@ export const history = {
     add: function( cmd ) {
         if( cmd ) {
             cmdHistory.push( cmd );
+            
+            // if the index was at the end of command history
+            // (not currently browsing), make sure it stays there
+            if( currentCmdIndex === cmdHistory.length - 1 ) {
+                currentCmdIndex++;
+            }
+
             return true;
         }
 
@@ -527,6 +534,7 @@ export async function sendCommand( e, command ) {
         let userAction = e.detail && e.detail.userAction;
         const originalValue = command || inputElem.value;
         let finalValue = originalValue;
+        const lastCommand = cmdHistory.length > 0 && cmdHistory[ cmdHistory.length - 1 ];
 
         // userAction is true if not specifically given
         if( typeof userAction !== 'boolean' ) {
@@ -591,12 +599,14 @@ export async function sendCommand( e, command ) {
         }
 
         // save input to history
-        if( originalValue !== cmdHistory[ 0 ] && /\S/.test( originalValue ) ) {
+        if( !isSilent && originalValue !== lastCommand && /\S/.test( originalValue ) ) {
             history.add( originalValue );
         }
 
         // reset the current spot in the command history
-        currentCmdIndex = cmdHistory.length;
+        if( userAction ) {
+            currentCmdIndex = cmdHistory.length;
+        }
 
         // Turn has ended, create a new container for the next turn.
         // Do this before appending the command to the transcript so that
@@ -670,12 +680,12 @@ export function init( opt ) {
         // Check for up/down to use the command history
         if( keyCode === 38 ) // up -> prev
         {
-            getCmdFromHistory( 1 );
+            getCmdFromHistory( -1 );
             e.preventDefault();
         }
         if( keyCode === 40 ) // down -> next
         {
-            getCmdFromHistory( -1 );
+            getCmdFromHistory( +1 );
             e.preventDefault();
         }
     }, false );

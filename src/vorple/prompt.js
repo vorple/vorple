@@ -162,6 +162,12 @@ export function hide() {
 
 
 /**
+ * Haven's history API
+ */
+export { history } from "../haven/prompt";
+
+
+/**
  * Hook into Haven's input listeners
  */
 export function init() {
