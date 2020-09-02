@@ -47,6 +47,7 @@ function startEngine() {
 export async function start( opt ) {
     // create the HTML structure
     let havenElement;
+    let containerId = "haven";
     
     if( opt.container instanceof Element ) {
         havenElement = opt.container;
@@ -55,7 +56,12 @@ export async function start( opt ) {
         havenElement = document.querySelector( opt.container );
 
         if( !havenElement ) {
-            throw new Error( `Can't find element "${opt.container}" to use as the main container` );
+            if( opt.container.charAt(0) === "#" && opt.container.indexOf( " " ) === -1 ) {
+                containerId = opt.container.substr( 1 );
+            }
+            else {
+                throw new Error( `Can't find element "${opt.container}" to use as the main container` );
+            }   
         }
     }
     else {
@@ -64,7 +70,7 @@ export async function start( opt ) {
 
     if( !havenElement ) {
         havenElement = document.createElement( 'main' );
-        havenElement.id = 'haven';
+        havenElement.id = containerId;
         document.body.appendChild( havenElement );
     }
 
