@@ -284,6 +284,9 @@ export async function init() {
 
     // start up Haven
     start({
+        // container where the interpreter will be embedded
+        container: vorple.options.container || "#vorple",
+
         // we use Vorple's custom prompt, not what the engine provides
         enginePrompt: false,
 

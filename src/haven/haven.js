@@ -46,7 +46,21 @@ function startEngine() {
  */
 export async function start( opt ) {
     // create the HTML structure
-    let havenElement = document.getElementById( 'haven' );
+    let havenElement;
+    
+    if( opt.container instanceof Element ) {
+        havenElement = opt.container;
+    }
+    else if( opt.container && typeof opt.container === "string" ) {
+        havenElement = document.querySelector( opt.container );
+
+        if( !havenElement ) {
+            throw new Error( `Can't find element "${opt.container}" to use as the main container` );
+        }
+    }
+    else {
+        havenElement = document.getElementById( 'haven' );
+    }
 
     if( !havenElement ) {
         havenElement = document.createElement( 'main' );

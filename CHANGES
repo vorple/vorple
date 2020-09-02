@@ -11,6 +11,8 @@ Release 3.2.3
 
 - Modified the source file structure so that it's easier to include Vorple in
   JavaScript projects with npm
+- The HTML element container for the interpreter can be specified in the options
+  object
 - Command history API is now accessible through vorple.prompt.history in 
   addition to Haven's haven.prompt.history
 - Silent or repeating commands are no longer added to the command history
