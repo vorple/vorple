@@ -20,6 +20,9 @@ Release 3.2.3
   when initializing Vorple
 - proxy_url option now defaults to the Parchment proxy 
   (https://zcode.appspot.com/proxy/)
+- The default loading spinner icon is now "." (full stop) instead of "|" (pipe)
+  if nothing else is specified. The Inform packages still use "V" as their
+  default spinner icon, which can be changed by editing the HTML template.
 - Fixed a bug that caused Firefox to sometimes scroll the page to the top when
   clicking links
 - Fixed a bug that prevented vorple.audio.isEffectPlaying() from detecting

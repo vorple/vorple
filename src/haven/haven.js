@@ -109,7 +109,7 @@ export async function start( opt ) {
     if( !spinnerElement ) {
         spinnerElement = document.createElement( 'h2' );
         spinnerElement.id = 'spinner';
-        spinnerElement.innerText = '|';
+        spinnerElement.innerText = '.';
         loaderContainer.appendChild( spinnerElement );
     }
 
