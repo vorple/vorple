@@ -2,7 +2,7 @@ const opt = {
     autosave: true,
     exit_url: '',
     extra_opcodes: true,
-    proxy_url: 'proxy.php',
+    proxy_url: 'https://zcode.appspot.com/proxy/?encode=base64&callback=processBase64Zcode&url=%s',
     use_proxy: 'auto',
     windowing: true
 };

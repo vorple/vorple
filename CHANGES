@@ -18,6 +18,8 @@ Release 3.2.3
 - Silent or repeating commands are no longer added to the command history
 - It's no longer necessary to manually specify autosave and engineColors options
   when initializing Vorple
+- proxy_url option now defaults to the Parchment proxy 
+  (https://zcode.appspot.com/proxy/)
 - Fixed a bug that caused Firefox to sometimes scroll the page to the top when
   clicking links
 - Fixed a bug that prevented vorple.audio.isEffectPlaying() from detecting
