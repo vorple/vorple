@@ -1,13 +1,13 @@
-See also the changelog of the Inform extensions
-(https://github.com/vorple/inform6/CHANGES and
-https://github.com/vorple/inform7/CHANGES).
+See also the changelog of the Inform extensions:
+* https://github.com/vorple/inform6/blob/master/CHANGES
+* https://github.com/vorple/inform7/blob/master/CHANGES
 
 The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
-Release 3.2.3
-=============
+Release 3.2.3 (2020-09-03)
+==========================
 
 - Modified the source file structure so that it's easier to include Vorple in
   JavaScript projects with npm
@@ -27,8 +27,7 @@ Release 3.2.3
   clicking links
 - Fixed a bug that prevented vorple.audio.isEffectPlaying() from detecting
   currently playing sound effects
-- Fixed a bug that caused some commands from not being saved to the command
-  history
+- Fixed a bug that caused some commands not being saved to the command history
 - Updated jQuery to 3.5.1 and other libraries to their latest versions
 
 
