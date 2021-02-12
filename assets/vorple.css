@@ -33,7 +33,6 @@ blockquote {
 
 /* Hide default Inform 7 template elements */
 
-body.play > div.container,
 body.play > div.interpretercredit {
     display: none;
 }
