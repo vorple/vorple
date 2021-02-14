@@ -2617,7 +2617,6 @@ function glk_request_char_event_uni(win) {
 }
 
 function glk_request_line_event_uni(win, buf, initlen) {
-    console.log('request unicode line')
     if (!win)
         throw('glk_request_line_event: invalid window');
     if (win.char_request || win.line_request)

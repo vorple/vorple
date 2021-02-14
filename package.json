@@ -1,6 +1,6 @@
 {
   "name": "vorple",
-  "version": "3.2.3",
+  "version": "3.2.4",
   "description": "Vorple Interactive Fiction User Interface Library",
   "scripts": {
     "lint": "jshint src/*.js",
