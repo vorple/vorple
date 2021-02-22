@@ -49,13 +49,83 @@ import {
 
 /** VORPLE UTILITY FUNCTIONS */
 
+const key_codes = {
+    KEY_BACKSPACE: 8,
+    KEY_TAB:       9,
+    KEY_RETURN:   13,
+    KEY_ESC:      27,
+    KEY_LEFT:     37,
+    KEY_UP:       38,
+    KEY_RIGHT:    39,
+    KEY_DOWN:     40,
+    KEY_DELETE:   46,
+    KEY_HOME:     36,
+    KEY_END:      35,
+    KEY_PAGEUP:   33,
+    KEY_PAGEDOWN: 34,
+    KEY_INSERT:   45
+};
+
 /**
  * Receive character input from UI
  */
 export function sendChar( value ) {
+    let res = String.fromCharCode( value );
+
+    switch( value ) {
+        case key_codes.KEY_RETURN:
+            res = 'return'; break;
+        case key_codes.KEY_LEFT:
+            res = 'left'; break;
+        case key_codes.KEY_RIGHT:
+            res = 'right'; break;
+        case key_codes.KEY_UP:
+            res = 'up'; break;
+        case key_codes.KEY_DOWN:
+            res = 'down'; break;
+        case key_codes.KEY_BACKSPACE:
+            res = 'delete'; break;
+        case key_codes.KEY_ESC:
+            res = 'escape'; break;
+        case key_codes.KEY_TAB:
+            res = 'tab'; break;
+        case key_codes.KEY_PAGEUP:
+            res = 'pageup'; break;
+        case key_codes.KEY_PAGEDOWN:
+            res = 'pagedown'; break;
+        case key_codes.KEY_HOME:
+            res = 'home'; break;
+        case key_codes.KEY_END:
+            res = 'end'; break;
+        case 112:
+            res = 'func1'; break;
+        case 113:
+            res = 'func2'; break;
+        case 114:
+            res = 'func3'; break;
+        case 115:
+            res = 'func4'; break;
+        case 116:
+            res = 'func5'; break;
+        case 117:
+            res = 'func6'; break;
+        case 118:
+            res = 'func7'; break;
+        case 119:
+            res = 'func8'; break;
+        case 120:
+            res = 'func9'; break;
+        case 121:
+            res = 'func10'; break;
+        case 122:
+            res = 'func11'; break;
+        case 123:
+            res = 'func12'; break;
+    }
+
     accept_ui_event({ 
         type: 'char',
-        value: value || ""
+        value: res
     });
 }
 

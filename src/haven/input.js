@@ -158,15 +158,6 @@ export const keypress = {
 
         inputMode = 'buffer';
 
-        /*
-        Module.ccall(
-            'haven_getkey',
-            'null',
-            [ 'number' ],
-            [ keyCode ]
-        );
-        */
-
         if( shouldSendChar ) {
             if( typeof submitHook === 'function' ) {
                 const hook = submitHook({
