@@ -1,7 +1,13 @@
-html,
-body,
-input {
+html, body {
     font-family: "Roboto", sans-serif;
+}
+
+input, label {
+    background-color: initial;
+}
+
+body {
+    height: 100vh;
 }
 
 a, a:visited {
@@ -13,7 +19,12 @@ blockquote {
     padding: 0.5em 1em;
 }
 
+#vorple {
+    min-height: 100%;
+}
+
 #output {
+    background-color: inherit;
     line-height: 1.5em;
 }
 
@@ -262,7 +273,7 @@ body.play > div.interpretercredit {
 
 .status-line-container {
     display: flex;
-    background-color: #fff;
+    background-color: inherit;
     border-bottom: 3px double #ccc;
     position: -webkit-sticky;
     position: sticky;   /* same as "fixed" in this case but positions it relative to parent element */
