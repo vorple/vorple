@@ -1,8 +1,8 @@
 /**
+ * Helper functions and monkey patches to the Haven engine
+ * 
  * @module haven
  * @private
- *
- * Helper functions and monkey patches to the Haven engine
  */
 
 import "./glk";

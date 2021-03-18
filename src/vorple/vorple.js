@@ -130,8 +130,9 @@ export function addEventListener( eventNames, listener ) {
  */
 export function evaluate( code ) {
     /**
-     * @private
      * Stringify a value, or return null if the value can't be stringified
+     * 
+     * @private
      */
     const safeStringify = function( value ) {
         try {

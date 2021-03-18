@@ -32,10 +32,10 @@ export const defaults = {
 
 
 /**
- * @private
- *
  * Sets a timer that starts the next track in the music queue
  * after the time specified by defaults.pauseBetweenTracks.
+ *
+ * @private
  */
 function timeNextTrack() {
     clearTimeout( musicPauseTimer );
