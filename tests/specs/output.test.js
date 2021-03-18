@@ -1,4 +1,3 @@
-const assert = require( "chai" ).expect;
 const { sendCommand, vorple, waitForLineInput } = require( "../utility" );
 
 describe( "output filters", () => {
@@ -18,11 +17,11 @@ describe( "output filters", () => {
 
         sendCommand( "echo output foo" );
         waitForLineInput();
-        assert( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput bar" );
+        expect( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput bar" );
     });
 
     it( "has the correct meta information", () => {
-        assert( browser.execute( () => window.basicOutputMeta ) ).to.deep.include({
+        expect( browser.execute( () => window.basicOutputMeta ) ).to.deep.include({
             output: "output foo\n",
             original: "output foo\n",
             style: {
@@ -45,7 +44,7 @@ describe( "output filters", () => {
 
         sendCommand( "look" );
         waitForLineInput();
-        assert( browser.execute( () => window.boldOutputMeta ) ).to.deep.include({
+        expect( browser.execute( () => window.boldOutputMeta ) ).to.deep.include({
             style: {
                 bold: true,
                 italic: false
@@ -69,7 +68,7 @@ describe( "output filters", () => {
 
         sendCommand( "echo output foo" );
         waitForLineInput();
-        assert( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput xyz" );
+        expect( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput xyz" );
         filterCleanup();
     });
 
@@ -77,7 +76,7 @@ describe( "output filters", () => {
         browser.execute( () => window.basicOutputFilterRemover() );
         sendCommand( "echo output foo" );
         waitForLineInput();
-        assert( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput foo" );
+        expect( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput foo" );
     });
 
     it( "returning false will stop the filter chain", () => {
@@ -96,7 +95,7 @@ describe( "output filters", () => {
 
         sendCommand( "echo output bar" );
         waitForLineInput();
-        assert( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output bar\noutput baz" );
+        expect( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output bar\noutput baz" );
         filterCleanup();
     });
 
@@ -126,7 +125,7 @@ describe( "output filters", () => {
 
         sendCommand( "echo output foo" );
         waitForLineInput();
-        assert( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput foo" );
+        expect( $( ".turn.previous" ).getText().trim() ).to.equal( ">echo output foo\noutput foo" );
         filterCleanup();
     });
 

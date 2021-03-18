@@ -5,6 +5,11 @@ See also the changelog of the Inform extensions:
 The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
+Release 3.x
+==========================
+
+- Updated jQuery to 3.6.0
+
 
 Release 3.2.5 (2021-02-22)
 ==========================

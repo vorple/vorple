@@ -1,5 +1,3 @@
-const expectElement = expect;
-const assert = require( "chai" ).expect;
 const { vorple, waitForLineInput } = require( "../utility" );
 
 // Mock the console and store what would have been printed there
@@ -49,7 +47,7 @@ describe( "debugging", () => {
         });
 
         it( "prints an error message to the console", () => {
-            assert( getLastError() ).to.equal( errorMsg );
+            expect( getLastError() ).to.equal( errorMsg );
         });
 
         it( "prints an error message on the screen", () => {
@@ -57,14 +55,14 @@ describe( "debugging", () => {
         });
 
         it( "throws a JavaScript error", () => {
-            assert( throws ).to.be.true;
+            expect( throws ).to.be.true;
         });
 
         it( "throws even when debugging is off", () => {
             setDebugging( false );
 
             try {
-                assert( vorple( "debug", "error", errorMsg ) ).to.throw();
+                expect( vorple( "debug", "error", errorMsg ) ).to.throw();
             }
             catch(e) {
             }
@@ -80,7 +78,7 @@ describe( "debugging", () => {
         });
 
         it( "prints the log message to the console", () => {
-            assert( getLastLog() ).to.equal( logMsg );
+            expect( getLastLog() ).to.equal( logMsg );
         });
 
         it( "prints the log message on the screen", () => {
@@ -92,25 +90,25 @@ describe( "debugging", () => {
 
             setDebugging( false );
             vorple( "debug", "log", logMsg );
-            assert( getLastLog() ).to.not.equal( logMsg );
-            assert( $( "#output" ).getText() ).to.not.include( logMsg );
+            expect( getLastLog() ).to.not.equal( logMsg );
+            expect( $( "#output" ).getText() ).to.not.include( logMsg );
         });
 
         it( "returns the state of debugging", () => {
             setDebugging( false );
-            assert( vorple( "debug", "log", logMsg ) ).to.be.false;
+            expect( vorple( "debug", "log", logMsg ) ).to.be.false;
             setDebugging( true );
-            assert( vorple( "debug", "log", logMsg ) ).to.be.true;
+            expect( vorple( "debug", "log", logMsg ) ).to.be.true;
         });
     });
 
     describe( "state change", () => {
         it( "toggles state", () => {
             setDebugging( false );
-            assert( vorple( "debug", "toggle" ) ).to.be.true;
-            assert( vorple( "debug", "status" ) ).to.be.true;
-            assert( vorple( "debug", "toggle" ) ).to.be.false;
-            assert( vorple( "debug", "status" ) ).to.be.false;
+            expect( vorple( "debug", "toggle" ) ).to.be.true;
+            expect( vorple( "debug", "status" ) ).to.be.true;
+            expect( vorple( "debug", "toggle" ) ).to.be.false;
+            expect( vorple( "debug", "status" ) ).to.be.false;
         });
     });
 });

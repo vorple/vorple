@@ -9,7 +9,7 @@ import "./quixe/gi_dispa";
 import "./quixe/gi_load";
 
 import vex from "vex-js";
-import { version } from "../package.json";
+import packageJson from "../package.json";
 
 window.vorple = {
     ...require( "./vorple/vorple.js" ),
@@ -21,7 +21,7 @@ window.vorple = {
     output: require( "./vorple/output.js" ),
     prompt: require( "./vorple/prompt.js" ),
     options: {},
-    version
+    version: packageJson.version
 };
 
 // initialize Vex modal windows

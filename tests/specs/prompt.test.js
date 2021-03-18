@@ -1,5 +1,3 @@
-const expectElement = expect;
-const assert = require( "chai" ).expect;
 const { flagValue, sendCommand, vorple } = require( "../utility" );
 
 const sendEnter = () => browser.execute( () => vorple.prompt.queueKeypress('\n') );
@@ -17,15 +15,15 @@ describe( "Prompt", () => {
             it( "adds a command to the queue and runs it", () => {
                 sendCommand( "set flag queueCommandSingle" );
                 waitForLineInput();
-                assert( flagValue( "queueCommandSingle" ) ).to.be.true;
+                expect( flagValue( "queueCommandSingle" ) ).to.be.true;
             });
 
             it( "queues two commands, runs both", () => {
                 sendCommand( "set flag queueTwoCommands1" );
                 sendCommand( "set flag queueTwoCommands2" );
                 waitForLineInput();
-                assert( flagValue( "queueTwoCommands1" ) ).to.be.true;
-                assert( flagValue( "queueTwoCommands2" ) ).to.be.true;
+                expect( flagValue( "queueTwoCommands1" ) ).to.be.true;
+                expect( flagValue( "queueTwoCommands2" ) ).to.be.true;
             });
 
             it( "queued commands are shown in the transcript", () => {
@@ -37,8 +35,8 @@ describe( "Prompt", () => {
 
                 sendCommand( silentCommand, true );
                 waitForLineInput();
-                assert( flagValue( "silentCommand" ) ).to.be.true;
-                assert( $( ".prompt-input*=" + silentCommand ).isExisting() ).to.be.false;
+                expect( flagValue( "silentCommand" ) ).to.be.true;
+                expect( $( ".prompt-input*=" + silentCommand ).isExisting() ).to.be.false;
             });
 
             it( "doesn't clear the prompt text that the player has already typed", () => {
@@ -67,7 +65,7 @@ describe( "Prompt", () => {
         describe( ".queueKeypress()", () => {
             it( "adds a keypress to the queue and runs it", () => {
                 sendCommand( "pause" );
-                assert( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
+                expect( browser.execute( () => haven.input.getMode() ) ).to.equal( "getkey" );
                 sendEnter();
                 waitForLineInput();
             });
@@ -119,7 +117,7 @@ describe( "Prompt", () => {
 
             it( "changes only the current prompt", () => {
                 vorple( "prompt", "setPrefix", uniquePrefix, true );
-                assert( $( ".prompt-prefix*=" + uniquePrefix ).isExisting() ).to.be.false;
+                expect( $( ".prompt-prefix*=" + uniquePrefix ).isExisting() ).to.be.false;
             });
 
             it( "persists the change", () => {
@@ -138,7 +136,7 @@ describe( "Prompt", () => {
         describe( ".hide()", () => {
             it( "hides the prompt", () => {
                 vorple( "prompt", "hide" );
-                assert( $( "#lineinput" ).isDisplayed() ).to.be.false;
+                expect( $( "#lineinput" ).isDisplayed() ).to.be.false;
             });
         });
 
@@ -165,7 +163,7 @@ describe( "Input filters", () => {
         });
 
         sendCommand( "set value foo" );
-        assert( browser.execute( () => window.testValue ) ).to.equal( "bar" );
+        expect( browser.execute( () => window.testValue ) ).to.equal( "bar" );
     });
 
     it( "don't change what's printed on the screen", () => {
@@ -173,7 +171,7 @@ describe( "Input filters", () => {
     });
 
     it( "have the correct meta object", () => {
-        assert( browser.execute( () => window.basicInputMeta) ).to.include({
+        expect( browser.execute( () => window.basicInputMeta) ).to.include({
             input: "set value foo",
             original: "set value foo",
             type: "line",
@@ -185,7 +183,7 @@ describe( "Input filters", () => {
     it( "calling the return value removes filter", () => {
         browser.execute( () => window.basicInputFilterRemover() );
         sendCommand( "set value foo" );
-        assert( browser.execute( () => window.testValue ) ).to.equal( "foo" );
+        expect( browser.execute( () => window.testValue ) ).to.equal( "foo" );
     });
 
     it( "input parameter is chained", () => {
@@ -206,12 +204,12 @@ describe( "Input filters", () => {
         });
 
         sendCommand( "zero" );
-        assert( browser.execute( () => window.chainInput ) ).to.deep.equal( [ "zero", "one", "two" ] );
+        expect( browser.execute( () => window.chainInput ) ).to.deep.equal( [ "zero", "one", "two" ] );
         filterCleanup();
     });
 
     it( "original input never changes", () => {
-        assert( browser.execute( () => window.chainOriginal ) ).to.deep.equal( [ "zero", "zero", "zero" ] );
+        expect( browser.execute( () => window.chainOriginal ) ).to.deep.equal( [ "zero", "zero", "zero" ] );
     });
 
     it( "returning nothing, null or true ignores filter", () => {
@@ -222,7 +220,7 @@ describe( "Input filters", () => {
         });
 
         sendCommand( "set flag ignoredfilters" );
-        assert( flagValue( "ignoredfilters" ) ).to.be.true;
+        expect( flagValue( "ignoredfilters" ) ).to.be.true;
         filterCleanup();
     });
 
@@ -235,7 +233,7 @@ describe( "Input filters", () => {
 
         sendCommandManually( cancelCommand );
         waitForLineInput();
-        assert( flagValue( "cancelledfilter" ) ).to.be.false;
+        expect( flagValue( "cancelledfilter" ) ).to.be.false;
         filterCleanup();
     });
 
@@ -244,7 +242,7 @@ describe( "Input filters", () => {
     });
 
     it( "canceling doesn't append the prompt to the output", () => {
-        assert( $( ".lineinput.last .prompt-input" ).getText() ).not.to.equal( cancelCommand );
+        expect( $( ".lineinput.last .prompt-input" ).getText() ).not.to.equal( cancelCommand );
     });
 
     it( "wait for promise to resolve", () => {
@@ -262,9 +260,9 @@ describe( "Input filters", () => {
 
         sendCommand( "set flag promisefilter" );
         browser.pause( 600 );
-        assert( flagValue( "promisefilter" ) ).to.be.false;
+        expect( flagValue( "promisefilter" ) ).to.be.false;
         browser.pause( 600 );
-        assert( flagValue( "promisefilter" ) ).to.be.true;
+        expect( flagValue( "promisefilter" ) ).to.be.true;
     });
     
     it( "block the UI while the filters resolve", () => {
@@ -281,7 +279,7 @@ describe( "Input filters", () => {
         sendCommandManually( "throw" );
         waitForLineInput();
         expectElement( $( "#lineinput-field" ) ).toHaveValue( "throw" );
-        assert( $( ".lineinput.last .prompt-input" ).getText() ).not.to.include( "throw" );
+        expect( $( ".lineinput.last .prompt-input" ).getText() ).not.to.include( "throw" );
         browser.keys( "x" );    // make sure the UI is unblocked
         expectElement( $( "#lineinput-field" ) ).toHaveValue( "throwx" );
         filterCleanup();
@@ -306,17 +304,17 @@ describe( "Command history", () => {
     before( () => browser.refresh() );
 
     it( "is empty at the start of game", () => {
-        assert( history() ).to.be.empty;
+        expect( history() ).to.be.empty;
     });
 
     it( "contains typed commands", () => {
         clear();
         sendCommandManually( "a" );
         sendCommandManually( "b" );
-        assert( history() ).to.deep.equal( [ "a", "b" ] );
+        expect( history() ).to.deep.equal( [ "a", "b" ] );
 
         sendCommandManually( "c" );
-        assert( history() ).to.deep.equal( [ "a", "b", "c" ] );
+        expect( history() ).to.deep.equal( [ "a", "b", "c" ] );
     });
 
     it( "won't add identical repeating commands", () => {
@@ -326,7 +324,7 @@ describe( "Command history", () => {
         sendCommandManually( "b" ); // identical and consecutive, not stored
         sendCommandManually( "a" ); // identical but not consecutive, should be stored
 
-        assert( history() ).to.deep.equal( [ "a", "b", "a" ] );
+        expect( history() ).to.deep.equal( [ "a", "b", "a" ] );
     });
 
     it( "adds commands programmatically", () => {
@@ -334,13 +332,13 @@ describe( "Command history", () => {
         sendCommandManually( "a" );
         browser.execute( () => vorple.prompt.history.add( "b" ) );
         sendCommandManually( "c" );
-        assert( history() ).to.deep.equal( [ "a", "b", "c" ] );
+        expect( history() ).to.deep.equal( [ "a", "b", "c" ] );
     });
 
     it( "can be cleared", () => {
         sendCommandManually( "a" );
         clear();
-        assert( history() ).to.be.empty;
+        expect( history() ).to.be.empty;
     });
 
     it( "can remove commands by index", () => {
@@ -350,8 +348,8 @@ describe( "Command history", () => {
         sendCommandManually( "c" );
 
         const result = browser.execute( () => vorple.prompt.history.remove( 1 ) );
-        assert( history() ).to.deep.equal( [ "a", "c" ] );
-        assert( result ).to.be.true;
+        expect( history() ).to.deep.equal( [ "a", "c" ] );
+        expect( result ).to.be.true;
     });
 
     it( "won't remove when index is out of bounds", () => {
@@ -359,12 +357,12 @@ describe( "Command history", () => {
         sendCommandManually( "a" );
 
         const result1 = browser.execute( () => vorple.prompt.history.remove( 1 ) ) 
-        assert( history() ).to.deep.equal( [ "a" ] );
-        assert( result1 ).to.be.false;
+        expect( history() ).to.deep.equal( [ "a" ] );
+        expect( result1 ).to.be.false;
 
         const result2 = browser.execute( () => vorple.prompt.history.remove( -1 ) ) 
-        assert( history() ).to.deep.equal( [ "a" ] );
-        assert( result2 ).to.be.false;
+        expect( history() ).to.deep.equal( [ "a" ] );
+        expect( result2 ).to.be.false;
     });
 
     it( "removes the last command", () => {
@@ -374,8 +372,8 @@ describe( "Command history", () => {
         sendCommandManually( "c" );
 
         const result = browser.execute( () => vorple.prompt.history.remove() );
-        assert( history() ).to.deep.equal( [ "a", "b" ] );
-        assert( result ).to.be.true;
+        expect( history() ).to.deep.equal( [ "a", "b" ] );
+        expect( result ).to.be.true;
     });
 
     it( "can be replaced entirely", () => {
@@ -384,7 +382,7 @@ describe( "Command history", () => {
         sendCommandManually( "b" );
         sendCommandManually( "c" );
         browser.execute( () => vorple.prompt.history.set([ "d", "e", "f" ]) );
-        assert( history() ).to.deep.equal( [ "d", "e", "f" ] );
+        expect( history() ).to.deep.equal( [ "d", "e", "f" ] );
     });
 
     it( "can be browsed with arrow keys", () => {
@@ -464,6 +462,6 @@ describe( "Command history", () => {
         clear();
         sendCommand( "a" );
         sendCommand( "b", true );
-        assert( history() ).to.deep.equal( [ "a" ] );
+        expect( history() ).to.deep.equal( [ "a" ] );
     });
 });

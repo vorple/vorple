@@ -171,6 +171,10 @@ exports.config = {
      * @param {Array.<String>} specs List of spec file paths that are to be run
      */
     before: function( capabilities, specs ) {
+        require('expect-webdriverio');
+        global.expectElement = global.expect;
+        global.expect = require( "chai" ).expect;
+
         const INFORM_VERSION = process.env.INFORM_VERSION || "7";
 
         // start the unit test game

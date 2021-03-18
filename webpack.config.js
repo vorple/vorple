@@ -21,6 +21,11 @@ module.exports = {
     performance: {
         hints: false    // Interpreter files are big – don't warn about them
     },
+    resolve: {
+        fallback: { 
+            path: require.resolve("path-browserify")
+        }
+    },
     externals: {
       jquery: "jQuery"  // Webpack tends to include jQuery multiple times, we'll handle it separately
     },
@@ -32,14 +37,14 @@ module.exports = {
         new CopyWebpackPlugin(
             {
                 patterns: [
-                    { from: process.env.NODE_ENV === "unittest" ? "assets/index.test.html" : "assets/index.html", to: "index.html", flatten: true },
-                    { from: "assets/vorple.css", to: "interpreter/", flatten: true },
-                    { from: "src/haven/haven.css", to: "interpreter/", flatten: true },
-                    { from: "node_modules/jquery-powertip/dist/css/jquery.powertip.css", to: "interpreter/", flatten: true },
-                    { from: "node_modules/toastr/build/toastr.css", to: "interpreter/", flatten: true },
-                    { from: "node_modules/vex-js/dist/css/vex.css", to: "interpreter/", flatten: true },
-                    { from: "node_modules/vex-js/dist/css/vex-theme-plain.css", to: "interpreter/", flatten: true },
-                    { from: "vendor/fonts/**/*", to: "interpreter/", globOptions: { ignore: [ "LICENSE.txt" ] }, flatten: true }
+                    { from: process.env.NODE_ENV === "unittest" ? "assets/index.test.html" : "assets/index.html", to: "index.html" },
+                    { from: "assets/vorple.css", to: "interpreter/" },
+                    { from: "src/haven/haven.css", to: "interpreter/" },
+                    { from: "node_modules/jquery-powertip/dist/css/jquery.powertip.css", to: "interpreter/" },
+                    { from: "node_modules/toastr/build/toastr.css", to: "interpreter/" },
+                    { from: "node_modules/vex-js/dist/css/vex.css", to: "interpreter/" },
+                    { from: "node_modules/vex-js/dist/css/vex-theme-plain.css", to: "interpreter/" },
+                    { from: "vendor/fonts/**/*", to: "interpreter/", globOptions: { ignore: [ "LICENSE.txt" ] } }
                 ],
             }
         )

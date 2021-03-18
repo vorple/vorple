@@ -8,7 +8,7 @@ import { error, log } from "./debug";
 import { init as initPrompt, applyInputFilters } from "./prompt";
 import { loadStoryFile, initQuixe } from "./haven";
 
-import { version } from "../../package.json";
+import packageJson from "../../package.json";
 import {
     JS_RETURN_VALUE_FILENAME,
     JS_RETURN_VALUE_TYPE_FILENAME,
@@ -371,12 +371,12 @@ export function removeEventListener( eventNames, listener ) {
  * @returns {boolean} True if version matches
  */
 export function requireVersion( requiredVersion, callback ) {
-    const thisVer = version.split( '.' ).map( str => Number( str ) );
+    const thisVer = packageJson.version.split( '.' ).map( str => Number( str ) );
     const reqVer = ("" + requiredVersion).split( '.' ).map( str => Number( str ) );
     const cb = callback || (
         match => {
             if( !match ) {
-                error( `Vorple version ${requiredVersion} was requested, but Vorple is at version ${version}` );
+                error( `Vorple version ${requiredVersion} was requested, but Vorple is at version ${packageJson.version}` );
             }
         });
 
