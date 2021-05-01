@@ -274,9 +274,8 @@ export function getInformVersion() {
  */
 export async function init() {
     // use Haven's init listeners to trigger our own listeners
-    addCallback( async cb => { 
+    addCallback( async() => { 
         await triggerEvent( 'init' );
-        cb();
     });
 
     // initialize submodules
@@ -291,9 +290,13 @@ export async function init() {
         // we use Vorple's custom prompt, not what the engine provides
         enginePrompt: false,
 
-        // ignore font family
+        // ignore Inform built-in font family features
         engineFontFamily: false,
 
+        // use Glk's sendLine as the input function
+        engineInputFunction: window.Glk.sendLine,
+
+        // input and output filter functions
         filters: {
             input: applyInputFilters,
             output: applyOutputFilters
