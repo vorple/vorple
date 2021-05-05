@@ -269,6 +269,12 @@ body.play > div.interpretercredit {
 }
 
 
+/* Hyperlinks */
+.vorple-link.disabled {
+    pointer-events: none;
+}
+
+
 /* Status line */
 
 .status-line-container {

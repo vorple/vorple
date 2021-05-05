@@ -2,26 +2,25 @@
  * @module layout
  */
 import { flush } from "../haven/buffer";
+import { 
+    block as inputBlock,
+    isBlocked as isInputBlocked,
+    unblock as inputUnblock
+} from "../haven/input";
 import { container } from "../haven/window";
 
 
 /**
  * Blocks the UI so that the user can't type anything or click any elements.
+ * Note that this only applies to built-in input and features, for custom
+ * features use vorple.layout.isBlocked() to check whether input should be
+ * accepted.
  *
- * Use layout.unblock to remove the block.
+ * Use vorple.layout.unblock() to remove the block.
  */
 export function block() {
-    // prevent keypresses
-    $( document ).on( 'keydown.vorple.uiblock', function( e ) {
-        e.stopImmediatePropagation();
-        return false;
-    } );
-
-    // add an invisible layer that catches clicks
-    $( '<div class="uiblock">' ).on( 'click.vorple.uiblock', function( e ) {
-        e.stopImmediatePropagation();
-        return false;
-    } ).appendTo( 'body' );
+    $( '.vorple-link' ).addClass( 'disabled' );
+    inputBlock();
 }
 
 
@@ -70,6 +69,18 @@ export function focus( targetElement, targetWindow = 0 ) {
     container.set( $target.last().get( 0 ), targetWindow );
 
     return true;
+}
+
+
+/**
+ * Returns whether user input is blocked.
+ * 
+ * @returns {boolean} True if input is blocked
+ * 
+ * @since 3.3.0
+ */
+export function isBlocked() {
+    return isInputBlocked();
 }
 
 
@@ -164,6 +175,6 @@ export function scrollToEnd( speed = 500 ) {
  * @see layout.block
  */
 export function unblock() {
-    $( '.uiblock' ).remove();
-    $( document ).off( 'keydown.vorple.uiblock' );
+    $( '.vorple-link' ).removeClass( 'disabled' );
+    inputUnblock();
 }

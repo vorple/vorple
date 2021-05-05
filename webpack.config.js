@@ -38,7 +38,8 @@ module.exports = {
             {
                 patterns: [
                     { from: process.env.NODE_ENV === "unittest" ? "assets/index.test.html" : "assets/index.html", to: "index.html" },
-                    { from: "assets/*.css", to: "interpreter/" },
+                    { from: "assets/haven.css", to: "interpreter/" },
+                    { from: "assets/vorple.css", to: "interpreter/" },
                     { from: "node_modules/jquery-powertip/dist/css/jquery.powertip.css", to: "interpreter/" },
                     { from: "node_modules/toastr/build/toastr.css", to: "interpreter/" },
                     { from: "node_modules/vex-js/dist/css/vex.css", to: "interpreter/" },
