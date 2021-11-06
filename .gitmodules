@@ -1,6 +1,6 @@
 [submodule "src/haven"]
 	path = src/haven
-	url = git@github.com:vorple/haven.git
+	url = https://github.com/vorple/haven.git
 [submodule "quixe"]
 	path = src/quixe
 	url = https://github.com/erkyrath/quixe.git
