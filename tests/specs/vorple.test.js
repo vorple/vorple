@@ -440,7 +440,6 @@ describe( "Event listeners", () => {
 
         it( "triggers for manual submit", () => {
             vorple( "prompt", "queueCommand", "pause" );
-            vorple( "layout", "scrollToEnd", 0 );
             browser.pause( 50 );
             browser.keys( "Enter" );
             waitForLineInput();
@@ -453,7 +452,6 @@ describe( "Event listeners", () => {
 
         it( "triggers for mouse clicks", () => {
             vorple( "prompt", "queueCommand", "pause" );
-            vorple( "layout", "scrollToEnd", 0 );
             browser.pause( 50 );
             $( ".lineinput.last" ).click();
             waitForLineInput();

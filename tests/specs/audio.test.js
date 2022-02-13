@@ -67,7 +67,7 @@ describe( "Audio methods", () => {
             expect( vorple( "audio", "isAudioPlaying" ) ).to.be.true;
             expect( vorple( "audio", "isEffectPlaying" ) ).to.be.true;
             expect( vorple( "audio", "isMusicPlaying" ) ).to.be.false;
-            browser.pause( 500 );
+            browser.pause( 1500 );
             expect( vorple( "audio", "isAudioPlaying" ) ).to.be.false;
             expect( vorple( "audio", "isEffectPlaying" ) ).to.be.false;
             expect( vorple( "audio", "isMusicPlaying" ) ).to.be.false;
@@ -144,7 +144,7 @@ describe( "Audio methods", () => {
             expect( vorple( "audio", "currentMusicPlaying" ) ).to.equal( shortaudio2 );    // we're at the pause between tracks
             browser.pause( 150 );
             expect( vorple( "audio", "currentMusicPlaying" ) ).to.equal( shortaudio2 );    // track 2 has started playing
-            browser.pause( 350 );
+            browser.pause( 500 );
             expect( vorple( "audio", "currentMusicPlaying" ) ).to.be.null;                 // playlist has ended
         });
 
