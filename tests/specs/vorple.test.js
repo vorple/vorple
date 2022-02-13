@@ -523,4 +523,12 @@ describe( "Event listeners", () => {
             waitForLineInput();
         });
     });
+
+    // THIS MUST BE THE LAST TEST because it loads a different game file
+    describe( "game load", () => {
+        it( "handles gblorb files", () => {
+            browser.url( `/?story=stories/story.gblorb` );
+            waitForLineInput();
+        });
+    });
 });

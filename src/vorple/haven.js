@@ -63,8 +63,8 @@ export function initQuixe( storyfile ) {
     window.GlkOte = {
         log: () => {}
     };
-    
-    GiLoad.load_run( null, storyfile, typeof storyfile === 'string' ? 'base64' : undefined );
+
+    GiLoad.load_run( {}, storyfile, typeof storyfile === 'string' ? 'base64' : undefined );
 }
 
 

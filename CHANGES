@@ -6,9 +6,10 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
-Release 3.3.0
+Release 3.x
 ==========================
 
+- Fixed the interpreter not loading gblorb files (#49) 
 - Fixed UI blocking with vorple.layout.block() not working in some situations
 - Added vorple.layout.isBlocked() for checking whether user input is blocked
 - Updated jQuery to 3.6.0
