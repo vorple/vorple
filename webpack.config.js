@@ -44,7 +44,7 @@ module.exports = {
                     { from: "node_modules/toastr/build/toastr.css", to: "interpreter/" },
                     { from: "node_modules/vex-js/dist/css/vex.css", to: "interpreter/" },
                     { from: "node_modules/vex-js/dist/css/vex-theme-plain.css", to: "interpreter/" },
-                    { from: "vendor/fonts/**/*", to: "interpreter/", globOptions: { ignore: [ "LICENSE.txt" ] } }
+                    { from: "roboto*", to: "interpreter/", context: "vendor/fonts/roboto" }
                 ],
             }
         )
