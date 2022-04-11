@@ -77,7 +77,7 @@ export function focus( targetElement, targetWindow = 0 ) {
  * 
  * @returns {boolean} True if input is blocked
  * 
- * @since 3.3.0
+ * @since 3.2.6
  */
 export function isBlocked() {
     return isInputBlocked();
