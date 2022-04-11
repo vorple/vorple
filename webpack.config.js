@@ -34,6 +34,10 @@ module.exports = {
       "./src/index.js"
     ],
     plugins: [
+        // Client-side Buffer shim
+        new webpack.ProvidePlugin({
+            Buffer: [ "buffer", "Buffer" ]
+        }),
         new CopyWebpackPlugin(
             {
                 patterns: [

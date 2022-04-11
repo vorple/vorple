@@ -6,6 +6,12 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
+Release 3.2.7 (2022-04-11)
+==========================
+
+- Fixed a bug that prevented saving and restoring games
+
+
 Release 3.2.6 (2022-02-17)
 ==========================
 

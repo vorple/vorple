@@ -263,7 +263,7 @@ describe( "Virtual filesystem", () => {
     });
 
     describe( "read/write", () => {
-        it( "writes and reads files", () => {
+        it( "writes and reads text files", () => {
             expect( vorple( "file", "write", "test.txt", contents ) ).to.be.true;
             expect( vorple( "file", "read", "test.txt" ) ).to.equal( contents );
 
@@ -274,6 +274,11 @@ describe( "Virtual filesystem", () => {
             expect( vorple( "file", "read", "foo" ) ).to.equal( contents );
             expect( vorple( "file", "read", "/inform/foo" ) ).to.equal( contents );
             expect( vorple( "file", "read", "foo", { cwd: "/inform" } ) ).to.equal( contents );
+        });
+
+        it( "writes and reads binary files", () => {
+            expect( vorple( "file", "write", "test.bin", [ 1, 2, 3 ], { binary: true } ) ).to.be.true;
+            expect( vorple( "file", "read", "test.bin" ) ).to.equal( "\u0001\u0002\u0003" );
         });
 
         it( "writes the Inform 7 header", () => {
