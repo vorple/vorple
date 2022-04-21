@@ -56,7 +56,7 @@ function timeNextTrack() {
         const next = musicQueue.shift();
 
         if( next ) {
-            playMusic( next.url, next.looping );
+            playMusic( next.url, { looping: next.looping });
         }
     }, defaults.pauseBetweenTracks );
 }
