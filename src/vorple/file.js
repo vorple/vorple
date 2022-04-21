@@ -322,14 +322,14 @@ export function info( filename, options ) {
         let contents;
 
         if( isDirectory ) {
-            contents = readdir( filename, { cwd: opt.cwd } );
+            contents = readdir( filename, { cwd: opt.cwd } );
         }
         else {
             contents = read( filename, { cwd: opt.cwd, header: true } );
         }
         
         if( contents === null ) {
-            return false;
+            return null;
         }
         
         const header = hasHeader( contents ) ? {
