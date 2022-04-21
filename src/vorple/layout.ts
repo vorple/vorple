@@ -2,7 +2,7 @@
  * @module layout
  */
 import { flush } from "../haven/buffer";
-import { 
+import {
     block as inputBlock,
     isBlocked as isInputBlocked,
     unblock as inputUnblock
@@ -19,7 +19,7 @@ import { container } from "../haven/window";
  * Use vorple.layout.unblock() to remove the block.
  */
 export function block() {
-    $( '.vorple-link' ).addClass( 'disabled' );
+    $( ".vorple-link" ).addClass( "disabled" );
     inputBlock();
 }
 
@@ -38,7 +38,7 @@ export function block() {
 export function closeTag( targetWindow = 0 ) {
     const current = container.get( targetWindow );
 
-    if( current.id === 'window0' ) {
+    if( current.id === "window0" ) {
         return false;
     }
 
@@ -74,9 +74,9 @@ export function focus( targetElement, targetWindow = 0 ) {
 
 /**
  * Returns whether user input is blocked.
- * 
+ *
  * @returns {boolean} True if input is blocked
- * 
+ *
  * @since 3.2.6
  */
 export function isBlocked() {
@@ -121,7 +121,7 @@ export function openTag( tagName, classes, targetWindow = 0 ) {
  * If the element doesn't exist, the function doesn't do anything.
  *
  * @param {string|object} target  The target element
- * @param {number} [speed=500]  The duration of the scroll animation in milliseconds 
+ * @param {number} [speed=500]  The duration of the scroll animation in milliseconds
  *
  * @returns {promise} A promise that resolves to true when the scroll animation
  *   ends, or resolves to false if no scrolling was needed (element doesn't
@@ -135,11 +135,12 @@ export function scrollTo( target, speed = 500 ) {
         return Promise.resolve( false );
     }
 
-    const pagePosition = $( 'body' ).scrollTop();
-    const targetPosition = $target.offset().top;
-    const targetHeight = $target.height();
-    const windowHeight = $( window ).height();
-    const pageBottom = $( document ).height() - windowHeight;
+    const pagePosition = $( "body" ).scrollTop() || 0;
+    const targetPosition = $target.offset()?.top || 0;
+    const targetHeight = $target.height() || 0;
+    const windowHeight = $( window ).height() || 0;
+    const documentHeight = $( "document" )?.height() || 0;
+    const pageBottom = documentHeight - windowHeight ;
     const halfway = windowHeight / 2 + pagePosition;
     const offset = 30;
 
@@ -150,7 +151,7 @@ export function scrollTo( target, speed = 500 ) {
         return Promise.resolve( false );
     }
 
-    return $( 'html, body' ).stop().animate( {
+    return $( "html, body" ).stop().animate({
         scrollTop: Math.min( Math.max( targetPosition - offset, 0 ), pageBottom )
     }, speed ).promise().then( () => true );
 }
@@ -158,13 +159,15 @@ export function scrollTo( target, speed = 500 ) {
 
 /**
  * Scroll to the end of the document.
- * 
+ *
  * @param {number} [speed=500]  The duration of the scroll animation in milliseconds
  * @returns {promise} A promise that resolves when the scroll animation ends
  */
 export function scrollToEnd( speed = 500 ) {
-    return $( 'html, body' ).stop().animate( {
-        scrollTop: $( document ).height() - $( window ).height()
+    const documentHeight = $( document ).height() || 0;
+    const windowHeight = $( window ).height() || 0;
+    return $( "html, body" ).stop().animate({
+        scrollTop: documentHeight - windowHeight
     }, speed ).promise();
 }
 
@@ -175,6 +178,6 @@ export function scrollToEnd( speed = 500 ) {
  * @see layout.block
  */
 export function unblock() {
-    $( '.vorple-link' ).removeClass( 'disabled' );
+    $( ".vorple-link" ).removeClass( "disabled" );
     inputUnblock();
 }

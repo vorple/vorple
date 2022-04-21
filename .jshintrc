@@ -1,4 +1,0 @@
-{
-  "esversion": 6,
-  "-W067": true   // don't complain about (0,eval) in Vorple JS execution
-}

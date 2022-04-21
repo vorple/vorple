@@ -3,7 +3,7 @@
  */
 
 import $ from "jquery";
-import { 
+import {
     getMode,
     keypress
 } from "../haven/input";
@@ -17,9 +17,25 @@ import { addEventListener } from "./vorple";
 import { error } from "./debug";
 import { block, unblock } from "./layout";
 
-const inputFilters = [];
-const commandQueue = [];
-const keyQueue = [];
+interface ParserCommand {
+    cmd: string;
+    silent: boolean;
+}
+
+export interface InputFilterMeta {
+    input: string;
+    original: string;
+    type: "line" | "char";
+    userAction: boolean;
+    silent: boolean;
+}
+
+export type InputFilter = ( input: string, meta: InputFilterMeta ) => boolean;
+
+
+const inputFilters: InputFilter[] = [];
+const commandQueue: ParserCommand[] = [];
+const keyQueue: string[] = [];
 
 
 /**
@@ -28,7 +44,7 @@ const keyQueue = [];
  */
 function runCommandQueue() {
     if( commandQueue.length > 0 ) {
-        const command = commandQueue.shift();
+        const command = commandQueue.shift() as ParserCommand;
 
         submit( command.cmd, command.silent );
         return false;
@@ -39,13 +55,13 @@ function runCommandQueue() {
 /**
  * If there is a keypress waiting in the queue, send it to the parser.
  * The key is then removed from the queue.
- * 
+ *
  * @since 3.2.0
  */
 function runKeyQueue() {
     if( keyQueue.length > 0 ) {
-        const key = keyQueue.shift();
-        keypress.send({ keyCode: key.charCodeAt(0), force: true });
+        const key = keyQueue.shift() as string;
+        keypress.send({ keyCode: key.charCodeAt( 0 ), force: true });
         return false;
     }
 
@@ -55,8 +71,8 @@ function runKeyQueue() {
 
 /**
  * Registers a new input filter.
- * 
- * @param {function} filter 
+ *
+ * @param {function} filter
  * @returns {function} A function that can be called to remove the filter
  * @since 3.2.0
  */
@@ -68,8 +84,8 @@ export function addInputFilter( filter ) {
 
 /**
  * Runs input through all input filters.
- * 
- * @param {string} originalInput 
+ *
+ * @param {string} originalInput
  * @since 3.2.0
  * @private
  */
@@ -92,9 +108,6 @@ export async function applyInputFilters( originalInput, meta ) {
         try {
             filtered = await Promise.resolve( filtered );
         }
-        catch( e ) {
-            throw e;
-        }
         finally {
             unblock();
         }
@@ -111,9 +124,10 @@ export async function applyInputFilters( originalInput, meta ) {
                 return false;
 
             default:
+            {
                 const type = typeof filtered;
 
-                if( type === "object" && filtered.then ) {
+                if( type === "object" && "then" in filtered ) {
                     error( "Input filter promise resolved into another promise, which is not allowed" );
                 }
 
@@ -124,18 +138,19 @@ export async function applyInputFilters( originalInput, meta ) {
                     error( "Input filter returned a value of type " + type );
                 }
                 break;
+            }
         }
     }
 
     unblock();
-    
+
     return finalInput;
 }
 
 
 /**
  * Clear the command queue.
- * 
+ *
  * @since 3.2.0
  */
 export function clearCommandQueue() {
@@ -145,7 +160,7 @@ export function clearCommandQueue() {
 
 /**
  * Clear the keypress queue.
- * 
+ *
  * @since 3.2.0
  */
 export function clearKeyQueue() {
@@ -157,7 +172,7 @@ export function clearKeyQueue() {
  * Manually hide the prompt. It won't be shown until unhide() is called.
  */
 export function hide() {
-    $( getHavenPrompt() ).addClass( 'force-hidden' );
+    $( getHavenPrompt() ).addClass( "force-hidden" );
 }
 
 
@@ -172,7 +187,7 @@ export { history } from "../haven/prompt";
  */
 export function init() {
     // Hook into the lineinput's ready event for passing commands from the queue.
-    addEventListener( 'expectCommand', runCommandQueue );
+    addEventListener( "expectCommand", runCommandQueue );
 
     // Run the key queue when the engine expects a keypress
     addEventListener( "expectKeypress", runKeyQueue );
@@ -188,10 +203,10 @@ export function init() {
  *      screen. The result of the command will still print normally.
  */
 export function queueCommand( cmd, silent = false ) {
-    commandQueue.push( {
+    commandQueue.push({
         cmd: cmd,
         silent: !!silent
-    } );
+    });
 
     if( isReady() ) {
         runCommandQueue();
@@ -209,7 +224,7 @@ export function queueCommand( cmd, silent = false ) {
 export function queueKeypress( key ) {
     keyQueue.push( key );
 
-    if( getMode() === 'getkey' ) {
+    if( getMode() === "getkey" ) {
         runKeyQueue();
     }
 }
@@ -217,7 +232,7 @@ export function queueKeypress( key ) {
 
 /**
  * Removes a filter from the registered input filters.
- * 
+ *
  * @param {function} filter The filter to remove
  * @since 3.2.0
  */
@@ -250,7 +265,7 @@ export function setPrefix( prefix, html = false ) {
     let newPrefix = prefix;
 
     if( !html ) {
-        newPrefix = $( '<div>' ).text( prefix ).html();
+        newPrefix = $( "<div>" ).text( prefix ).html();
     }
 
     havenPrefix.set( newPrefix );
@@ -265,7 +280,7 @@ export function setPrefix( prefix, html = false ) {
  * @param value
  */
 export function setValue( value ) {
-    $( getHavenPrompt() ).find( '#lineinput-field' ).val( value );
+    $( getHavenPrompt() ).find( "#lineinput-field" ).val( value );
 }
 
 
@@ -278,12 +293,12 @@ export function setValue( value ) {
  *      screen. The result of the command will still print normally.
  */
 export function submit( command, silent = false ) {
-    sendCommand( new CustomEvent( 'submit', { 
-        detail: { 
+    sendCommand( new CustomEvent( "submit", {
+        detail: {
             silent: !!silent,
             userAction: false
         }
-    } ), command );
+    }), command );
 }
 
 
@@ -294,5 +309,5 @@ export function submit( command, silent = false ) {
  * by some other means.
  */
 export function unhide() {
-    $( getHavenPrompt() ).removeClass( 'force-hidden' );
+    $( getHavenPrompt() ).removeClass( "force-hidden" );
 }

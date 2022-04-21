@@ -18,7 +18,11 @@ import {
 } from "./file";
 import { applyOutputFilters } from "./output";
 
-let informVersion;
+let informVersion: 6 | 7;
+
+export interface VorpleOptions {
+    container?: string | JQuery;
+}
 
 
 /**
@@ -37,8 +41,8 @@ const eventListeners = {
 
 /**
  * Adds or removes one listener from one event.
- * 
- * @returns {boolean} False if trying to remove a listener that hasn't been registered, true otherwise 
+ *
+ * @returns {boolean} False if trying to remove a listener that hasn't been registered, true otherwise
  * @since 3.2.0
  * @private
  */
@@ -46,7 +50,7 @@ function addOrRemoveListener( eventName, listener, action ) {
     if( !eventName || typeof eventName === "function" ) {
         return error( `Event name missing when trying to ${action} an event listener` );
     }
-  
+
     if( !eventListeners[ eventName ] ) {
         return error( `Tried to ${action} a listener to an unknown event ${eventName}` );
     }
@@ -85,17 +89,17 @@ function eToInt( x ) {
     let e;
 
     if( Math.abs( x ) < 1.0 ) {
-        e = parseInt( x.toString().split( 'e-' )[ 1 ] );
+        e = parseInt( x.toString().split( "e-" )[ 1 ] );
         if( e ) {
             x *= Math.pow( 10, e - 1 );
-            x = '0.' + (new Array( e )).join( '0' ) + x.toString().substring( 2 );
+            x = "0." + ( new Array( e ) ).join( "0" ) + x.toString().substring( 2 );
         }
     } else {
-        e = parseInt( x.toString().split( '+' )[ 1 ] );
+        e = parseInt( x.toString().split( "+" )[ 1 ] );
         if( e > 20 ) {
             e -= 20;
             x /= Math.pow( 10, e );
-            x += (new Array( e + 1 )).join( '0' );
+            x += ( new Array( e + 1 ) ).join( "0" );
         }
     }
 
@@ -105,7 +109,7 @@ function eToInt( x ) {
 
 /**
  * Registers a listener for an event. See "Filters and event listeners" in the documentation for details.
- * 
+ *
  * @param {string|string[]} eventNames The event name or an array of event names where to add the listener
  * @param {function} listener The listener to register
  * @returns {function} A function that can be called to remove the listeners
@@ -131,7 +135,7 @@ export function addEventListener( eventNames, listener ) {
 export function evaluate( code ) {
     /**
      * Stringify a value, or return null if the value can't be stringified
-     * 
+     *
      * @private
      */
     const safeStringify = function( value ) {
@@ -149,7 +153,7 @@ export function evaluate( code ) {
 
     code = code.substr( header.length );
 
-    log( 'Evaluating: ' + code );
+    log( "Evaluating: " + code );
 
     let i7type = "nothing";
 
@@ -157,46 +161,46 @@ export function evaluate( code ) {
     try {
         retval = new Function( "'use strict';\n" + code )();
     }
-    catch(e) {
-        error( 'JavaScript code from story file threw an error: ' + e.message + '\n\n' + code );
+    catch( e ) {
+        error( "JavaScript code from story file threw an error: " + ( e as Error ).message + "\n\n" + code );
     }
 
     const type = typeof retval;
 
     // build the return value
-    if( type === 'undefined' ) {
-        log( 'The code did not return anything' );
+    if( type === "undefined" ) {
+        log( "The code did not return anything" );
         return;
     }
-    else if( type === 'string' ) {
-        retval = '"' + retval + '"';
+    else if( type === "string" ) {
+        retval = `"${retval}"`;
         i7type = "text";
     }
-    else if( type === 'function' || type === 'symbol' ) {
+    else if( type === "function" || type === "symbol" ) {
         retval = retval.toString();
         i7type = "function";
     }
-    else if( typeof Set !== 'undefined' && retval instanceof Set ) {
+    else if( typeof Set !== "undefined" && retval instanceof Set ) {
         retval = safeStringify( Array.from( retval ) );
         i7type = "list";
     }
     else if( retval === Infinity ) {
-        retval = 'Infinity';
+        retval = "Infinity";
         i7type = "infinity";
     }
     else if( retval === -Infinity ) {
-        retval = '-Infinity';
+        retval = "-Infinity";
         i7type = "infinity";
     }
     else if( retval !== retval ) {   // NaN !== NaN
-        retval = 'NaN';
+        retval = "NaN";
         i7type = "NaN";
     }
     else if( type === "boolean" ) {
         retval = String( retval );
         i7type = "truth state";
     }
-    else if( type === 'number' ) {
+    else if( type === "number" ) {
         if( Math.abs( retval ) > 1e20 ) {   // more than 20 digits are displayed in scientific notation
             retval = eToInt( retval );
         }
@@ -249,8 +253,8 @@ export function evaluate( code ) {
  * @private
  */
 function getHeader( content ) {
-    if( content.charAt( 0 ) === '*' ) {
-        return content.substr( 0, content.indexOf( '\n' ) + 1 );
+    if( content.charAt( 0 ) === "*" ) {
+        return content.substr( 0, content.indexOf( "\n" ) + 1 );
     }
 
     return "";
@@ -260,7 +264,7 @@ function getHeader( content ) {
 /**
  * Returns the Inform version, detected at handshake.
  * Before the handshake the value is undefined.
- * 
+ *
  * @returns {number|undefined} 6 or 7
  * @since 3.2.0
  */
@@ -274,8 +278,8 @@ export function getInformVersion() {
  */
 export async function init() {
     // use Haven's init listeners to trigger our own listeners
-    addCallback( async() => { 
-        await triggerEvent( 'init' );
+    addCallback( async() => {
+        await triggerEvent( "init" );
     });
 
     // initialize submodules
@@ -285,7 +289,7 @@ export async function init() {
     // start up Haven
     start({
         // container where the interpreter will be embedded
-        container: vorple.options.container || "#vorple",
+        container: window.vorple.options.container || "#vorple",
 
         // we use Vorple's custom prompt, not what the engine provides
         enginePrompt: false,
@@ -304,19 +308,19 @@ export async function init() {
 
         // have Haven trigger listeners
         hooks: {
-            expectCommand: () => { triggerEvent( 'expectCommand' ); },
-            expectKeypress: () => { triggerEvent( 'expectKeypress' ); },
-            quit: () => { triggerEvent( 'quit' ); },
-            submitCommand: meta => triggerEvent( 'submitCommand', meta ),
-            submitKeypress: meta => triggerEvent( 'submitKeypress', meta )
+            expectCommand: () => { triggerEvent( "expectCommand" ); },
+            expectKeypress: () => { triggerEvent( "expectKeypress" ); },
+            quit: () => { triggerEvent( "quit" ); },
+            submitCommand: meta => triggerEvent( "submitCommand", meta ),
+            submitKeypress: meta => triggerEvent( "submitKeypress", meta )
         },
 
         // the function that loads the story file
-        loadStoryFile, 
+        loadStoryFile,
 
         // user-provided options
         options: {
-            ...vorple.options,
+            ...window.vorple.options,
             autosave: false,
             engineColors: false
         },
@@ -332,7 +336,7 @@ export async function init() {
 
 /**
  * Removes a registered event listener.
- * 
+ *
  * @param {string|string[]} [eventNames] The event name or an array of event names from where to remove the listener.
  * Leaving this parameter out completely (i.e. passing the listener function as the first and only parameter)
  * removes the listener from all events where it's been registered.
@@ -375,8 +379,8 @@ export function removeEventListener( eventNames, listener ) {
  * @returns {boolean} True if version matches
  */
 export function requireVersion( requiredVersion, callback ) {
-    const thisVer = packageJson.version.split( '.' ).map( str => Number( str ) );
-    const reqVer = ("" + requiredVersion).split( '.' ).map( str => Number( str ) );
+    const thisVer = packageJson.version.split( "." ).map( str => Number( str ) );
+    const reqVer = ( "" + requiredVersion ).split( "." ).map( str => Number( str ) );
     const cb = callback || (
         match => {
             if( !match ) {
@@ -416,8 +420,8 @@ export function requireVersion( requiredVersion, callback ) {
 
 /**
  * Sets the Inform version.
- * 
- * @param {number} version 
+ *
+ * @param {number} version
  * @since 3.2.0
  * @private
  */
@@ -428,13 +432,13 @@ export function setInformVersion( version ) {
 
 /**
  * Runs all custom event listeners for the given event.
- * 
- * @param {string} eventName 
+ *
+ * @param {string} eventName
  * @param {object} [meta={}]
  * @since 3.2.0
  * @private
  */
-export async function triggerEvent( eventName, meta = {} ) {
+export async function triggerEvent( eventName, meta = {}) {
     for( let i = 0; i < eventListeners[ eventName ].length; ++i ) {
         await eventListeners[ eventName ][ i ]({ ...meta, type: eventName });
     }

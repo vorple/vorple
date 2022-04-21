@@ -4,3 +4,4 @@ library
 dist
 errorShots
 lib
+yarn-error.log

@@ -1,6 +1,6 @@
 /**
  * Helper functions and monkey patches to the Haven engine
- * 
+ *
  * @module haven
  * @private
  */
@@ -10,16 +10,22 @@ import { set as setHavenStyle } from "../haven/style";
 import error from "../haven/error";
 import { get } from "../haven/options";
 
+interface HavenStyleHints {
+    bold?: boolean;
+    italic?: boolean;
+    underline?: boolean;
+}
+
 // Inform 7 creates a file that puts the story file in this variable
 let base64StoryFile = null;
 
-const stylehints = [];
+const stylehints: HavenStyleHints[] = [];
 
 // default
 stylehints[ 0 ] = {
     bold: false,
     italic: false,
-    underline: false,
+    underline: false
 //  proportional: true
 };
 
@@ -47,7 +53,7 @@ stylehints[ 4 ] = {
 /**
  * Start Quixe. Uses the base64StoryFile data (from Inform 7)
  * if a file hasn't been specified
- * 
+ *
  * @since 3.2.0
  * @private
  */
@@ -64,19 +70,19 @@ export function initQuixe( storyfile ) {
         log: () => {}
     };
 
-    GiLoad.load_run( {}, storyfile, typeof storyfile === 'string' ? 'base64' : undefined );
+    window.GiLoad.load_run({}, storyfile, typeof storyfile === "string" ? "base64" : undefined );
 }
 
 
 /**
  * Load the story file.
- *  
+ *
  * @since 3.2.0
  * @private
  */
 export function loadStoryFile() {
     // use "storyfile" parameter if it exists, to bypass the Quixe file loader
-    const url = get( 'storyfile' ) || get( 'story' );
+    const url = get( "storyfile" ) || get( "story" );
 
     if( base64StoryFile ) {
         const storydata = base64StoryFile;
@@ -86,21 +92,21 @@ export function loadStoryFile() {
 
     return new Promise( ( resolve, reject ) => {
         const httpRequest = new XMLHttpRequest();
-    
+
         httpRequest.onreadystatechange = function() {
-        if( httpRequest.readyState == XMLHttpRequest.DONE ) {
-            switch( httpRequest.status ) {
-                case 200:
-                    resolve( Array.from( new Uint8Array( httpRequest.response ) ) );
-                    break;
-    
-                default:
-                    reject( error( "Error loading game file. Server returned status code " + httpRequest.status + " (" + httpRequest.statusText + ")" ) );
-                    break;
+            if( httpRequest.readyState == XMLHttpRequest.DONE ) {
+                switch( httpRequest.status ) {
+                    case 200:
+                        resolve( Array.from( new Uint8Array( httpRequest.response ) ) );
+                        break;
+
+                    default:
+                        reject( error( "Error loading game file. Server returned status code " + httpRequest.status + " (" + httpRequest.statusText + ")" ) );
+                        break;
+                }
             }
-        }
         };
-    
+
         httpRequest.open( "GET", url, true );
         httpRequest.responseType = "arraybuffer";   // this must be exactly here, otherwise IE11 breaks
         httpRequest.send();
@@ -110,7 +116,7 @@ export function loadStoryFile() {
 
 /**
  * Inform 7 interpreter template calls this to set the story file data.
- * 
+ *
  * @since 3.2.0
  * @private
  */
@@ -121,8 +127,8 @@ export function setBase64StoryFile( data ) {
 
 /**
  * Based on Glulx style code, set the basic style of the text being printed.
- * 
- * @param {number} style 
+ *
+ * @param {number} style
  */
 export function setStyle( style ) {
     /*
@@ -144,7 +150,7 @@ export function setStyle( style ) {
         return;
     }
 
-    for( let i in stylehints[ style ] ) {
+    for( const i in stylehints[ style ] ) {
         setHavenStyle( i, stylehints[ style ][ i ], 0 );
     }
 }
@@ -163,7 +169,7 @@ export function setStyleHint( style, hint, value ) {
             bold: false,
             italic: false,
             underline: false
-//          proportional: true
+            //          proportional: true
         };
     }
 
@@ -171,15 +177,15 @@ export function setStyleHint( style, hint, value ) {
 
     switch( hint ) {
         case 4:     // Weight
-            st.bold = (value === 1);
+            st.bold = ( value === 1 );
             break;
 
         case 5:     // Oblique
-            st.italic = (value === 1);
+            st.italic = ( value === 1 );
             break;
 
         case 6:     // Proportional
-//                st.proportional = (value === 1);
+            //                st.proportional = (value === 1);
             break;
     }
 }

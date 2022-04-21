@@ -1,36 +1,47 @@
 /**
  * Output filter methods.
- * 
+ *
  * @module output
  * @since 3.2.0
  */
 
-const outputFilters = [];
+export interface FilterMeta {
+    output: string;
+    original: string;
+    style: {
+        bold: boolean;
+        italic: boolean;
+    }
+}
+
+export type OutputFilter = ( input: string, meta: FilterMeta ) => boolean;
+
+const outputFilters: OutputFilter[] = [];
 
 
 /**
  * Registers a new output filter.
- * 
- * @param {function} filter 
+ *
+ * @param {function} filter
  * @returns {function} A function that can be called to remove the filter
  */
 export function addOutputFilter( filter ) {
     outputFilters.push( filter );
-    return () => removeOutputFilter( filter );
+    return (): boolean => removeOutputFilter( filter );
 }
 
 
 /**
  * Runs output through all output filters.
- * 
- * @param {string} originalOutput 
+ *
+ * @param {string} originalOutput
  * @private
  */
 export function applyOutputFilters( originalOutput, meta ) {
     let finalOutput = originalOutput;
 
     for( let i = 0; i < outputFilters.length; ++i ) {
-        let filtered = outputFilters[ i ]( finalOutput, {
+        const filtered = outputFilters[ i ]( finalOutput, {
             ...meta,
             output: finalOutput,
             original: originalOutput
@@ -52,7 +63,7 @@ export function applyOutputFilters( originalOutput, meta ) {
 
 /**
  * Removes a filter from the registered output filters.
- * 
+ *
  * @param {function} filter The filter to remove
  */
 export function removeOutputFilter( filter ) {

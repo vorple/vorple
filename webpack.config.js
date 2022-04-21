@@ -13,7 +13,7 @@ module.exports = {
         compress: true,
         port: process.env.PORT || 9000
     },
-    devtool: "source-map",
+    devtool: "inline-source-map",
     mode: process.env.ENV || "production",
     output: {
         filename: "interpreter/vorple.min.js"
@@ -22,17 +22,27 @@ module.exports = {
         hints: false    // Interpreter files are big – don't warn about them
     },
     resolve: {
-        fallback: { 
-            path: require.resolve("path-browserify")
+        extensions: [ ".ts", ".js" ],
+        fallback: {
+            path: require.resolve( "path-browserify" )
         }
     },
     externals: {
-      jquery: "jQuery"  // Webpack tends to include jQuery multiple times, we'll handle it separately
+        jquery: "jQuery"  // Webpack tends to include jQuery multiple times, we'll handle it separately
     },
     entry: [
-      "jquery/src/jquery",
-      "./src/index.js"
+        "jquery/src/jquery",
+        "./src/index.ts"
     ],
+    module: {
+        rules: [
+            {
+                test: /\.ts$/,
+                use: "ts-loader",
+                exclude: /node_modules/
+            }
+        ]
+    },
     plugins: [
         // Client-side Buffer shim
         new webpack.ProvidePlugin({
@@ -49,7 +59,7 @@ module.exports = {
                     { from: "node_modules/vex-js/dist/css/vex.css", to: "interpreter/" },
                     { from: "node_modules/vex-js/dist/css/vex-theme-plain.css", to: "interpreter/" },
                     { from: "roboto*", to: "interpreter/", context: "vendor/fonts/roboto" }
-                ],
+                ]
             }
         )
     ]
