@@ -13,12 +13,11 @@ import { container } from "../haven/window";
 /**
  * Blocks the UI so that the user can't type anything or click any elements.
  * Note that this only applies to built-in input and features, for custom
- * features use vorple.layout.isBlocked() to check whether input should be
- * accepted.
+ * features use [[isBlocked]] to check whether input should be accepted.
  *
- * Use vorple.layout.unblock() to remove the block.
+ * Use [[unblock]] to remove the block.
  */
-export function block() {
+export function block(): void {
     $( ".vorple-link" ).addClass( "disabled" );
     inputBlock();
 }
@@ -31,11 +30,12 @@ export function block() {
  * in the sense that it would be missing the closing tag. Instead we jump
  * out of the tag and set output focus back to its parent element.
  *
- * @param {number} [targetWindow=0]
- * @returns {boolean} True if a tag was open, false if we were already
- *  at the top window level and nothing was done
+ * @see [[openTag]]
+ *
+ * @param targetWindow  The target window in the Haven engine. This is practically always 0.
+ * @returns Returns true if a tag was open, false if we were already at the top window level and nothing was done.
  */
-export function closeTag( targetWindow = 0 ) {
+export function closeTag( targetWindow = 0 ): boolean {
     const current = container.get( targetWindow );
 
     if( current.id === "window0" ) {
@@ -52,14 +52,13 @@ export function closeTag( targetWindow = 0 ) {
 /**
  * Set output focus to an element.
  *
- * @param {string|object} targetElement
- * @param {number} [targetWindow=0]
+ * @param targetElement  A jQuery object or selector
+ * @param targetWindow  The target window in the Haven engine. This is practically always 0.
  *
- * @returns {boolean} True if the focus was set successfully, false if the
- *   element wasn't found
+ * @returns Returns true if the focus was set successfully, false if the element wasn't found.
  */
-export function focus( targetElement, targetWindow = 0 ) {
-    const $target = $( targetElement );
+export function focus( targetElement: string | JQuery.PlainObject, targetWindow = 0 ): boolean {
+    const $target: JQuery = $( targetElement );
 
     if( $target.length === 0 ) {
         return false;
@@ -73,13 +72,12 @@ export function focus( targetElement, targetWindow = 0 ) {
 
 
 /**
- * Returns whether user input is blocked.
+ * Checks whether user input is blocked.
  *
- * @returns {boolean} True if input is blocked
- *
+ * @returns Returns true if input is blocked, otherwise false.
  * @since 3.2.6
  */
-export function isBlocked() {
+export function isBlocked(): boolean {
     return isInputBlocked();
 }
 
@@ -89,17 +87,19 @@ export function isBlocked() {
  * focus to the element.
  *
  * Example:
- *  layout.openTag( 'div', 'vorple', 0 )  -->  <div class="vorple"></div>
+ * ```
+ * layout.openTag( 'div', 'vorple', 0 )  -->  <div class="vorple"></div>
+ * ```
  *
- * @param {string} tagName  Name of the tag to create
+ * @param tagName  Name of the tag to create
  * @param {string} classes  Class names to add to the element
- * @param {number} [targetWindow=0]  The number of the target window
+ * @param targetWindow  The target window in the Haven engine. This is practically always 0.
  *
- * @see layout.closeTag
+ * @see [[closeTag]]
  *
- * @returns {boolean} True
+ * @returns Returns true.
  */
-export function openTag( tagName, classes, targetWindow = 0 ) {
+export function openTag( tagName: string, classes: string, targetWindow = 0 ): true {
     const elem = document.createElement( tagName );
     const current = container.get( targetWindow );
 
@@ -121,13 +121,13 @@ export function openTag( tagName, classes, targetWindow = 0 ) {
  * If the element doesn't exist, the function doesn't do anything.
  *
  * @param {string|object} target  The target element
- * @param {number} [speed=500]  The duration of the scroll animation in milliseconds
+ * @param speed  The duration of the scroll animation in milliseconds
  *
  * @returns {promise} A promise that resolves to true when the scroll animation
  *   ends, or resolves to false if no scrolling was needed (element doesn't
  *   exist or is already in view.)
  */
-export function scrollTo( target, speed = 500 ) {
+export function scrollTo( target, speed = 500 ): Promise<boolean> {
     const $target = $( target );
 
     // if the element doesn't exist, do nothing
@@ -151,9 +151,9 @@ export function scrollTo( target, speed = 500 ) {
         return Promise.resolve( false );
     }
 
-    return $( "html, body" ).stop().animate({
+    return new Promise( ( resolve ) => $( "html, body" ).stop().animate({
         scrollTop: Math.min( Math.max( targetPosition - offset, 0 ), pageBottom )
-    }, speed ).promise().then( () => true );
+    }, speed ).promise().then( () => resolve( true ) ) );
 }
 
 
@@ -163,21 +163,23 @@ export function scrollTo( target, speed = 500 ) {
  * @param {number} [speed=500]  The duration of the scroll animation in milliseconds
  * @returns {promise} A promise that resolves when the scroll animation ends
  */
-export function scrollToEnd( speed = 500 ) {
+export function scrollToEnd( speed = 500 ): Promise<void> {
     const documentHeight = $( document ).height() || 0;
     const windowHeight = $( window ).height() || 0;
-    return $( "html, body" ).stop().animate({
-        scrollTop: documentHeight - windowHeight
-    }, speed ).promise();
+    return ( async(): Promise<void> => {
+        await $( "html, body" ).stop().animate({
+            scrollTop: documentHeight - windowHeight
+        }, speed ).promise();
+    })();
 }
 
 
 /**
  * Unblock the UI.
  *
- * @see layout.block
+ * @see [[block]]
  */
-export function unblock() {
+export function unblock(): void {
     $( ".vorple-link" ).removeClass( "disabled" );
     inputUnblock();
 }

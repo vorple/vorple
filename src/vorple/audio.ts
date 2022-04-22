@@ -10,26 +10,27 @@ interface AudioQueueItem {
 }
 
 let musicQueue: AudioQueueItem[] = [];
-
-/**
- * @private
- */
-let musicPauseTimer;
-
-/**
- * @private
- */
+let musicPauseTimer: ReturnType<typeof setTimeout>;
 let playlist: AudioQueueItem[] = [];
 
 
 /**
  * Default values for durations.
- *
- * @type {{fadeDuration: number, pauseBetweenTracks: number}}
  */
 export const defaults = {
-    fadeDuration: 1000,         // the duration of fade in or out, in milliseconds
-    pauseBetweenTracks: 1000    // how long to pause between music tracks, in milliseconds
+    /**
+     * The duration of fade in or out, in milliseconds
+     *
+     * @default 1000
+     */
+    fadeDuration: 1000,
+
+    /**
+     * How long to pause between music tracks, in milliseconds
+     *
+     * @default 1000
+     */
+    pauseBetweenTracks: 1000
 };
 
 
@@ -68,20 +69,18 @@ function timeNextTrack() {
  * Clears the playlist and the music queue. Does not stop music that's
  * currently playing.
  */
-export function clearPlaylist() {
+export function clearPlaylist(): void {
     playlist = [];
     musicQueue = [];
 }
 
 
 /**
- * Gets the name of the currently playing music file, or null if nothing
- * is playing. If music has been asked to stop, returns the
- * music that will play next.
- *
- * @returns {string|null}
+ * @returns Returns the name of the currently playing music file, or null if nothing
+ * is playing. If music has been asked to stop, returns the name of the music file
+ * that will play next.
  */
-export function currentMusicPlaying() {
+export function currentMusicPlaying(): string | null {
     const $music = $( ".vorple-music" );
 
     if( $music.length === 0 ) {
@@ -182,20 +181,16 @@ export function fadeOut( element, duration, callback ) {
  * Checks if any audio is playing. Note that sound that is being loaded or
  * has received a play command but isn't playing for some other reason
  * isn't considered as playing, even though it's about to start.
- *
- * @returns {boolean}
  */
-export function isAudioPlaying() {
+export function isAudioPlaying(): boolean {
     return isEffectPlaying() || isMusicPlaying();
 }
 
 
 /**
  * Checks if any sound effect is playing.
- *
- * @returns {boolean}
  */
-export function isEffectPlaying() {
+export function isEffectPlaying(): boolean {
     let isEffectPlaying = false;
 
     $( ".vorple-sound-effect" ).each( function() {
@@ -212,24 +207,22 @@ export function isEffectPlaying() {
 /**
  * Checks if an audio element is playing.
  *
- * @param {string|object} audioElement  DOM element, jQuery object or jQuery
- *      selector of the audio element
- * @returns {boolean}
+ * @param audioElement  DOM element, jQuery object or jQuery selector of the audio element
+ * @returns Returns true if audio element exists and is playing, false otherwise.
  */
-export function isElementPlaying( audioElement ) {
+export function isElementPlaying( audioElement ): boolean {
     const elem = $( audioElement ).get( 0 );
 
-    return !!( elem && elem.tagName === "AUDIO" && !elem.paused );
+    return Boolean( elem && elem.tagName === "AUDIO" && !elem.paused );
 }
 
 
 /**
- * Checks if music is playing. Returns true if music is actually playing
- * and it isn't fading out at the moment.
+ * Checks if music is playing.
  *
- * @returns {boolean}
+ * @returns Returns true if music is actually playing and it isn't fading out at the moment.
  */
-export function isMusicPlaying() {
+export function isMusicPlaying(): boolean {
     const $music = $( ".vorple-music" );
 
     // if the audio element doesn't exist, music is never playing
@@ -263,6 +256,7 @@ interface AudioPlayOptions {
     restart?: boolean;
     shuffled?: boolean;
 }
+
 
 /**
  * Starts playing music. If the same music file is already playing, does nothing
@@ -348,11 +342,12 @@ export function playSound( url, options: AudioPlayOptions = {}) {
 
 
 /* from https://stackoverflow.com/a/6274381 */
-function shuffleArray( a ) {
+function shuffleArray<T>( a: T[] ): T[]  {
     for( let i = a.length - 1; i > 0; i-- ) {
         const j = Math.floor( Math.random() * ( i + 1 ) );
         [ a[ i ], a[ j ] ] = [ a[ j ], a[ i ] ];
     }
+
     return a;
 }
 
@@ -415,10 +410,10 @@ export function setPlaylist( list, options: AudioPlayOptions = {}) {
 /**
  * Stops playing music. Clears the music queue and the playlist.
  *
- * @param {number} [fadeoutDuration=1000] The duration of the fadeout. Set to 0
- *      to stop immediately.
+ * @param fadeoutDuration  The duration of the fadeout in milliseconds.
+ *      Set to 0 to stop immediately.
  */
-export function stopMusic( fadeoutDuration ) {
+export function stopMusic( fadeoutDuration = 1000 ): void {
     const $music = $( ".vorple-music" );
 
     musicQueue = [];

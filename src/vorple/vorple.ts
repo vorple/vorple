@@ -265,18 +265,20 @@ function getHeader( content ) {
  * Returns the Inform version, detected at handshake.
  * Before the handshake the value is undefined.
  *
- * @returns {number|undefined} 6 or 7
  * @since 3.2.0
  */
-export function getInformVersion() {
+export function getInformVersion(): 6 | 7 | undefined {
     return informVersion;
 }
 
 
 /**
  * Initializes and starts Vorple.
+ *
+ * @returns The function returns a promise that's resolved when the init event has triggered and the virtual filesystem
+ * has started. The promise won't wait for the story file to load.
  */
-export async function init() {
+export async function init(): Promise<void> {
     // use Haven's init listeners to trigger our own listeners
     addCallback( async() => {
         await triggerEvent( "init" );
@@ -337,14 +339,14 @@ export async function init() {
 /**
  * Removes a registered event listener.
  *
- * @param {string|string[]} [eventNames] The event name or an array of event names from where to remove the listener.
+ * @param eventNames The event name or an array of event names from where to remove the listener.
  * Leaving this parameter out completely (i.e. passing the listener function as the first and only parameter)
  * removes the listener from all events where it's been registered.
- * @param {function} listener The listener to remove
- * @returns {boolean} True if the listener was removed from at least one event
+ * @param listener The listener to remove
+ * @returns Returns true if the listener was removed from at least one event.
  * @since 3.2.0
  */
-export function removeEventListener( eventNames, listener ) {
+export function removeEventListener( eventNames: string | string[], listener ): boolean {
     // if the first parameter is a function, remove all listeners
     if( typeof eventNames === "function" ) {
         listener = eventNames;
@@ -370,19 +372,17 @@ export function removeEventListener( eventNames, listener ) {
  * is requested, then any Vorple version below 3.2 (3.1, 3.1.1, 3.1.2 etc)
  * will pass. If version "3" is requested, every version 3.x.x will pass.
  *
- * If an optional callback is passed to the function, it will be run with
- * one boolean parameter: true if version matches, false otherwise.
- * Otherwise an error is thrown if the version doesn't match.
- *
  * @param {string} requiredVersion  The minimum version of Vorple that's required.
- * @param {function} [callback]  A custom callback
- * @returns {boolean} True if version matches
+ * @param callback  If an optional callback function is passed, it will be run with
+ * one boolean parameter: true if version matches, false otherwise. If a callback
+ * isn't provided, this function throws an error if the version doesn't match.
+ * @returns Returns true if version matches.
  */
-export function requireVersion( requiredVersion, callback ) {
+export function requireVersion( requiredVersion: string, callback?: ( versionMatches: boolean ) => void ): boolean {
     const thisVer = packageJson.version.split( "." ).map( str => Number( str ) );
     const reqVer = ( "" + requiredVersion ).split( "." ).map( str => Number( str ) );
     const cb = callback || (
-        match => {
+        ( match: boolean ): void => {
             if( !match ) {
                 error( `Vorple version ${requiredVersion} was requested, but Vorple is at version ${packageJson.version}` );
             }

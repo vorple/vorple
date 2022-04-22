@@ -4,20 +4,16 @@
 import havenError from "../haven/error";
 import { append } from "../haven/buffer";
 
-/**
- * @private
- * @type {boolean}
- */
 let debugState = false;
 
 
 /**
  * Show an error in the console and on the screen.
  *
- * @param {string} text  Error message
- * @returns {boolean} Always returns true, for consistency with log()
+ * @param text  The error message
+ * @returns Always returns true, for consistency with {@link log}.
  */
-export function error( text ) {
+export function error( text: string ): true {
     console.error( text );
     havenError( text );
 
@@ -28,16 +24,16 @@ export function error( text ) {
 /**
  * Print a logging message to console and on the screen if debugging mode is on.
  *
- * @param {string} text  Text to log
- * @returns {boolean} True if a debugging message was printed, false otherwise
+ * @param text  Text to log
+ * @returns Returns true if a debugging message was printed, false otherwise.
  */
-export function log( text ) {
+export function log( text: string ): boolean {
     if( !debugState ) {
         return false;
     }
 
     console.log( text );
-    append( '[' + text + ']\n', 0 );
+    append( "[" + text + "]\n", 0 );
 
     return true;
 }
@@ -46,33 +42,31 @@ export function log( text ) {
 /**
  * Set the debugging status off.
  *
- * @returns {boolean} the new status (always false)
+ * @returns Returns the new status (always false).
  */
-export function off() {
+export function off(): false {
     debugState = false;
 
-    return status();
+    return false;
 }
 
 
 /**
  * Set the debugging status on.
  *
- * @returns {boolean} the new status (always true)
+ * @returns Returns the new status (always true).
  */
-export function on() {
+export function on(): true {
     debugState = true;
 
-    return status();
+    return true;
 }
 
 
 /**
- * Returns the current state of the debugging flag.
- *
- * @returns {boolean}
+ * @returns Returns the current state of the debugging flag.
  */
-export function status() {
+export function status(): boolean {
     return debugState;
 }
 
@@ -80,10 +74,13 @@ export function status() {
 /**
  * Set or unset the the debugging flag.
  *
- * @returns {boolean} The new status of the debugging flag.
+ * @param newState  If a boolean is passed as an argument, the debugging flag is set to that value.
+ * Otherwise the flag's previous value is flipped (true to false, false to true.)
+ *
+ * @returns Returns the new status of the debugging flag.
  */
-export function toggle() {
-    debugState = !debugState;
+export function toggle( newState?: boolean ): boolean {
+    debugState = typeof newState === "boolean" ? newState : !debugState;
 
     return status();
 }

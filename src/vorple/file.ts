@@ -19,9 +19,16 @@ import * as BrowserFS from "browserfs";
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import { basename, dirname, resolve } from "path";
 
+/** @private */
 export const HANDSHAKE_FILENAME = "VpHndshk";
+
+/** @private */
 export const JS_EVAL_FILENAME = "VpJSEval";
+
+/** @private */
 export const JS_RETURN_VALUE_FILENAME = "VpJSRtrn";
+
+/** @private */
 export const JS_RETURN_VALUE_TYPE_FILENAME = "VpJSType";
 
 const HANDSHAKE_INIT = "Callooh!";
@@ -32,45 +39,34 @@ const SYNC_FS_ROOT = "/";
 /**
  * The directory root for the extended filesystem which has more space (IndexedDB)
  * and uses asynchronous access.
- *
- * @type {string}
  */
 export const ASYNC_FS_ROOT = "/extended/";
 
 /**
  *  The directory where Inform reads author-provided files (not saves or transcripts).
- *
- * @type {string}
  */
 export const INFORM_PATH = SYNC_FS_ROOT + "inform";
 
 /**
  *  The directory Vorple uses for its own files for communication between the interpreter and the game file.
- *
- * @type {string}
  */
 export const VORPLE_PATH = SYNC_FS_ROOT + "vorple";
 
 /**
  * Save file directory in the extended filesystem.
- *
- * @type {string}
  */
 export const SAVEFILE_PATH = ASYNC_FS_ROOT + "savefiles";
 
 /**
  * Transcripts directory in the extended filesystem.
- *
- * @type {string}
  */
 export const TRANSCRIPT_PATH = ASYNC_FS_ROOT + "transcripts";
 
 /**
  * The directory for temporary files. The temporary directory is emptied after leaving the page.
- *
- * @type {string}
  */
 export const TMP_PATH = "/tmp";
+
 const DEFAULT_PATH = INFORM_PATH;
 
 let fs: FSModule | null = null;
@@ -78,27 +74,37 @@ let fs: FSModule | null = null;
 
 /**
  * Check if file contents start with an Inform 7 header.
- *
- * @private
- * @param {string} contents
  */
-function hasHeader( contents ) {
+function hasHeader( contents: string ): boolean {
     return new RegExp( "^[\\-*] //.*// .*\\s+" ).test( contents );
 }
 
 
+export interface FileCopyOptions {
+    /**
+     * The directory where the operation takes place. Applies to both source and target parameters.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+
+    /**
+     * If true, any existing file of the same name will be replaced. If false, the operation will not continue if the file already exists.
+     *
+     * @default true
+     */
+    replace?: boolean;
+}
+
 /**
- * Copies a file.
+ * Copies a file to another location or name in the filesystem.
  *
- * @param {*} source File to copy
- * @param {*} target Target directory or the new name
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place. Applies to both source and target parameters.
- * @param {boolean} [options.replace=true] If true, any existing file of the same name will be replaced.
- *   If false, the operation will not continue if the file already exists.
- * @returns {boolean} True on success, false otherwise
+ * @param source  File to copy
+ * @param target  Target directory or the new name
+ * @param options  An optional options object.
+ * @returns Returns true on success, false otherwise.
  */
-export function copy( source, target, options = {}) {
+export function copy( source: string, target: string, options: FileCopyOptions = { cwd: DEFAULT_PATH, replace: true }): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         replace: true,
@@ -147,33 +153,41 @@ export function copy( source, target, options = {}) {
     }
 }
 
+export interface FileExistsOptions {
+    /**
+     * The root directory where to look for the file.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+}
+
 
 /**
  * Does a file or directory exist in the virtual filesystem?
  *
- * @param {string} filename
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {boolean} True if the file/directory exists, false otherwise
+ * @param filename  File or directory name to check
+ * @param options  An optional options object
+ * @returns Returns true if the file/directory exists, false otherwise.
  */
-export function exists( filename, options = {}) {
+export function exists( filename: string, options: FileExistsOptions = { cwd: DEFAULT_PATH }): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
     };
 
-    return fs?.existsSync( path( filename, opt.cwd ) );
+    return fs?.existsSync( path( filename, opt.cwd ) ) || false;
 }
 
 
 /**
  * Show a modal asking the user to provide a filename.
  *
- * @param {function} callback The function to call with the filename as the parameter
+ * @param callback  The function to call with the filename as the parameter
  *   after the user has selected the filename, or null if action was canceled
- * @param {string} [filepath=/inform] The root path of the file
+ * @param filepath  The root path of the file
  */
-export function filePrompt( callback, filepath = INFORM_PATH ) {
+export function filePrompt( callback: ( filename: string | null ) => void, filepath: string = INFORM_PATH ): void {
     const needsAsync = inAsyncFS( filepath );
 
     const asyncExists = async function( filename ) {
@@ -271,9 +285,10 @@ export function filePrompt( callback, filepath = INFORM_PATH ) {
 /**
  * Returns the BrowserFS object for direct access to the BrowserFS API.
  *
- * @returns {object|null} The FS object or null if the filesystem hasn't been initialized yet
+ * @see http://jvilk.com/browserfs/1.4.1/
+ * @returns Returns the FS object or null if the filesystem hasn't been initialized yet.
  */
-export function getFS() {
+export function getFS(): FSModule | null {
     return fs;
 }
 
@@ -284,38 +299,67 @@ export function getFS() {
  * (Asynchronous file access isn't officially supported so this is for internal use only.)
  *
  * @private
- * @param {string} fullPath Path to the file. Must be a full path, not relative.
+ * @param fullPath  Path to the file. Must be a full path, not relative.
  */
-export function inAsyncFS( fullPath ) {
+export function inAsyncFS( fullPath: string ): boolean {
     return fullPath.startsWith( ASYNC_FS_ROOT );
 }
 
+export interface I7FileHeader {
+    /**
+     * Project name in the header.
+     */
+    project: string;
+    /**
+     * File's ready status.
+     */
+    ready: boolean;
+}
+
+export interface FileInfo {
+    /**
+     * Contents of the text file, or files inside the directory.
+     */
+    contents: string | string[];
+    /**
+     * Parent directory.
+     */
+    directory: string;
+    /**
+     * Inform 7 header, or null if doesn't exist/apply.
+     */
+    header: I7FileHeader | null;
+    /**
+     * Base filename or directory name.
+     */
+    name: string;
+    /**
+     * True if it's a directory, false if it's a normal file.
+     */
+    isDirectory: boolean;
+    /**
+     * Full path to the file.
+     */
+    path: string;
+}
+
+export interface FileInfoOptions {
+    /**
+     * The root directory where to look for the file.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+}
 
 /**
- * Returns an object with information about a file or directory:
+ * Returns an object with information about a file or directory.
  *
- * ```
- * {
- *   contents: string | Array<string>,   // Contents of text file, or files inside the directory
- *   directory: string,                  // Parent directory
- *   header: null | {                    // Inform 7 header, or null if doesn't exist/apply
- *     project: string,                  // Project name in the header
- *     ready: boolean                    // File's ready status
- *   },
- *   name: string,                       // Base filename or directory name
- *   isDirectory: boolean,               // True if it's a directory, false if it's a normal file
- *   path: string                        // Full path to the file
- * }
- * ```
- *
- * Returns null if the file or directory doesn't exist.
- *
- * @param {string} filename
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {object|null}
+ * @param filename  File or directory
+ * @param options  An optional options object
+ * @returns Returns the FileInfo information object, or null if the file or directory doesn't exist.
  */
-export function info( filename, options = {}) {
+export function info( filename: string, options: FileInfoOptions = { cwd: DEFAULT_PATH }): FileInfo | null {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
@@ -329,23 +373,26 @@ export function info( filename, options = {}) {
         const fullPath = path( filename, opt.cwd );
         const stats = fs.statSync( fullPath );
         const isDirectory = stats.isDirectory();
-        let contents;
+        let contents: string | string[] | null;
+        let header: I7FileHeader | null = null;
 
         if( isDirectory ) {
             contents = readdir( filename, { cwd: opt.cwd });
         }
         else {
             contents = read( filename, { cwd: opt.cwd, header: true });
+
+            if( contents ) {
+                header = hasHeader( contents ) ? {
+                    project: contents.split( "//" )[ 1 ],
+                    ready: contents.charAt( 0 ) === "*"
+                } : null;
+            }
         }
 
         if( contents === null ) {
             return null;
         }
-
-        const header = hasHeader( contents ) ? {
-            project: contents.split( "//" )[ 1 ],
-            ready: contents.charAt( 0 ) === "*"
-        } : null;
 
         return {
             contents,
@@ -366,12 +413,12 @@ export function info( filename, options = {}) {
 /**
  * Creates a header for Inform 7 files. If the story is Inform 6, returns an empty string.
  *
- * @param {string} project Project's name
- * @param {string} filename Filename, path is automatically removed
- * @param {boolean} [ready=true] If true, the file is marked "ready" for Inform 7
- * @returns {string} Inform 7 header or an empty string for Inform 6
+ * @param project  Project's name
+ * @param filename  Filename, path is automatically removed
+ * @param ready  If true, the file is marked "ready" for Inform 7
+ * @returns Returns Inform 7 header or an empty string for Inform 6.
  */
-export function informHeader( project, filename, ready = true ) {
+export function informHeader( project: string, filename: string, ready = true ): string {
     const readyMark = ready ? "*" : "-";
 
     if( getInformVersion() === 7 ) {
@@ -402,7 +449,7 @@ export function informHeader( project, filename, ready = true ) {
  *
  * @returns {Promise<object>} A promise that resolves to the filesystem object
  */
-export function init() {
+export function init(): Promise<FSModule> {
     return new Promise( ( resolve, reject ) => {
         if( fs ) {
             // already initialized!
