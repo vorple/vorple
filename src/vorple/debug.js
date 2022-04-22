@@ -79,11 +79,14 @@ export function status() {
 
 /**
  * Set or unset the the debugging flag.
+ * 
+ * @param {boolean} [newState]  If a boolean is passed as an argument, the debugging flag is set to that value.
+ * Otherwise the flag's previous value is flipped (true to false, false to true.)
  *
  * @returns {boolean} The new status of the debugging flag.
  */
-export function toggle() {
-    debugState = !debugState;
+export function toggle( newState ) {
+    debugState = typeof newState === "boolean" ? newState : !debugState;
 
     return status();
 }

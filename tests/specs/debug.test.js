@@ -109,6 +109,12 @@ describe( "debugging", () => {
             expect( vorple( "debug", "status" ) ).to.be.true;
             expect( vorple( "debug", "toggle" ) ).to.be.false;
             expect( vorple( "debug", "status" ) ).to.be.false;
+            expect( vorple( "debug", "toggle", false ) ).to.be.false;
+            expect( vorple( "debug", "status" ) ).to.be.false;
+            expect( vorple( "debug", "toggle", true ) ).to.be.true;
+            expect( vorple( "debug", "status" ) ).to.be.true;
+            expect( vorple( "debug", "toggle", true ) ).to.be.true;
+            expect( vorple( "debug", "status" ) ).to.be.true;
         });
     });
 });
