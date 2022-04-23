@@ -360,7 +360,7 @@ function shuffleArray<T>( a: T[] ): T[]  {
  *      from the start when it ends
  * @param {boolean} [options.restart=false]  If true, always play from the start even
  *      when a track in the playlist is already playing
- * @param {boolean} [options.shuffle=false]  If true, shuffles the playlist in random
+ * @param {boolean} [options.shuffled=false]  If true, shuffles the playlist in random
  *      order before playing it
  */
 export function setPlaylist( list, options: AudioPlayOptions = {}) {
