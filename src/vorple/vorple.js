@@ -1,6 +1,8 @@
 /**
  * @module vorple
  */
+import satisfies from "semver/functions/satisfies";
+
 import { start } from "../haven/haven";
 import { addCallback } from "../haven/assets";
 
@@ -119,6 +121,35 @@ export function addEventListener( eventNames, listener ) {
     eventNames.forEach( name => addOrRemoveListener( name, listener, "add" ) );
 
     return () => removeEventListener( eventNames, listener );
+}
+
+
+/**
+ * Checks that the library's version matches the given version range.
+ * See https://github.com/npm/node-semver#ranges for the full syntax.
+ * 
+ * @example 
+ * // If the library version is e.g. 3.2.8 the following return true:
+ * 
+ * vorple.checkVersion("3.2")
+ * vorple.checkVersion(">=3.2.8")
+ * vorple.checkVersion("<3.3")
+ * vorple.checkVersion("3.2.8 || >=4")
+ * vorple.checkVersion("3.1 - 3.2")
+ * vorple.checkVersion("~3.2.5")
+ * 
+ * // The following return false:
+ * 
+ * vorple.checkVersion(">=4.0")
+ * vorple.checkVersion("<3.2.8")
+ * vorple.checkVersion("~3.2.9")
+ * 
+ * @param {string} versionRange The version range to check
+ * @returns {boolean} True if version matches the given range, false otherwise.
+ * @since 3.2.8
+ */
+export function checkVersion( versionRange ) {
+    return satisfies( packageJson.version, versionRange );
 }
 
 
@@ -369,10 +400,15 @@ export function removeEventListener( eventNames, listener ) {
  * If an optional callback is passed to the function, it will be run with
  * one boolean parameter: true if version matches, false otherwise.
  * Otherwise an error is thrown if the version doesn't match.
+ * 
+ * <p>This method is deprecated. Use checkVersion instead. The equivalent of e.g.
+ * <code>vorple.requireVersion("3.2")</code> is 
+ * <code>vorple.checkVersion(">=3.2")</code>.
  *
  * @param {string} requiredVersion  The minimum version of Vorple that's required.
  * @param {function} [callback]  A custom callback
  * @returns {boolean} True if version matches
+ * @deprecated Deprecated since 3.2.8 in favor of the more versatile checkVersion
  */
 export function requireVersion( requiredVersion, callback ) {
     const thisVer = packageJson.version.split( '.' ).map( str => Number( str ) );
