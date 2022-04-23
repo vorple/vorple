@@ -88,11 +88,11 @@ export function isBlocked(): boolean {
  *
  * Example:
  * ```
- * layout.openTag( 'div', 'vorple', 0 )  -->  <div class="vorple"></div>
+ * vorple.layout.openTag( 'div', 'vorple' )  -->  <div class="vorple"></div>
  * ```
  *
  * @param tagName  Name of the tag to create
- * @param {string} classes  Class names to add to the element
+ * @param classes  Class names to add to the element
  * @param targetWindow  The target window in the Haven engine. This is practically always 0.
  *
  * @see [[closeTag]]
@@ -120,14 +120,14 @@ export function openTag( tagName: string, classes: string, targetWindow = 0 ): t
  *
  * If the element doesn't exist, the function doesn't do anything.
  *
- * @param {string|object} target  The target element
+ * @param target  The target element
  * @param speed  The duration of the scroll animation in milliseconds
  *
- * @returns {promise} A promise that resolves to true when the scroll animation
+ * @returns Returns a promise that resolves to true when the scroll animation
  *   ends, or resolves to false if no scrolling was needed (element doesn't
  *   exist or is already in view.)
  */
-export function scrollTo( target, speed = 500 ): Promise<boolean> {
+export function scrollTo( target: string | JQuery.PlainObject, speed = 500 ): Promise<boolean> {
     const $target = $( target );
 
     // if the element doesn't exist, do nothing
@@ -160,8 +160,8 @@ export function scrollTo( target, speed = 500 ): Promise<boolean> {
 /**
  * Scroll to the end of the document.
  *
- * @param {number} [speed=500]  The duration of the scroll animation in milliseconds
- * @returns {promise} A promise that resolves when the scroll animation ends
+ * @param speed  The duration of the scroll animation in milliseconds
+ * @returns Returns a promise that resolves when the scroll animation ends.
  */
 export function scrollToEnd( speed = 500 ): Promise<void> {
     const documentHeight = $( document ).height() || 0;

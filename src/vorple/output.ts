@@ -5,16 +5,27 @@
  * @since 3.2.0
  */
 
-export interface FilterMeta {
+export interface OutputFilterMeta {
+    /**
+     * The current output.
+     */
     output: string;
+
+    /**
+     * The original output before it went through the filters.
+     */
     original: string;
+
+    /**
+     * Style information: whether the output will be printed bold and/or italic.
+     */
     style: {
         bold: boolean;
         italic: boolean;
     }
 }
 
-export type OutputFilter = ( input: string, meta: FilterMeta ) => boolean;
+export type OutputFilter = ( input: string, meta: OutputFilterMeta ) => boolean;
 
 const outputFilters: OutputFilter[] = [];
 
@@ -22,10 +33,12 @@ const outputFilters: OutputFilter[] = [];
 /**
  * Registers a new output filter.
  *
- * @param {function} filter
- * @returns {function} A function that can be called to remove the filter
+ * @param filter  The output filter to add.
+ * @returns  A function that can be called to remove the filter
+ *
+ * @see https://vorple-if.com/docs/filters.html
  */
-export function addOutputFilter( filter ) {
+export function addOutputFilter( filter: OutputFilter ): () => boolean {
     outputFilters.push( filter );
     return (): boolean => removeOutputFilter( filter );
 }
@@ -34,10 +47,10 @@ export function addOutputFilter( filter ) {
 /**
  * Runs output through all output filters.
  *
- * @param {string} originalOutput
- * @private
+ * @param originalOutput  The original output
+ * @internal
  */
-export function applyOutputFilters( originalOutput, meta ) {
+export function applyOutputFilters( originalOutput: string, meta: OutputFilterMeta ): string {
     let finalOutput = originalOutput;
 
     for( let i = 0; i < outputFilters.length; ++i ) {
@@ -64,9 +77,10 @@ export function applyOutputFilters( originalOutput, meta ) {
 /**
  * Removes a filter from the registered output filters.
  *
- * @param {function} filter The filter to remove
+ * @param filter  A reference to the filter to remove
+ * @returns Returns true if the filter was removed, false if the filter wasn't registered.
  */
-export function removeOutputFilter( filter ) {
+export function removeOutputFilter( filter: OutputFilter ): boolean {
     const index = outputFilters.indexOf( filter );
 
     if( index === -1 ) {

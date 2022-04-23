@@ -7,7 +7,7 @@
  *
  * @module glk
  * @since 3.2.0
- * @private
+ * @internal
  */
 
 const { append, flush } = require( "../haven/buffer" );

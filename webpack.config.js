@@ -14,7 +14,7 @@ module.exports = {
         port: process.env.PORT || 9000
     },
     devtool: process.env.NODE_ENV === "production" ? "source-map" : "inline-source-map",
-    mode: process.env.NODE_ENV || "production",
+    mode: process.env.NODE_ENV === "production" ? "production" : "development",
     output: {
         filename: "interpreter/vorple.min.js"
     },

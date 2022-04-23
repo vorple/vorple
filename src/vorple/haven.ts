@@ -2,7 +2,7 @@
  * Helper functions and monkey patches to the Haven engine
  *
  * @module haven
- * @private
+ * @internal
  */
 
 import "./glk";
@@ -17,7 +17,7 @@ interface HavenStyleHints {
 }
 
 // Inform 7 creates a file that puts the story file in this variable
-let base64StoryFile = null;
+let base64StoryFile: string | null = null;
 
 const stylehints: HavenStyleHints[] = [];
 
@@ -55,9 +55,9 @@ stylehints[ 4 ] = {
  * if a file hasn't been specified
  *
  * @since 3.2.0
- * @private
+ * @internal
  */
-export function initQuixe( storyfile ) {
+export function initQuixe( storyfile: string ): void {
     if( !window.Quixe ) {
         error( "Can't find Quixe" );
     }
@@ -67,7 +67,7 @@ export function initQuixe( storyfile ) {
     }
 
     window.GlkOte = {
-        log: () => {}
+        log: (): void => {}
     };
 
     window.GiLoad.load_run({}, storyfile, typeof storyfile === "string" ? "base64" : undefined );
@@ -78,9 +78,9 @@ export function initQuixe( storyfile ) {
  * Load the story file.
  *
  * @since 3.2.0
- * @private
+ * @internal
  */
-export function loadStoryFile() {
+export function loadStoryFile(): Promise<number[]> | string {
     // use "storyfile" parameter if it exists, to bypass the Quixe file loader
     const url = get( "storyfile" ) || get( "story" );
 
@@ -93,7 +93,7 @@ export function loadStoryFile() {
     return new Promise( ( resolve, reject ) => {
         const httpRequest = new XMLHttpRequest();
 
-        httpRequest.onreadystatechange = function() {
+        httpRequest.onreadystatechange = function(): void {
             if( httpRequest.readyState == XMLHttpRequest.DONE ) {
                 switch( httpRequest.status ) {
                     case 200:
@@ -118,19 +118,17 @@ export function loadStoryFile() {
  * Inform 7 interpreter template calls this to set the story file data.
  *
  * @since 3.2.0
- * @private
+ * @internal
  */
-export function setBase64StoryFile( data ) {
+export function setBase64StoryFile( data: string ): void {
     base64StoryFile = data;
 }
 
 
 /**
  * Based on Glulx style code, set the basic style of the text being printed.
- *
- * @param {number} style
  */
-export function setStyle( style ) {
+export function setStyle( style: number ): void {
     /*
      #define style_Normal (0)
      #define style_Emphasized (1)
@@ -158,12 +156,8 @@ export function setStyle( style ) {
 
 /**
  * Changes the appearance of a default style.
- *
- * @param style
- * @param hint
- * @param value
  */
-export function setStyleHint( style, hint, value ) {
+export function setStyleHint( style: number, hint: number, value: number ): void {
     if( !stylehints[ style ] ) {
         stylehints[ style ] = {
             bold: false,

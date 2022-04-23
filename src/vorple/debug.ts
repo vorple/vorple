@@ -72,7 +72,7 @@ export function status(): boolean {
 
 
 /**
- * Set or unset the the debugging flag.
+ * Set or unset the debugging flag.
  *
  * @param newState  If a boolean is passed as an argument, the debugging flag is set to that value.
  * Otherwise the flag's previous value is flipped (true to false, false to true.)

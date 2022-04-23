@@ -41,14 +41,18 @@ const keyQueue: string[] = [];
 /**
  * If there is a command waiting in the queue, submit it to the parser.
  * The command is then removed from the queue.
+ *
+ * @internal
  */
-function runCommandQueue() {
+function runCommandQueue(): boolean {
     if( commandQueue.length > 0 ) {
         const command = commandQueue.shift() as ParserCommand;
 
         submit( command.cmd, command.silent );
         return false;
     }
+
+    return true;
 }
 
 
@@ -57,8 +61,9 @@ function runCommandQueue() {
  * The key is then removed from the queue.
  *
  * @since 3.2.0
+ * @internal
  */
-function runKeyQueue() {
+function runKeyQueue(): boolean {
     if( keyQueue.length > 0 ) {
         const key = keyQueue.shift() as string;
         keypress.send({ keyCode: key.charCodeAt( 0 ), force: true });
@@ -72,11 +77,13 @@ function runKeyQueue() {
 /**
  * Registers a new input filter.
  *
- * @param {function} filter
- * @returns {function} A function that can be called to remove the filter
+ * @see https://vorple-if.com/docs/filters.html#input-filters
  * @since 3.2.0
+ *
+ * @param filter  The input filter to register
+ * @returns Returns a function that can be called to remove the filter.
  */
-export function addInputFilter( filter ) {
+export function addInputFilter( filter: InputFilter ): () => void {
     inputFilters.push( filter );
     return () => removeInputFilter( filter );
 }
@@ -85,11 +92,12 @@ export function addInputFilter( filter ) {
 /**
  * Runs input through all input filters.
  *
- * @param {string} originalInput
  * @since 3.2.0
- * @private
+ * @internal
+ * @param originalInput  The original input
+ * @param meta  Associated input meta
  */
-export async function applyInputFilters( originalInput, meta ) {
+export async function applyInputFilters( originalInput: string, meta: InputFilterMeta ): Promise<string | false> {
     let finalInput = originalInput;
 
     // block the UI while filters run, to prevent the player from typing before the previous command has resolved
@@ -153,7 +161,7 @@ export async function applyInputFilters( originalInput, meta ) {
  *
  * @since 3.2.0
  */
-export function clearCommandQueue() {
+export function clearCommandQueue(): void {
     commandQueue.length = 0;
 }
 
@@ -163,7 +171,7 @@ export function clearCommandQueue() {
  *
  * @since 3.2.0
  */
-export function clearKeyQueue() {
+export function clearKeyQueue(): void {
     keyQueue.length = 0;
 }
 
@@ -171,21 +179,21 @@ export function clearKeyQueue() {
 /**
  * Manually hide the prompt. It won't be shown until unhide() is called.
  */
-export function hide() {
+export function hide(): void {
     $( getHavenPrompt() ).addClass( "force-hidden" );
 }
 
 
 /**
- * Haven's history API
+ * Haven's history API.
  */
 export { history } from "../haven/prompt";
 
 
 /**
- * Hook into Haven's input listeners
+ * Hook into Haven's input listeners.
  */
-export function init() {
+export function init(): void {
     // Hook into the lineinput's ready event for passing commands from the queue.
     addEventListener( "expectCommand", runCommandQueue );
 
@@ -198,11 +206,11 @@ export function init() {
  * Add a command to the command queue. If the line input is ready, execute
  * the command immediately.
  *
- * @param {string} cmd
- * @param {boolean} [silent=false]  If true, the command isn't shown on the
- *      screen. The result of the command will still print normally.
+ * @param cmd  Command to add
+ * @param silent  If true, the command isn't shown on the screen.
+ *      The result of the command will still print normally.
  */
-export function queueCommand( cmd, silent = false ) {
+export function queueCommand( cmd: string, silent = false ): void {
     commandQueue.push({
         cmd: cmd,
         silent: !!silent
@@ -218,10 +226,10 @@ export function queueCommand( cmd, silent = false ) {
  * Add a keypress to the command queue. If the engine is waiting for a keypress,
  * send it immediately.
  *
- * @param {string} key A one-character string containing the pressed character
+ * @param key A one-character string containing the pressed character
  * @since 3.2.0
  */
-export function queueKeypress( key ) {
+export function queueKeypress( key: string ): void {
     keyQueue.push( key );
 
     if( getMode() === "getkey" ) {
@@ -231,12 +239,13 @@ export function queueKeypress( key ) {
 
 
 /**
- * Removes a filter from the registered input filters.
+ * Removes a filter from registered input filters.
  *
- * @param {function} filter The filter to remove
+ * @param filter  The filter to remove
+ * @returns Returns true if the filter was removed, false if the filter wasn't registered.
  * @since 3.2.0
  */
-export function removeInputFilter( filter ) {
+export function removeInputFilter( filter: InputFilter ): boolean {
     const index = inputFilters.indexOf( filter );
 
     if( index === -1 ) {
@@ -255,16 +264,23 @@ export function removeInputFilter( filter ) {
  * The currently active command prompt is changed, and the new prefix is used
  * for all future command prompts until changed again.
  *
- * @param prefix
- * @param {boolean} [html=false]  If true, the prefix is inserted into the DOM
- *   as HTML. Otherwise HTML is escaped and shown as-is.
+ * Note that calling this function directly with JavaScript changes the prompt
+ * in the interpreter, but doesn't pass the information to the story file.
+ * Therefore checking what the prefix is in the Inform story might not return
+ * correct values because the variable that the story uses to track the prefix
+ * content hasn't been changed. In most cases it's recommended to use the Vorple
+ * extensions/libraries in Inform to change the prefix.
  *
- *  @returns {string} The new prefix.
+ * @param prefix  The new prefix
+ * @param isHtml  If true, the prefix is inserted into the DOM as HTML.
+ *      Otherwise HTML is escaped and shown as-is.
+ *
+ *  @returns Returns the new prefix.
  */
-export function setPrefix( prefix, html = false ) {
+export function setPrefix( prefix: string, isHtml = false ): string {
     let newPrefix = prefix;
 
-    if( !html ) {
+    if( !isHtml ) {
         newPrefix = $( "<div>" ).text( prefix ).html();
     }
 
@@ -277,9 +293,9 @@ export function setPrefix( prefix, html = false ) {
 /**
  * Set the lineinput's value.
  *
- * @param value
+ * @param value  The new value
  */
-export function setValue( value ) {
+export function setValue( value: string ): void {
     $( getHavenPrompt() ).find( "#lineinput-field" ).val( value );
 }
 
@@ -287,12 +303,11 @@ export function setValue( value ) {
 /**
  * Trigger the submit event of the lineinput.
  *
- * @param {string|null} [command] The command to send, if null or left out
- *      the lineinput field's value is used.
- * @param {boolean} [silent=false]  If true, the command isn't shown on the
- *      screen. The result of the command will still print normally.
+ * @param command  The command to send, if null or left out the lineinput field's current value is used.
+ * @param silent  If true, the command isn't shown on the screen.
+ *      The result of the command will still print normally.
  */
-export function submit( command, silent = false ) {
+export function submit( command?: string | null, silent = false ): void {
     sendCommand( new CustomEvent( "submit", {
         detail: {
             silent: !!silent,
@@ -304,10 +319,10 @@ export function submit( command, silent = false ) {
 
 /**
  * Remove manual hiding of the prompt. It's called rather clumsily "unhide"
- * instead of "show" to stress that it only undoes what the hide() method did,
+ * instead of "show" to stress that it only undoes what the [[hide]] method did,
  * and it doesn't force the prompt to appear if it has been hidden or removed
  * by some other means.
  */
-export function unhide() {
+export function unhide(): void {
     $( getHavenPrompt() ).removeClass( "force-hidden" );
 }

@@ -2,8 +2,8 @@
  * This module is the access point to the virtual filesystem.
  *
  * The system uses BrowserFS to handle the virtual filesystem in browser's localstorage.
- * See https://jvilk.com/browserfs/2.0.0-beta/classes/_backend_localstorage_.localstoragefilesystem.html
- * for the full API. The getFS() method can be used to retrieve the filesystem object that can be used
+ * See https://jvilk.com/browserfs/1.4.1/classes/_backend_localstorage_.localstoragefilesystem.html
+ * for the full API. The [[getFS]] method can be used to retrieve the filesystem object that can be used
  * to access the BrowserFS API directly.
  *
  * All methods in this module use the synchronous versions of the filesystem methods
@@ -19,16 +19,16 @@ import * as BrowserFS from "browserfs";
 import type { FSModule } from "browserfs/dist/node/core/FS";
 import { basename, dirname, resolve } from "path";
 
-/** @private */
+/** @internal */
 export const HANDSHAKE_FILENAME = "VpHndshk";
 
-/** @private */
+/** @internal */
 export const JS_EVAL_FILENAME = "VpJSEval";
 
-/** @private */
+/** @internal */
 export const JS_RETURN_VALUE_FILENAME = "VpJSRtrn";
 
-/** @private */
+/** @internal */
 export const JS_RETURN_VALUE_TYPE_FILENAME = "VpJSType";
 
 const HANDSHAKE_INIT = "Callooh!";
@@ -145,7 +145,7 @@ export function copy( source: string, target: string, options: FileCopyOptions =
 
     try {
         const contents = read( sourceFilename, { header: true });
-        write( targetFilename, contents, { header: false });
+        write( targetFilename, contents || "", { header: false });
         return true;
     }
     catch( e ) {
@@ -190,7 +190,7 @@ export function exists( filename: string, options: FileExistsOptions = { cwd: DE
 export function filePrompt( callback: ( filename: string | null ) => void, filepath: string = INFORM_PATH ): void {
     const needsAsync = inAsyncFS( filepath );
 
-    const asyncExists = async function( filename ) {
+    const asyncExists = async( filename: string ): Promise<boolean> => {
         return new Promise( resolve => {
             const fs = getFS();
 
@@ -208,7 +208,7 @@ export function filePrompt( callback: ( filename: string | null ) => void, filep
         });
     };
 
-    const askForFilename = function() {
+    const askForFilename = (): void => {
         window.vex.dialog.open({
             message: "Enter filename:",
             input: [
@@ -245,7 +245,7 @@ export function filePrompt( callback: ( filename: string | null ) => void, filep
         });
     };
 
-    const askToOverwrite = function( finalPath ) {
+    const askToOverwrite = ( finalPath: string ): void => {
         window.vex.dialog.open({
             message: "File already exists. Overwrite?",
             buttons: [
@@ -264,9 +264,9 @@ export function filePrompt( callback: ( filename: string | null ) => void, filep
     };
 
     if( needsAsync ) {
-        ( async function() {
+        ( async(): Promise<void> => {
             if( !await asyncExists( filepath ) ) {
-                mkdir( filepath, askForFilename );
+                mkdir( filepath );
             }
 
             askForFilename();
@@ -298,7 +298,7 @@ export function getFS(): FSModule | null {
  *
  * (Asynchronous file access isn't officially supported so this is for internal use only.)
  *
- * @private
+ * @internal
  * @param fullPath  Path to the file. Must be a full path, not relative.
  */
 export function inAsyncFS( fullPath: string ): boolean {
@@ -411,12 +411,12 @@ export function info( filename: string, options: FileInfoOptions = { cwd: DEFAUL
 
 
 /**
- * Creates a header for Inform 7 files. If the story is Inform 6, returns an empty string.
+ * Creates a header for Inform 7 files. If the story is made with Inform 6, this method returns an empty string.
  *
  * @param project  Project's name
  * @param filename  Filename, path is automatically removed
  * @param ready  If true, the file is marked "ready" for Inform 7
- * @returns Returns Inform 7 header or an empty string for Inform 6.
+ * @returns Returns the Inform 7 header or an empty string for Inform 6.
  */
 export function informHeader( project: string, filename: string, ready = true ): string {
     const readyMark = ready ? "*" : "-";
@@ -439,6 +439,7 @@ export function informHeader( project: string, filename: string, ready = true ):
  * available.
  *
  * @example
+ * ```
  * async function getAccessToFS() {
  *   const fs = await vorple.file.init();
  *
@@ -446,8 +447,9 @@ export function informHeader( project: string, filename: string, ready = true ):
  *   // also all vorple.file.* methods are now available
  *   vorple.file.write("info.txt", "Filesystem is now available");
  * }
+ * ```
  *
- * @returns {Promise<object>} A promise that resolves to the filesystem object
+ * @returns Returns a promise that resolves to the filesystem object.
  */
 export function init(): Promise<FSModule> {
     return new Promise( ( resolve, reject ) => {
@@ -503,6 +505,15 @@ export function init(): Promise<FSModule> {
     });
 }
 
+export interface FileReadyOptions {
+    /**
+     * The root directory of the file.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+}
+
 /**
  * Check if a file has been marked ready for Inform 7 to read.
  *
@@ -511,14 +522,13 @@ export function init(): Promise<FSModule> {
  * it's important to make a difference between invalid operation and a file
  * that has been marked not ready.
  *
- * This method always returns false on Inform 6.
+ * @param filename  Path to the file
+ * @param options  An optional options object
+ * @returns Returns true if file is ready, false on error or not ready.
  *
- * @param {string} filename
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {boolean} True if file is ready, false on error or not ready
+ * This method always returns false on Inform 6.
  */
-export function isReady( filename, options = {}) {
+export function isReady( filename: string, options: FileReadyOptions = {}): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
@@ -555,15 +565,15 @@ export function isReady( filename, options = {}) {
  *
  * In Inform 6 this method does nothing and always returns false.
  *
- * @param {string} filename
- * @param {boolean} [ready=true] If true, marks the file ready. Otherwise marks the file not ready.
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {boolean} True if operation was successful, false otherwise.
- *  Returns true even if no change was made to the file (was already marked ready.)
+ * @param filename  Path to the file
+ * @param ready  If true, marks the file ready. Otherwise marks the file not ready.
+ * @param options  An optional options object
+ * @returns Returns true if operation was successful, false otherwise.
+ *      Returns true even if no change was made to the file (was already marked ready.)
+ *      Always returns false on Inform 6.
  */
 
-export function markReady( filename, ready = true, options = {}) {
+export function markReady( filename: string, ready = true, options: FileReadyOptions = {}): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
@@ -597,15 +607,14 @@ export function markReady( filename, ready = true, options = {}) {
 /**
  * Create a new directory in the virtual filesystem.
  *
- * This does not create missing subdirectories, e.g. mkdir( 'foo/bar' ) won't work
- * if directory 'foo' doesn't exist.
+ * This does not create missing subdirectories, e.g. `mkdir( 'foo/bar' )`
+ * won't work if directory 'foo' doesn't exist.
  *
- * @param {string} dirname
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {boolean} True if directory was created, false otherwise
+ * @param dirname  The directory to create
+ * @param options  An optional options object
+ * @returns Returns true if a directory was created, false otherwise.
  */
-export function mkdir( dirname, options = {}): boolean {
+export function mkdir( dirname: string, options: DirectoryOptions = {}): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
@@ -630,21 +639,34 @@ export function mkdir( dirname, options = {}): boolean {
     }
 }
 
+export interface MoveFileOptions {
+    /**
+     * The directory where the operation takes place. Applies to both source and target parameters.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+
+    /**
+     * If true, any existing file of the same name will be replaced.
+     * If false, the operation will not continue if the file already exists.
+     * This option is ignored if the source is a directory (a directory will never overwrite a file.)
+     *
+     * @default true
+     */
+    replace?: boolean;
+}
 
 /**
  * Moves a file or directory to another directory.
  * If the target doesn't exist, the file or directory is renamed.
  *
- * @param {*} source File/directory to move
- * @param {*} target Target directory or the new name
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place. Applies to both source and target parameters.
- * @param {boolean} [options.replace=true] If true, any existing file of the same name will be replaced.
- *   If false, the operation will not continue if the file already exists.
- *   This option is ignored if the source is a directory (a directory will never overwrite a file.)
- * @returns {boolean} True on success, false otherwise
+ * @param source  File/directory to move
+ * @param target  Target directory or the new name
+ * @param options  An optional options object
+ * @returns Returns true on success, false otherwise.
  */
-export function move( source, target, options = {}) {
+export function move( source: string, target: string, options: MoveFileOptions = {}): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         replace: true,
@@ -704,32 +726,57 @@ export function move( source, target, options = {}) {
  * `/inform/bar/foo.txt`.
  *
  * @example
+ * ```
  * vorple.file.path( "foo.txt" );                   // --> /inform/foo.txt
  * vorple.file.path( "foo.txt", "bar" );            // --> /inform/bar/foo.txt
  * vorple.file.path( "foo.txt", "/bar" );           // --> /bar/foo.txt
  * vorple.file.path( "../foo.txt", "/bar/xyz" );    // --> /bar/foo.txt
  * vorple.file.path( "foo.txt", "/" );              // --> /foo.txt
  * vorple.file.path( "/foo.txt", "/bar/xyz" );      // --> /foo.txt
+ * ```
  *
- * @param {string} filename
- * @param {string} path
+ * @param filename  Name of the file
+ * @param path  Path where the file is appended
+ * @returns Returns the full path.
  */
-export function path( filename, path = "." ) {
+export function path( filename, path = "." ): string {
     return resolve( DEFAULT_PATH, path, filename );
+}
+
+
+export interface ReadFileOptions {
+    /**
+     * Is the file to be read a binary file.
+     *
+     * @default false
+     */
+    binary?: boolean;
+
+    /**
+     * The root directory where to look for the file.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+
+    /**
+     * If true, return value contains the Inform 7 header if present.
+     * Otherwise the header is not included in the return value.
+     *
+     * @default false
+     */
+    header?: boolean;
 }
 
 
 /**
  * Read a text file from the virtual filesystem
  *
- * @param {string} filename
- * @param {object} [options={}]
- * @param {boolean} [options.binary=false] Is it a binary file?
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @param {boolean} [options.header=false] If true, return value contains the Inform 7 header if present. Otherwise the header is not included in the return value.
- * @returns {string|null} The contents of the file, or null file could not be read
+ * @param filename  The file to read
+ * @param options  An optional options object
+ * @returns Returns the contents of the file, or null file could not be read.
  */
-export function read( filename, options = {}) {
+export function read( filename: string, options: ReadFileOptions = {}): string | null {
     const opt = {
         binary: false,
         cwd: DEFAULT_PATH,
@@ -763,16 +810,25 @@ export function read( filename, options = {}) {
 }
 
 
+export interface DirectoryOptions {
+    /**
+     * The root directory of the file.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+}
+
+
 /**
- * Returns the contents of a directory. Returns null if the directory doesn't exist
- * or the directory is actually a file.
+ * Reads the contents of a directory.
  *
- * @param {string} dirname
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {array|null} The list of files in the directory, or null on error
+ * @param dirname  Name of the directory
+ * @param options  An optional options object
+ * @returns Returns the list of files and directories as an array of strings.
+ *      Returns null if the directory doesn't exist or if trying to read a file.
  */
-export function readdir( dirname, options = {}) {
+export function readdir( dirname: string, options: DirectoryOptions = {}): string[] | null {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
@@ -792,11 +848,11 @@ export function readdir( dirname, options = {}) {
  * the resource itself. This is used to get the resource files from the Borogove
  * editor.
  *
- * @param {string} url
- * @returns {string} The URL or a data URL
+ * @param url  URL to the resource
+ * @returns Returns the URL or a data URL.
  * @since 3.2.2
  */
-export function resourceUrl( url ) {
+export function resourceUrl( url: string ): string {
     // don't do anything to non-strings or empty strings
     if( typeof url !== "string" || !url ) {
         return url;
@@ -821,12 +877,11 @@ export function resourceUrl( url ) {
 /**
  * Remove a directory from the virtual filesystem. Directory must be empty.
  *
- * @param {string} dirname
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {boolean} True if directory was removed, false otherwise
+ * @param dirname
+ * @param options  An optional options object
+ * @returns Returns true if a directory was removed, false otherwise.
  */
-export function rmdir( dirname, options = {}) {
+export function rmdir( dirname: string, options: DirectoryOptions = {}): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
@@ -845,12 +900,12 @@ export function rmdir( dirname, options = {}) {
 /**
  * Ask the user to choose a save file to restore.
  *
- * @param {string} gameid The IFID of the game
- * @param {function} callback The function to call with the filename as the parameter
+ * @param gameid The IFID of the game
+ * @param callback The function to call with the filename as the parameter
  *   after the user has selected the filename, or null if action was canceled
- * @private
+ * @internal
  */
-export async function restoreFilePrompt( gameid, callback ) {
+export async function restoreFilePrompt( gameid: string, callback: ( filename: string | null ) => void ): Promise<void> {
     const fullPath = path( gameid, SAVEFILE_PATH );
     const fs = getFS();
     const savefiles: string[] = await new Promise( resolve => fs?.readdir( fullPath, ( err, result ) => resolve( result || [] ) ) );
@@ -893,7 +948,7 @@ export async function restoreFilePrompt( gameid, callback ) {
                 // filesystem so that the engine can read it synchronously
                 if( fs ) {
                     fs.readFile( source, {}, ( err, contents ) => {
-                        write( dest, contents, { binary: true });
+                        write( dest, contents || "", { binary: true });
                         callback( dest );
                     });
                 }
@@ -909,11 +964,12 @@ export async function restoreFilePrompt( gameid, callback ) {
 /**
  * Ask the user to provide a filename for saving the transcript.
  *
- * @param {function} callback The function to call with the filename as the parameter
+ * @param gameid  The IFID of the game
+ * @param callback  The function to call with the filename as the parameter
  *   after the user has selected the filename, or null if action was canceled
- * @private
+ * @internal
  */
-export function saveFilePrompt( gameid, callback ) {
+export function saveFilePrompt( gameid: string, callback: ( filename: string | null ) => void ): void {
     filePrompt( callback, path( gameid, SAVEFILE_PATH ) );
 }
 
@@ -921,11 +977,11 @@ export function saveFilePrompt( gameid, callback ) {
 /**
  * Ask the user to provide a filename for saving the transcript.
  *
- * @param {function} callback The function to call with the filename as the parameter
+ * @param callback  The function to call with the filename as the parameter
  *   after the user has selected the filename, or null if action was canceled
- * @private
+ * @internal
  */
-export function transcriptFilePrompt( callback ) {
+export function transcriptFilePrompt( callback: ( filename: string | null ) => void ): void {
     const choice = prompt( "Enter filename" );
 
     if( !choice ) {
@@ -936,16 +992,24 @@ export function transcriptFilePrompt( callback ) {
 }
 
 
+export interface UnlinkOptions {
+    /**
+     * The root directory of the file.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+}
+
 /**
  * Unlink (i.e. delete) a file from the virtual filesystem.
- * Use rmdir() to remove directories.
+ * Use [[rmdir]] to remove directories.
  *
- * @param {string} filename
- * @param {object} [options={}]
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @returns {boolean} True if file was removed, false otherwise
+ * @param filename  File to unlink
+ * @param options  An optional options object
+ * @returns Returns true if the file was removed, false otherwise.
  */
-export function unlink( filename, options = {}) {
+export function unlink( filename: string, options: UnlinkOptions = {}): boolean {
     const opt = {
         cwd: DEFAULT_PATH,
         ...options
@@ -961,24 +1025,60 @@ export function unlink( filename, options = {}) {
 }
 
 
+export interface WriteFileOptions {
+    /**
+     * If true, contents are appended to the file, otherwise the file is overwritten with the new content.
+     *
+     * @default false
+     */
+    append?: boolean;
+
+    /**
+     * If true, writes a binary file instead of a text file.
+     *
+     * @default false
+     */
+    binary?: boolean;
+
+    /**
+     * The directory where the operation takes place.
+     *
+     * @default "/inform"
+     */
+    cwd?: string;
+
+    /**
+     * If true, an Inform 7 header is added to the start of the file. On Inform 6 this option does nothing.
+     *
+     * @default true
+     */
+    header?: boolean;
+
+    /**
+     * The project name that's used in the Inform 7 header. Does nothing on Inform 6 or if the [[header]] option is not set.
+     *
+     * @default "VORPLE"
+     */
+    project?: string;
+
+    /**
+     * If true, the header gets a "ready" mark (`*`) to signal Inform 7 that the file can be read. Otherwise the header is marked not ready (`-`).
+     *  Does nothing on Inform 6 or if the [[header]] option is not set.
+     *
+     * @default true
+     */
+    ready?: boolean;
+}
+
 /**
  * Write a file to the virtual filesystem.
  *
- * @param {string} filename
- * @param {string|array} contents Contents of what to write to the file, either a string or a byte array
- * @param {object} [options={}]
- * @param {boolean} [options.append=false] If true, contents are appended to the file, otherwise the file is overwritten with the new content
- * @param {boolean} [options.binary=false] If true, writes a binary file instead of a text file
- * @param {string} [options.cwd=/inform] The directory where the operation takes place
- * @param {boolean} [options.header=true] If true, an Inform 7 header is added to the start of the file. On Inform 6 this option does nothing.
- * @param {string} [options.project=VORPLE] The project name that's used in the Inform 7 header.
- *  Does nothing on Inform 6 or if `options.header` is false.
- * @param {boolean} [options.ready=true] If true, the header gets a "ready" mark (`*`) to signal Inform 7 that the file can be read.
- *  Otherwise the header is marked not ready (`-`).
- *  Does nothing on Inform 6 or if `options.header` is false.
- * @returns {boolean} True on success, false otherwise
+ * @param filename  Filename/path to write
+ * @param contents Contents of what to write to the file, either a string or a byte array
+ * @param options  An optional options object
+ * @returns Returns true on success, false otherwise.
  */
-export function write( filename, contents, options = {}) {
+export function write( filename: string, contents: string | Uint8Array | Buffer, options: WriteFileOptions = {}): boolean {
     const opt = {
         append: false,
         binary: false,
@@ -1034,7 +1134,7 @@ export function write( filename, contents, options = {}) {
         if( inAsyncFS( fullPath ) ) {
             // This handles the "special case" of writing savefiles and transcripts - not guaranteed to work in the general case!
             if( contents.length === 0 ) {
-                return;
+                return false;
             }
             if( opt.append ) {
                 fs?.appendFile( fullPath, contents, encoding, err => console.log( err ) );

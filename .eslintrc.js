@@ -19,6 +19,9 @@ module.exports = {
         } ],
         "@typescript-eslint/interface-name-prefix": 0,
         "@typescript-eslint/no-empty-function": 0,
+        "@typescript-eslint/no-empty-interface": [ 1, {
+            "allowSingleExtends": true
+        } ],
         "@typescript-eslint/no-unused-vars": [ 1, {
             "argsIgnorePattern": "^_"
         } ],
