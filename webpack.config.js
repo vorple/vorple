@@ -13,8 +13,8 @@ module.exports = {
         compress: true,
         port: process.env.PORT || 9000
     },
-    devtool: "inline-source-map",
-    mode: process.env.ENV || "production",
+    devtool: process.env.NODE_ENV === "production" ? "source-map" : "inline-source-map",
+    mode: process.env.NODE_ENV || "production",
     output: {
         filename: "interpreter/vorple.min.js"
     },

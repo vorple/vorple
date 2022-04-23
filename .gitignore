@@ -5,3 +5,9 @@ dist
 errorShots
 lib
 yarn-error.log
+
+src/vorple/*.js*
+src/vorple/*.d.ts
+!src/vorple/glk*.js
+src/index.*
+!src/index.ts
