@@ -218,9 +218,33 @@ describe( "Audio methods", () => {
             expect( getVolume( "change" ) ).to.equal( 0 );
         });
 
-        it( "fading out a non-audio element should do nothing", () => {
+        it( "fading out an audio element returns true", () => {
+            startSound( "one" );
+            expect( vorple( "audio", "fadeOut", "#one" ) ).to.be.true;
+        });
+
+        it( "fading out an audio element passes true to callback", async() => {
+            startSound( "one" );
+            const retval = await browser.executeAsync(done => {
+                vorple.audio.fadeOut( "#one", 10, done );
+            });
+            expect( retval ).to.be.true;
+        });
+
+        it( "fading out a non-audio element does nothing", () => {
             expect( () => vorple( "audio", "fadeOut", "body" ) ).to.not.throw();
             expectElement( $( "body" ) ).toExist();
+        });
+
+        it( "fading out a non-audio element returns false", () => {
+            expect( vorple( "audio", "fadeOut", "body" ) ).to.be.false;
+        });
+
+        it( "fading out a non-audio element passes false to callback", async() => {
+            const retval = await browser.executeAsync( done => {
+                vorple.audio.fadeOut( "body", 10, done );
+            });
+            expect( retval ).to.be.false;
         });
     });
 });

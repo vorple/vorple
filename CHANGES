@@ -19,6 +19,8 @@ Release 3.2.8 (2022-04-)
 - Fixed vorple.file.info() possibly returning false instead of null in some 
   cases when reading a file failed
 - Fixed audio queue not respecting the looping flag of upcoming tracks
+- Fixed vorple.audio.fadeOut() not passing the success boolean to the callback
+  parameter as documented
 - Added an optional parameter to vorple.debug.toggle() to set the debug flag
   to a specific state instead of flipping the current state
 
