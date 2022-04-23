@@ -128,7 +128,7 @@ export function fadeOut( element, duration, callback ) {
         }
 
         if( typeof callback === "function" ) {
-            callback();
+            callback( remove );
         }
     };
 
@@ -165,7 +165,6 @@ export function fadeOut( element, duration, callback ) {
             $sound.data( "fadeouttimer", newTimer );
         }
         else {
-            $sound.remove();
             runCallbackIfExists( true );
         }
     }
