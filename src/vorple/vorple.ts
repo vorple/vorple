@@ -1,6 +1,8 @@
 /**
  * @module vorple
  */
+import satisfies from "semver/functions/satisfies";
+
 import { start } from "../haven/haven";
 import { addCallback } from "../haven/assets";
 
@@ -143,6 +145,39 @@ export function addEventListener( eventNames: VorpleEventCategory | VorpleEventC
     eventNames.forEach( name => addOrRemoveListener( name, listener, "add" ) );
 
     return () => removeEventListener( eventNames, listener );
+}
+
+
+/**
+ * Checks that the library's version matches the given version range.
+ * See https://github.com/npm/node-semver#ranges for the full syntax.
+ *
+ * @example
+ * If the library version is e.g. 3.2.8 the following return true:
+ *
+ * ```
+ * vorple.checkVersion("3.2")
+ * vorple.checkVersion(">=3.2.8")
+ * vorple.checkVersion("<3.3")
+ * vorple.checkVersion("3.2.8 || >=4")
+ * vorple.checkVersion("3.1 - 3.2")
+ * vorple.checkVersion("~3.2.5")
+ * ```
+ *
+ * The following return false:
+ *
+ * ```
+ * vorple.checkVersion(">=4.0")
+ * vorple.checkVersion("<3.2.8")
+ * vorple.checkVersion("~3.2.9")
+ * ```
+ *
+ * @param versionRange  The version range to check
+ * @returns True if version matches the given range, false otherwise.
+ * @since 3.2.8
+ */
+export function checkVersion( versionRange: string ): boolean {
+    return satisfies( packageJson.version, versionRange );
 }
 
 
@@ -395,11 +430,17 @@ export function removeEventListener( eventNames: VorpleEventCategory | VorpleEve
  * is requested, then any Vorple version below 3.2 (3.1, 3.1.1, 3.1.2 etc)
  * will pass. If version "3" is requested, every version 3.x.x will pass.
  *
+ * If an optional callback is passed to the function, it will be run with
+ * one boolean parameter: true if version matches, false otherwise.
+ * Otherwise an error is thrown if the version doesn't match.
+ *
  * @param requiredVersion  The minimum version of Vorple that's required
  * @param callback  If an optional callback function is passed, it will be run with
  * one boolean parameter: true if version matches, false otherwise. If a callback
  * isn't provided, this function throws an error if the version doesn't match.
  * @returns Returns true if version matches.
+ * @deprecated Deprecated since 3.2.8 in favor of the more versatile [[checkVersion]].
+ * The equivalent of e.g. `vorple.requireVersion("3.2")` is `vorple.checkVersion(">=3.2")`.
  */
 export function requireVersion( requiredVersion: string, callback?: ( versionMatches: boolean ) => void ): boolean {
     const thisVer = packageJson.version.split( "." ).map( str => Number( str ) );

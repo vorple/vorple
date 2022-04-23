@@ -68,6 +68,7 @@
     "custom-event-polyfill": "1.0.7",
     "jquery": "3.6.0",
     "jquery-powertip": "1.3.2",
+    "semver": "7.3.7",
     "toastr": "2.1.4",
     "vex-dialog": "1.1.0",
     "vex-js": "4.1.0"
