@@ -6,7 +6,7 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
-Release 3.2.8 (2022-04-)
+Release 3.2.8 (2022-04-25)
 ==========================
 
 - Added method vorple.checkVersion() to replace vorple.requireVersion() which
