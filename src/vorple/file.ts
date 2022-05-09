@@ -34,6 +34,9 @@ export const JS_RETURN_VALUE_TYPE_FILENAME = "VpJSType";
 const HANDSHAKE_INIT = "Callooh!";
 const HANDSHAKE_RESPONSE = "Callay!";
 
+// The file owner id for Inform 7
+const I7_FILE_OWNER = "VORPLE";
+
 const SYNC_FS_ROOT = "/";
 
 /**
@@ -791,7 +794,7 @@ export function read( filename: string, options: ReadFileOptions = {}): string |
     // tries to read the handshake file. This tells it that
     // it's running on the Vorple interpreter.
     if( filename === HANDSHAKE_FILENAME ) {
-        return informHeader( "VORPLE", filename ) + HANDSHAKE_RESPONSE;
+        return informHeader( I7_FILE_OWNER, filename ) + HANDSHAKE_RESPONSE;
     }
 
     try {
@@ -1084,7 +1087,7 @@ export function write( filename: string, contents: string | Uint8Array | Buffer,
         binary: false,
         cwd: DEFAULT_PATH,
         header: true,
-        project: "VORPLE",
+        project: I7_FILE_OWNER,
         ready: true,
         ...options
     };
