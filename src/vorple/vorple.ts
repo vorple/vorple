@@ -10,7 +10,6 @@ import { error, log } from "./debug";
 import { init as initPrompt, applyInputFilters } from "./prompt";
 import { loadStoryFile, initQuixe } from "./haven";
 
-import packageJson from "../../package.json";
 import {
     JS_RETURN_VALUE_FILENAME,
     JS_RETURN_VALUE_TYPE_FILENAME,
@@ -177,7 +176,7 @@ export function addEventListener( eventNames: VorpleEventCategory | VorpleEventC
  * @since 3.2.8
  */
 export function checkVersion( versionRange: string ): boolean {
-    return satisfies( packageJson.version, versionRange );
+    return satisfies( window.vorple.version, versionRange );
 }
 
 
@@ -443,12 +442,12 @@ export function removeEventListener( eventNames: VorpleEventCategory | VorpleEve
  * The equivalent of e.g. `vorple.requireVersion("3.2")` is `vorple.checkVersion(">=3.2")`.
  */
 export function requireVersion( requiredVersion: string, callback?: ( versionMatches: boolean ) => void ): boolean {
-    const thisVer = packageJson.version.split( "." ).map( str => Number( str ) );
+    const thisVer = window.vorple.version.split( "." ).map( str => Number( str ) );
     const reqVer = ( "" + requiredVersion ).split( "." ).map( str => Number( str ) );
     const cb = callback || (
         ( match: boolean ): void => {
             if( !match ) {
-                error( `Vorple version ${requiredVersion} was requested, but Vorple is at version ${packageJson.version}` );
+                error( `Vorple version ${requiredVersion} was requested, but Vorple is at version ${window.vorple.version}` );
             }
         });
 

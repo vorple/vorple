@@ -26,8 +26,6 @@ import "./quixe/gi_load";
 import vex, { Vex } from "vex-js";
 import vexDialog from "vex-dialog";
 
-import packageJson from "../package.json";
-
 // The Vex type definition is missing these parts
 interface VexWithDialog extends Vex {
     registerPlugin( plugin: any ): void;
@@ -76,6 +74,9 @@ declare global {
     }
 }
 
+// The following line is modified automatically by the build script, don't change it unless you know what you're doing
+const VORPLE_VERSION = "4.0.0";
+
 window.vorple = {
     ...core,
     audio,
@@ -86,7 +87,7 @@ window.vorple = {
     output,
     prompt,
     options: {},
-    version: packageJson.version
+    version: VORPLE_VERSION
 };
 
 // initialize Vex modal windows

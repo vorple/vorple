@@ -21,15 +21,18 @@
     "url": "https://github.com/vorple/vorple/issues"
   },
   "homepage": "https://vorple-if.com",
-  "main": "./lib/index.js",
+  "main": "./dist/index.js",
+  "module": "commonjs",
   "files": [
     "assets",
     "dist",
     "lib",
+    "web",
     "src/haven/*.js",
     "src/quixe",
+    "src/types",
     "src/vorple",
-    "src/index.js"
+    "src/index.ts"
   ],
   "devDependencies": {
     "@babel/cli": "7.17.10",

@@ -5,7 +5,7 @@ const path = require( "path" );
 module.exports = {
     devServer: {
         static: [
-            { directory: path.join( __dirname, "dist" ) },
+            { directory: path.join( __dirname, "web" ) },
             { directory: path.join( __dirname, "tests" ) },
             { directory: path.join( __dirname, "library" ) },
             { directory: path.join( __dirname, "../inform7/tests" ) }
@@ -16,16 +16,14 @@ module.exports = {
     devtool: process.env.NODE_ENV === "production" ? "source-map" : "inline-source-map",
     mode: process.env.NODE_ENV === "production" ? "production" : "development",
     output: {
-        filename: "interpreter/vorple.min.js"
+        filename: "interpreter/vorple.min.js",
+        path: path.join( __dirname, "web" )
     },
     performance: {
         hints: false    // Interpreter files are big – don't warn about them
     },
     resolve: {
-        extensions: [ ".ts", ".js" ],
-        fallback: {
-            path: require.resolve( "path-browserify" )
-        }
+        extensions: [ ".ts", ".js" ]
     },
     externals: {
         jquery: "jQuery"  // Webpack tends to include jQuery multiple times, we'll handle it separately

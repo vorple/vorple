@@ -4,6 +4,7 @@ library
 dist
 errorShots
 lib
+web
 yarn-error.log
 
 src/vorple/*.js*

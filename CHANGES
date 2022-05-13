@@ -6,10 +6,15 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
-Release 4.0.0 (2022-05-)
+Release 4.0.0 (2022-05-11)
 ==========================
 
-Codebase converted to Typescript.
+- Codebase converted to Typescript
+- In the npm package, the "src" directory now contains the original Typescript
+  source code, "dist" contains the compiled JavaScript code, and "web" contains
+  the interpreter package that used to be in "dist"
+- Replaced imports from the "path" module to BrowserFS's equivalent to avoid
+  having to include path-browserify when using Vorple as an npm package
 
 
 Release 3.2.8 (2022-04-25)

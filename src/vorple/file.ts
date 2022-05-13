@@ -17,7 +17,8 @@ import { getInformVersion, setInformVersion } from "./vorple";
 
 import * as BrowserFS from "browserfs";
 import type { FSModule } from "browserfs/dist/node/core/FS";
-import { basename, dirname, resolve } from "path";
+
+const { basename, dirname, resolve } = BrowserFS.BFSRequire( "path" );
 
 /** @internal */
 export const HANDSHAKE_FILENAME = "VpHndshk";

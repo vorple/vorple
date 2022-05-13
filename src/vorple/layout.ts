@@ -64,7 +64,7 @@ export function focus( targetElement: string | JQuery.PlainObject, targetWindow 
         return false;
     }
 
-    flush();
+    flush( targetWindow );
     container.set( $target.last().get( 0 ), targetWindow );
 
     return true;
