@@ -6,6 +6,12 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
+Release 4.0.1 (2022-06-26)
+==========================
+
+- Fixed npm package not working correctly in React/Webpack projects (#57)
+
+
 Release 4.0.0 (2022-05-11)
 ==========================
 
