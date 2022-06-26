@@ -60,7 +60,7 @@
 
 /* Put everything inside the Quixe namespace. */
 
-Quixe = function() {
+window.Quixe = function() {
 
 /* Create the "self" object. (No relation to the Inform "self" global.) */
 var self = {};
@@ -1051,7 +1051,7 @@ function oputil_store(context, funcop, operand) {
             }
         }
 
-        holdvar = alloc_holdvar(context, true);
+        var holdvar = alloc_holdvar(context, true);
         context.offstack.push(holdvar);
         if (funcop.argsize == 4) {
             context.code.push(holdvar+"=("+operand+");");

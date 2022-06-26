@@ -75,7 +75,7 @@ declare global {
 }
 
 // The following line is modified automatically by the build script, don't change it unless you know what you're doing
-const VORPLE_VERSION = "4.0.0";
+const VORPLE_VERSION = "4.0.1";
 
 window.vorple = {
     ...core,
