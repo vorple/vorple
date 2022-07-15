@@ -650,7 +650,7 @@ function RefStruct() {
 const DidNotReturn = { dummy: "Glk call has not yet returned" };
 
 function call_may_not_return( id ) {
-    if( id == 0x001 || id == 0x0C0 || id == 0x062 )
+    if( id == 0x001 || id == 0x0C0 || id == 0x062 || id == 0x044 )  // modified; 0x044 (68) is "stream_close" which evaluates Vorple JS and might need to handle promises
         return true;
     else
         return false;
@@ -1961,7 +1961,9 @@ function glk_stream_open_memory( buf, fmode, rock ) {
     return str;
 }
 
-function glk_stream_close( str, result ) {
+function glk_stream_close( str, result ) {  // modified
+    let isAsync = false;
+
     if( !str )
         throw ( "glk_stream_close: invalid stream" );
 
@@ -1978,7 +1980,13 @@ function glk_stream_close( str, result ) {
             const contents = str.buf.map( code => String.fromCharCode( code ) ).join( "" );
             const code = contents.substring( contents.indexOf( "\n" ) + 1 );
             if( str.filename === "VpJSEval" && code.length > 1 ) {
-                evaluate( code );
+                evaluate( code ).then( () => {
+                    if( window.GiDispa )
+                        window.GiDispa.prepare_resume( null );
+
+                    VM.resume( null );
+                });
+                isAsync = true;
             }
             else {
                 write(
@@ -1995,6 +2003,10 @@ function glk_stream_close( str, result ) {
 
     gli_stream_fill_result( str, result );
     gli_delete_stream( str );
+
+    if( isAsync ) {
+        return DidNotReturn;
+    }
 }
 
 function glk_stream_set_position( str, pos, seekmode ) {

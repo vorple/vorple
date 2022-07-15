@@ -181,25 +181,26 @@ export function checkVersion( versionRange: string ): boolean {
 
 
 /**
+ * Stringify a value, or return the string "null" if the value can't be stringified.
+ * @internal
+ */
+function safeStringify( value: unknown ): string {
+    try {
+        return JSON.stringify( value );
+    }
+    catch( e ) {
+        return "null";
+    }
+}
+
+
+/**
  * Evaluates JavaScript code and writes the return value and its type to the
  * virtual filesystem for the story file to read.
  *
  * @param code  JavaScript code to evaluate
  */
-export function evaluate( code: string ): void {
-    /**
-     * Stringify a value, or return the string "null" if the value can't be stringified
-     * @internal
-     */
-    const safeStringify = function( value ): string {
-        try {
-            return JSON.stringify( value );
-        }
-        catch( e ) {
-            return "null";
-        }
-    };
-
+export async function evaluate( code: string ): Promise<void> {
     let retval: string;
     let evaluationResult: unknown;
 
@@ -213,7 +214,10 @@ export function evaluate( code: string ): void {
 
     // Evaluate the JavaScript code.
     try {
-        evaluationResult = new Function( "'use strict';\n" + code )();
+        const evaluated = new Function( "'use strict';\n" + code )();
+
+        // Pass the result through Promise.resolve which will evaluate the return value if it's a promise
+        evaluationResult = await Promise.resolve( evaluated ).catch( rejection => rejection );
     }
     catch( e ) {
         error( "JavaScript code from story file threw an error: " + ( e as Error ).message + "\n\n" + code );

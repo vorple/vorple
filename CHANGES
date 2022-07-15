@@ -6,6 +6,13 @@ The numbers after the items refer to GitHub issues. (inform #xx) refers to issue
 number xx in the Inform extensions/libraries repositories.
 
 
+Release 4.1.0 (2022-)
+==========================
+
+- When evaluating JavaScript code that returns a promise, Vorple now waits until
+  the promise is resolved and passes its return value to Inform
+
+
 Release 4.0.1 (2022-06-26)
 ==========================
 
