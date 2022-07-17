@@ -11,6 +11,8 @@ Release 4.1.0 (2022-)
 
 - When evaluating JavaScript code that returns a promise, Vorple now waits until
   the promise is resolved and passes its return value to Inform
+- Added vorple.layout.createNewTurnContainer()
+- Fixed vorple.layout.scrollTo() always scrolling to the top of the page
 - Interpreter name is now "Vorple" instead of "Quixe" in the web document title
 
 

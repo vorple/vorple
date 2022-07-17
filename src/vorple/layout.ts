@@ -7,7 +7,11 @@ import {
     isBlocked as isInputBlocked,
     unblock as inputUnblock
 } from "../haven/input";
-import { container } from "../haven/window";
+import {
+    container,
+    newTurnContainer,
+    rotateTurnMarkers
+} from "../haven/window";
 
 
 /**
@@ -46,6 +50,18 @@ export function closeTag( targetWindow = 0 ): boolean {
     container.set( current.parentNode, targetWindow );
 
     return true;
+}
+
+
+/**
+ * Creates a new empty turn container. This is useful for splitting output to
+ * "turns" outside Inform.
+ *
+ * @since 4.1.0
+ */
+export function createNewTurnContainer(): void {
+    rotateTurnMarkers();
+    newTurnContainer( 0 );
 }
 
 
@@ -135,11 +151,11 @@ export function scrollTo( target: string | JQuery.PlainObject, speed = 500 ): Pr
         return Promise.resolve( false );
     }
 
-    const pagePosition = $( "body" ).scrollTop() || 0;
+    const pagePosition = $( "html" ).scrollTop() || $( "body" ).scrollTop() || 0;
     const targetPosition = $target.offset()?.top || 0;
     const targetHeight = $target.height() || 0;
     const windowHeight = $( window ).height() || 0;
-    const documentHeight = $( "document" )?.height() || 0;
+    const documentHeight = $( document )?.height() || 0;
     const pageBottom = documentHeight - windowHeight ;
     const halfway = windowHeight / 2 + pagePosition;
     const offset = 30;
