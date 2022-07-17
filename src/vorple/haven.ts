@@ -70,7 +70,13 @@ export function initQuixe( storyfile: string ): void {
         log: (): void => {}
     };
 
-    window.GiLoad.load_run({}, storyfile, typeof storyfile === "string" ? "base64" : undefined );
+    window.GiLoad.load_run(
+        {
+            engine_name: "Vorple"
+        },
+        storyfile,
+        typeof storyfile === "string" ? "base64" : undefined
+    );
 }
 
 

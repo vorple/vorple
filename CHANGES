@@ -11,6 +11,7 @@ Release 4.1.0 (2022-)
 
 - When evaluating JavaScript code that returns a promise, Vorple now waits until
   the promise is resolved and passes its return value to Inform
+- Interpreter name is now "Vorple" instead of "Quixe" in the web document title
 
 
 Release 4.0.1 (2022-06-26)
